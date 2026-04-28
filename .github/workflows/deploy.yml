@@ -77,6 +77,7 @@ jobs:
           mask-aws-account-id: true
 
       - name: Build SAM application
+        if: github.event_name == 'push' && steps.deploy_config.outputs.can_deploy == 'true'
         run: sam build --use-container --template-file infrastructure/template.yaml
 
       - name: Deploy SAM application
