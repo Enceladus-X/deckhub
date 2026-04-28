@@ -10,6 +10,7 @@ env:
   AWS_REGION: ${{ vars.AWS_REGION || 'ap-northeast-2' }}
   SAM_STACK_NAME: ${{ vars.SAM_STACK_NAME || 'deckhub' }}
   STAGE_NAME: ${{ vars.STAGE_NAME || 'prod' }}
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   backend:
@@ -19,6 +20,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
+      can_deploy: ${{ steps.deploy_config.outputs.can_deploy }}
       api_url: ${{ steps.outputs.outputs.api_url }}
       frontend_bucket: ${{ steps.outputs.outputs.frontend_bucket }}
       frontend_distribution_id: ${{ steps.outputs.outputs.frontend_distribution_id }}
@@ -45,8 +47,28 @@ jobs:
       - name: Validate SAM template
         run: sam validate --template-file infrastructure/template.yaml
 
+      - name: Detect deploy configuration
+        id: deploy_config
+        env:
+          AWS_DEPLOY_ROLE_ARN: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          SAM_ARTIFACT_BUCKET: ${{ secrets.SAM_ARTIFACT_BUCKET }}
+          CLOUDFRONT_KEY_GROUP_ID: ${{ secrets.CLOUDFRONT_KEY_GROUP_ID }}
+          CLOUDFRONT_KEY_PAIR_ID: ${{ secrets.CLOUDFRONT_KEY_PAIR_ID }}
+          CLOUDFRONT_PRIVATE_KEY_SECRET_ARN: ${{ secrets.CLOUDFRONT_PRIVATE_KEY_SECRET_ARN }}
+        run: |
+          if [ -n "$AWS_DEPLOY_ROLE_ARN" ] && \
+             [ -n "$SAM_ARTIFACT_BUCKET" ] && \
+             [ -n "$CLOUDFRONT_KEY_GROUP_ID" ] && \
+             [ -n "$CLOUDFRONT_KEY_PAIR_ID" ] && \
+             [ -n "$CLOUDFRONT_PRIVATE_KEY_SECRET_ARN" ]; then
+            echo "can_deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "can_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::AWS deployment secrets are not configured yet. Validation passed; deployment was skipped."
+          fi
+
       - name: Configure AWS credentials
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && steps.deploy_config.outputs.can_deploy == 'true'
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
@@ -58,7 +80,7 @@ jobs:
         run: sam build --use-container --template-file infrastructure/template.yaml
 
       - name: Deploy SAM application
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && steps.deploy_config.outputs.can_deploy == 'true'
         env:
           SAM_ARTIFACT_BUCKET: ${{ secrets.SAM_ARTIFACT_BUCKET }}
           CLOUDFRONT_KEY_GROUP_ID: ${{ secrets.CLOUDFRONT_KEY_GROUP_ID }}
@@ -80,7 +102,7 @@ jobs:
               CloudFrontPrivateKeySecretArn="$CLOUDFRONT_PRIVATE_KEY_SECRET_ARN"
 
       - name: Read stack outputs
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && steps.deploy_config.outputs.can_deploy == 'true'
         id: outputs
         run: |
           outputs="$(aws cloudformation describe-stacks \
@@ -104,7 +126,7 @@ jobs:
     name: Frontend static export
     needs: backend
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.backend.outputs.can_deploy == 'true'
     permissions:
       contents: read
       id-token: write
