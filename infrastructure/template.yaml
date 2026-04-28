@@ -1,0 +1,289 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: DeckHub serverless API, DynamoDB tables, private S3 buckets, and CloudFront origins.
+
+Parameters:
+  StageName:
+    Type: String
+    Default: prod
+  CloudFrontTrustedKeyGroupId:
+    Type: String
+    Default: ""
+    Description: Optional key group id used to require signed URLs for deck downloads.
+  CloudFrontKeyPairId:
+    Type: String
+    Default: ""
+    Description: Key pair id used by the Lambda signer for CloudFront signed URLs.
+  CloudFrontPrivateKeySecretArn:
+    Type: String
+    Default: ""
+    Description: Optional Secrets Manager ARN containing the CloudFront private key PEM.
+
+Conditions:
+  HasTrustedKeyGroup: !Not [!Equals [!Ref CloudFrontTrustedKeyGroupId, ""]]
+  HasPrivateKeySecret: !Not [!Equals [!Ref CloudFrontPrivateKeySecretArn, ""]]
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Architectures:
+      - arm64
+    MemorySize: 256
+    Timeout: 10
+    Tracing: Active
+    Environment:
+      Variables:
+        DECKS_TABLE_NAME: !Ref DecksTable
+        DECK_VERSIONS_TABLE_NAME: !Ref DeckVersionsTable
+        DOWNLOAD_DOMAIN: !GetAtt DeckFilesDistribution.DomainName
+        DOWNLOAD_URL_TTL_SECONDS: "300"
+        CLOUDFRONT_KEY_PAIR_ID: !Ref CloudFrontKeyPairId
+        CLOUDFRONT_PRIVATE_KEY_SECRET_ARN: !If
+          - HasPrivateKeySecret
+          - !Ref CloudFrontPrivateKeySecretArn
+          - ""
+
+Resources:
+  DeckHubApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref StageName
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - content-type
+          - authorization
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: src.app.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DecksTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DeckVersionsTable
+        - !If
+          - HasPrivateKeySecret
+          - Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref CloudFrontPrivateKeySecretArn
+          - !Ref AWS::NoValue
+      Events:
+        RootProxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref DeckHubApi
+            Path: /
+            Method: ANY
+        ApiProxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref DeckHubApi
+            Path: /{proxy+}
+            Method: ANY
+
+  DecksTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: deck_id
+          AttributeType: S
+        - AttributeName: slug
+          AttributeType: S
+      KeySchema:
+        - AttributeName: deck_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: SlugIndex
+          KeySchema:
+            - AttributeName: slug
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  DeckVersionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: deck_id
+          AttributeType: S
+        - AttributeName: version
+          AttributeType: S
+        - AttributeName: version_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: deck_id
+          KeyType: HASH
+        - AttributeName: version
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: VersionIdIndex
+          KeySchema:
+            - AttributeName: version_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  FrontendOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-frontend-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  FrontendDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub "${AWS::StackName} frontend"
+        DefaultRootObject: index.html
+        HttpVersion: http2
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: FrontendS3Origin
+            DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt FrontendOriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: FrontendS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${FrontendBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}"
+
+  DeckFilesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  DeckFilesOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-deck-files-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  DeckFilesDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub "${AWS::StackName} deck file delivery"
+        HttpVersion: http2
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: DeckFilesS3Origin
+            DomainName: !GetAtt DeckFilesBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt DeckFilesOriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: DeckFilesS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          TrustedKeyGroups: !If
+            - HasTrustedKeyGroup
+            - - !Ref CloudFrontTrustedKeyGroupId
+            - !Ref AWS::NoValue
+
+  DeckFilesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref DeckFilesBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${DeckFilesBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DeckFilesDistribution}"
+
+Outputs:
+  ApiUrl:
+    Value: !Sub "https://${DeckHubApi}.execute-api.${AWS::Region}.amazonaws.com/${StageName}"
+  FrontendBucketName:
+    Value: !Ref FrontendBucket
+  FrontendDistributionId:
+    Value: !Ref FrontendDistribution
+  FrontendDistributionDomain:
+    Value: !GetAtt FrontendDistribution.DomainName
+  DeckFilesBucketName:
+    Value: !Ref DeckFilesBucket
+  DeckFilesDistributionId:
+    Value: !Ref DeckFilesDistribution
+  DeckFilesDistributionDomain:
+    Value: !GetAtt DeckFilesDistribution.DomainName

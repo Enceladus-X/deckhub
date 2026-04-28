@@ -1,0 +1,12 @@
+{
+  "version": "2.0",
+  "routeKey": "GET /health",
+  "rawPath": "/health",
+  "requestContext": {
+    "stage": "$default",
+    "http": {
+      "method": "GET",
+      "path": "/health"
+    }
+  }
+}
