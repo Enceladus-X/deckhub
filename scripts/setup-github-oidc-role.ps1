@@ -25,8 +25,10 @@ if (!$accountId) {
 }
 
 $providerArn = "arn:aws:iam::$accountId:oidc-provider/token.actions.githubusercontent.com"
-aws iam get-open-id-connect-provider --open-id-connect-provider-arn $providerArn *> $null
-$createProvider = if ($LASTEXITCODE -eq 0) { "false" } else { "true" }
+$existingProviderArn = aws iam list-open-id-connect-providers `
+  --query "OpenIDConnectProviderList[?Arn=='$providerArn'].Arn | [0]" `
+  --output text
+$createProvider = if ($existingProviderArn -and $existingProviderArn -ne "None") { "false" } else { "true" }
 
 Write-Host "Deploying GitHub OIDC role stack..."
 Write-Host "AWS account: $accountId"

@@ -23,8 +23,8 @@ function Write-JsonFile($Path, $Value) {
 }
 
 function To-AwsFileUri($Path) {
-  $resolved = (Resolve-Path -LiteralPath $Path).Path -replace "\\", "/"
-  return "file:///$resolved"
+  $resolved = (Resolve-Path -LiteralPath $Path).Path
+  return "file://$resolved"
 }
 
 Require-Command aws
@@ -45,16 +45,22 @@ Write-Host "Deriving public key..."
 openssl rsa -pubout -in $privateKeyPath -out $publicKeyPath
 
 Write-Host "Storing private key in AWS Secrets Manager..."
-aws secretsmanager describe-secret --secret-id $SecretName --region $AwsRegion *> $null
-if ($LASTEXITCODE -eq 0) {
+$privateKeyPem = Get-Content -LiteralPath $privateKeyPath -Raw
+$existingSecretArn = aws secretsmanager list-secrets `
+  --filters Key=name,Values=$SecretName `
+  --region $AwsRegion `
+  --query "SecretList[0].ARN" `
+  --output text
+
+if ($existingSecretArn -and $existingSecretArn -ne "None") {
   aws secretsmanager put-secret-value `
     --secret-id $SecretName `
-    --secret-string (To-AwsFileUri $privateKeyPath) `
+    --secret-string $privateKeyPem `
     --region $AwsRegion | Out-Null
 } else {
   aws secretsmanager create-secret `
     --name $SecretName `
-    --secret-string (To-AwsFileUri $privateKeyPath) `
+    --secret-string $privateKeyPem `
     --region $AwsRegion `
     --description "DeckHub CloudFront signed URL private key" | Out-Null
 }
