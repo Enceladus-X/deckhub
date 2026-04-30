@@ -186,9 +186,12 @@ Resources:
                   - apigateway:PATCH
                   - apigateway:POST
                   - apigateway:PUT
+                  - apigateway:TagResource
+                  - apigateway:UntagResource
                 Resource:
                   - !Sub "arn:aws:apigateway:${AWS::Region}::/apis"
                   - !Sub "arn:aws:apigateway:${AWS::Region}::/apis/*"
+                  - !Sub "arn:aws:apigateway:${AWS::Region}::/v2/*"
                   - !Sub "arn:aws:apigateway:${AWS::Region}::/tags/*"
 
               - Sid: DynamoDbDeploy
