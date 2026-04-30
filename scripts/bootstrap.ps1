@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 Write-Host "Installing frontend dependencies..."
-npm --prefix frontend install
+npm --prefix frontend ci
 
 Write-Host "Preparing backend virtual environment..."
 if (!(Test-Path backend/.venv)) {
