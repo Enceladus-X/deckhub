@@ -189,6 +189,7 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:apigateway:${AWS::Region}::/apis"
                   - !Sub "arn:aws:apigateway:${AWS::Region}::/apis/*"
+                  - !Sub "arn:aws:apigateway:${AWS::Region}::/tags/*"
 
               - Sid: DynamoDbDeploy
                 Effect: Allow
