@@ -30,7 +30,7 @@ const sortOptions: { label: string; value: SortKey }[] = [
 
 export function DeckCatalog({ decks, providers }: DeckCatalogProps) {
   const [query, setQuery] = useState("");
-  const [activeProvider, setActiveProvider] = useState("All");
+  const [activeProvider, setActiveProvider] = useState("전체");
   const [sortBy, setSortBy] = useState<SortKey>("recommended");
 
   const totalCards = decks.reduce((sum, deck) => sum + deck.cards, 0);
@@ -44,7 +44,7 @@ export function DeckCatalog({ decks, providers }: DeckCatalogProps) {
   const filteredDecks = decks
     .filter((deck) => {
       const matchesProvider =
-        activeProvider === "All" || deck.provider === activeProvider;
+        activeProvider === "전체" || deck.provider === activeProvider;
       const searchable = [
         deck.title,
         deck.code,
@@ -86,7 +86,7 @@ export function DeckCatalog({ decks, providers }: DeckCatalogProps) {
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 pl-9 pr-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="시험명, 코드, 태그 검색"
+            placeholder="자격명, 종목코드, 과목 검색"
             value={query}
           />
         </div>
@@ -108,7 +108,7 @@ export function DeckCatalog({ decks, providers }: DeckCatalogProps) {
               >
                 <span>{provider}</span>
                 <span className="text-xs text-zinc-400">
-                  {provider === "All"
+                  {provider === "전체"
                     ? decks.length
                     : decks.filter((deck) => deck.provider === provider).length}
                 </span>
@@ -147,10 +147,10 @@ export function DeckCatalog({ decks, providers }: DeckCatalogProps) {
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h1 className="text-2xl font-semibold leading-8">
-                시험 과목별 Anki 덱
+                Q-Net 자격시험 Anki 덱
               </h1>
               <p className="mt-1 text-sm text-zinc-500">
-                Immutable versions, community review, signed CDN delivery.
+                국가기술자격과 국가전문자격을 과목별로 정리하는 커뮤니티 아카이브입니다.
               </p>
             </div>
             <div className="flex flex-wrap gap-4 text-sm text-zinc-600">
@@ -258,7 +258,7 @@ export function DeckCatalog({ decks, providers }: DeckCatalogProps) {
               검색 결과가 없습니다
             </p>
             <p className="mt-2 text-sm text-zinc-500">
-              새 시험 과목이라면 첫 번째 덱을 업로드할 수 있습니다.
+              아직 없는 자격 종목이라면 첫 번째 덱을 업로드해보세요.
             </p>
             <Link
               className="mt-4 inline-flex h-10 items-center justify-center rounded-md bg-zinc-950 px-4 text-sm font-semibold text-white transition hover:bg-teal-700"

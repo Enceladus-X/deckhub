@@ -25,10 +25,10 @@ export default function UploadPage() {
                 </div>
                 <div>
                   <h1 className="text-2xl font-semibold leading-8">
-                    Anki 덱 업로드
+                    Q-Net 자격시험 덱 업로드
                   </h1>
                   <p className="mt-1 text-sm leading-6 text-zinc-500">
-                    시험 과목, 버전, 변경 내용을 함께 제출합니다.
+                    자격 종목, 구분, 버전, 변경 내용을 함께 제출합니다.
                   </p>
                 </div>
               </div>
@@ -41,11 +41,14 @@ export default function UploadPage() {
             <h2 className="text-lg font-semibold leading-7">검수 흐름</h2>
             <div className="mt-4 divide-y divide-zinc-100">
               {[
-                [FileCheck2, "파일 확인", ".apkg, SHA256, 크기"],
-                [ShieldCheck, "공개 검수", "민감 정보와 저작권"],
-                [Clock, "버전 등록", "덮어쓰기 없는 배포"],
+                [FileCheck2, "파일 확인", ".apkg, SHA256, 파일 크기"],
+                [ShieldCheck, "공개 검수", "저작권, 개인정보, 악성 파일"],
+                [Clock, "버전 등록", "덮어쓰기 없는 버전별 배포"],
               ].map(([Icon, title, body]) => (
-                <div className="flex gap-3 py-4 first:pt-0 last:pb-0" key={title as string}>
+                <div
+                  className="flex gap-3 py-4 first:pt-0 last:pb-0"
+                  key={title as string}
+                >
                   <Icon
                     size={18}
                     className="mt-0.5 shrink-0 text-teal-600"
@@ -55,7 +58,9 @@ export default function UploadPage() {
                     <p className="text-sm font-semibold text-zinc-800">
                       {title as string}
                     </p>
-                    <p className="mt-1 text-sm text-zinc-500">{body as string}</p>
+                    <p className="mt-1 text-sm text-zinc-500">
+                      {body as string}
+                    </p>
                   </div>
                 </div>
               ))}

@@ -12,7 +12,7 @@ export function AppHeader() {
           <div>
             <p className="text-xl font-semibold leading-7">DeckHub</p>
             <p className="text-sm text-zinc-500">
-              Certification Deck Hub for Anki
+              Q-Net 자격시험 Anki 아카이브
             </p>
           </div>
         </Link>

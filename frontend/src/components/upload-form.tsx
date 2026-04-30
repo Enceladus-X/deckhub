@@ -9,6 +9,15 @@ import {
   UploadCloud,
 } from "lucide-react";
 
+const examDomains = [
+  "IT/정보통신",
+  "안전관리",
+  "전기/전자",
+  "건축",
+  "부동산/관리",
+  "전문서비스",
+];
+
 export function UploadForm() {
   const [submitted, setSubmitted] = useState(false);
   const [fileName, setFileName] = useState("");
@@ -25,38 +34,40 @@ export function UploadForm() {
     >
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-zinc-800">시험 기관</span>
+          <span className="text-sm font-semibold text-zinc-800">
+            자격 분야
+          </span>
           <select
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
-            defaultValue="AWS"
+            defaultValue="IT/정보통신"
             name="provider"
           >
-            <option>AWS</option>
-            <option>Google Cloud</option>
-            <option>Microsoft</option>
-            <option>Linux Foundation</option>
-            <option>Security</option>
+            {examDomains.map((domain) => (
+              <option key={domain}>{domain}</option>
+            ))}
           </select>
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-zinc-800">시험 코드</span>
+          <span className="text-sm font-semibold text-zinc-800">
+            종목 코드
+          </span>
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="examCode"
-            placeholder="SAA-C03"
+            placeholder="QNET-1320"
             required
           />
         </label>
 
         <label className="space-y-2">
           <span className="text-sm font-semibold text-zinc-800">
-            시험 과목/트랙
+            자격 구분
           </span>
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="examTrack"
-            placeholder="Cloud Architecture"
+            placeholder="국가기술자격 · 기사"
             required
           />
         </label>
@@ -66,7 +77,7 @@ export function UploadForm() {
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="title"
-            placeholder="AWS Solutions Architect Associate"
+            placeholder="정보처리기사 필기 핵심 덱"
             required
           />
         </label>
@@ -92,17 +103,19 @@ export function UploadForm() {
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="sourceUrl"
-            placeholder="https://..."
+            placeholder="https://www.q-net.or.kr/..."
             type="url"
           />
         </label>
 
         <label className="space-y-2 md:col-span-2">
-          <span className="text-sm font-semibold text-zinc-800">변경 내용</span>
+          <span className="text-sm font-semibold text-zinc-800">
+            변경 내용
+          </span>
           <textarea
             className="min-h-28 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="changelog"
-            placeholder="추가/수정된 시험 범위와 카드 품질 메모"
+            placeholder="추가/수정한 과목 범위, 출제기준 반영 여부, 카드 품질 메모"
             required
           />
         </label>
@@ -134,7 +147,9 @@ export function UploadForm() {
       <div className="mt-5 flex flex-col gap-3 border-t border-zinc-100 pt-5 md:flex-row md:items-center md:justify-between">
         <label className="flex items-start gap-2 text-sm leading-6 text-zinc-600">
           <input className="mt-1" required type="checkbox" />
-          <span>공개 배포 가능한 자료이며 민감 정보가 포함되어 있지 않습니다.</span>
+          <span>
+            공개 배포 가능한 자료이며 저작권 침해 자료나 민감 정보가 포함되어 있지 않습니다.
+          </span>
         </label>
         <button
           className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-zinc-950 px-4 text-sm font-semibold text-white transition hover:bg-teal-700"
@@ -148,7 +163,9 @@ export function UploadForm() {
       {submitted ? (
         <div className="mt-5 flex items-start gap-3 rounded-md border border-teal-200 bg-teal-50 p-4 text-sm text-teal-800">
           <CheckCircle2 size={19} aria-hidden="true" />
-          <p>제출 대기열에 추가되었습니다. 검수 상태는 업로드 기록에 표시됩니다.</p>
+          <p>
+            제출 대기열에 추가되었습니다. 실제 서비스에서는 검수 상태와 SHA256 해시를 업로드 기록에 표시합니다.
+          </p>
         </div>
       ) : null}
     </form>
