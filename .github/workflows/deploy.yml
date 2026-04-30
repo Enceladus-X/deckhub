@@ -78,7 +78,7 @@ jobs:
 
       - name: Build SAM application
         if: github.event_name == 'push' && steps.deploy_config.outputs.can_deploy == 'true'
-        run: sam build --use-container --template-file infrastructure/template.yaml
+        run: sam build --template-file infrastructure/template.yaml
 
       - name: Deploy SAM application
         if: github.event_name == 'push' && steps.deploy_config.outputs.can_deploy == 'true'

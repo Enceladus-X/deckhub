@@ -27,7 +27,7 @@ Globals:
   Function:
     Runtime: python3.12
     Architectures:
-      - arm64
+      - x86_64
     MemorySize: 256
     Timeout: 10
     Tracing: Active
