@@ -165,6 +165,25 @@ jobs:
       - name: Upload static export to S3
         run: aws s3 sync out s3://${{ needs.backend.outputs.frontend_bucket }} --delete
 
+      - name: Create static route aliases
+        run: |
+          find out -path "*/index.html" -not -path "out/index.html" -print0 | while IFS= read -r -d '' index_file; do
+            route="${index_file#out/}"
+            route="${route%/index.html}"
+
+            aws s3api put-object \
+              --bucket "${{ needs.backend.outputs.frontend_bucket }}" \
+              --key "$route" \
+              --body "$index_file" \
+              --content-type "text/html"
+
+            aws s3api put-object \
+              --bucket "${{ needs.backend.outputs.frontend_bucket }}" \
+              --key "$route/" \
+              --body "$index_file" \
+              --content-type "text/html"
+          done
+
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
