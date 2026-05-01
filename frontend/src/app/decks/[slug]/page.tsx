@@ -62,9 +62,6 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
                     <span className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700">
                       {deck.category}
                     </span>
-                    <span className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700">
-                      {deck.code}
-                    </span>
                     <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-medium text-teal-700">
                       {deck.status}
                     </span>
@@ -84,23 +81,12 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
             <section className="rounded-lg border border-zinc-200 bg-white p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-lg font-semibold leading-7">학습 범위</h2>
+                  <h2 className="text-lg font-semibold leading-7">샘플 카드</h2>
                   <p className="text-sm text-zinc-500">
-                    업로더가 공개한 과목 커버리지와 샘플 카드입니다.
+                    다운로드 전에 카드 스타일과 설명 방식을 먼저 확인합니다.
                   </p>
                 </div>
                 <Sparkles size={20} className="text-zinc-500" aria-hidden="true" />
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                {deck.subjects.map((subject) => (
-                  <span
-                    className="rounded-md bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-700"
-                    key={subject}
-                  >
-                    {subject}
-                  </span>
-                ))}
               </div>
 
               <div className="mt-5 grid gap-3 md:grid-cols-2">

@@ -79,31 +79,12 @@ export function UploadForm() {
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-zinc-800">종목 코드</span>
-          <input
-            className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
-            name="examCode"
-            placeholder="QNET-1320"
-            required
-          />
-        </label>
-
-        <label className="space-y-2">
           <span className="text-sm font-semibold text-zinc-800">자격 구분</span>
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="examTrack"
             placeholder="국가기술자격 · 기사"
             required
-          />
-        </label>
-
-        <label className="space-y-2">
-          <span className="text-sm font-semibold text-zinc-800">별칭</span>
-          <input
-            className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
-            name="aliases"
-            placeholder="정처기, 정보처리"
           />
         </label>
 
@@ -116,16 +97,6 @@ export function UploadForm() {
             placeholder="정보처리기사 필기 핵심 덱"
             required
             value={title}
-          />
-        </label>
-
-        <label className="space-y-2 md:col-span-2">
-          <span className="text-sm font-semibold text-zinc-800">세부 과목</span>
-          <input
-            className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
-            name="subjects"
-            placeholder="소프트웨어 설계, 데이터베이스, 정보시스템 구축관리"
-            required
           />
         </label>
 

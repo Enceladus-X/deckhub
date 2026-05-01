@@ -14,7 +14,6 @@ class Deck(BaseModel):
     deck_id: str
     slug: str
     title: str
-    certification_code: str
     latest_version_id: str | None = None
     status: DeckStatus = "draft"
 
@@ -70,7 +69,6 @@ class CommentResult(BaseModel):
 class UploadRequest(BaseModel):
     title: str = Field(min_length=2, max_length=120)
     category: str
-    certification_code: str
     version: str
     file_name: str
     sha256: str | None = None

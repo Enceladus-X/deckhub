@@ -47,7 +47,6 @@ def test_upload_creates_review_pending_record():
             {
                 "title": "정보보안기사 필기 요약 덱",
                 "category": "IT",
-                "certification_code": "QNET-9999",
                 "version": "2026.05",
                 "file_name": "security.apkg",
             },

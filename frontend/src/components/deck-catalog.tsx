@@ -21,6 +21,8 @@ type DeckCatalogProps = {
 
 type SortMode = "추천순" | "최신순" | "다운로드순" | "카드많은순";
 
+const sortModes: SortMode[] = ["추천순", "최신순", "다운로드순", "카드많은순"];
+
 export function DeckCatalog({ categories, decks, query }: DeckCatalogProps) {
   const [activeCategory, setActiveCategory] = useState("전체");
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
@@ -33,12 +35,9 @@ export function DeckCatalog({ categories, decks, query }: DeckCatalogProps) {
         activeCategory === "전체" || deck.category === activeCategory;
       const searchable = [
         deck.title,
-        deck.code,
         deck.category,
         deck.examTrack,
         deck.description,
-        deck.subjects.join(" "),
-        deck.aliases.join(" "),
         deck.uploader,
       ]
         .join(" ")
@@ -132,19 +131,29 @@ export function DeckCatalog({ categories, decks, query }: DeckCatalogProps) {
             })}
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-zinc-500">
-            정렬
-            <select
-              className="h-9 rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm font-medium text-zinc-700 outline-none focus:border-teal-600 focus:bg-white"
-              onChange={(event) => setSortMode(event.target.value as SortMode)}
-              value={sortMode}
-            >
-              <option>추천순</option>
-              <option>최신순</option>
-              <option>다운로드순</option>
-              <option>카드많은순</option>
-            </select>
-          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-zinc-500">정렬</span>
+            <div className="flex flex-wrap gap-1 rounded-md border border-zinc-200 bg-zinc-50 p-1">
+              {sortModes.map((mode) => {
+                const isActive = sortMode === mode;
+
+                return (
+                  <button
+                    className={`h-8 rounded px-3 text-sm font-semibold transition ${
+                      isActive
+                        ? "bg-zinc-950 text-white shadow-sm"
+                        : "text-zinc-600 hover:bg-white hover:text-teal-700"
+                    }`}
+                    key={mode}
+                    onClick={() => setSortMode(mode)}
+                    type="button"
+                  >
+                    {mode}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         <div className="mt-5 space-y-3">
@@ -187,7 +196,7 @@ export function DeckCatalog({ categories, decks, query }: DeckCatalogProps) {
                       {deck.title}
                     </span>
                     <span className="mt-1 block text-sm text-zinc-500">
-                      {deck.examTrack} · {deck.code}
+                      {deck.examTrack}
                     </span>
                   </span>
 
@@ -222,16 +231,6 @@ export function DeckCatalog({ categories, decks, query }: DeckCatalogProps) {
                         <p className="text-sm leading-6 text-zinc-600">
                           {deck.description}
                         </p>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {deck.subjects.slice(0, 5).map((subject) => (
-                            <span
-                              className="rounded-md bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-600"
-                              key={subject}
-                            >
-                              {subject}
-                            </span>
-                          ))}
-                        </div>
                         <p className="mt-3 rounded-md bg-zinc-50 p-3 text-sm leading-6 text-zinc-600">
                           {deck.versions[0]?.changelog}
                         </p>

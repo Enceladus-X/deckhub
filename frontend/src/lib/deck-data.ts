@@ -26,7 +26,6 @@ export type Deck = {
   slug: string;
   title: string;
   aliases: string[];
-  code: string;
   category: string;
   examTrack: string;
   subjects: string[];
@@ -56,7 +55,6 @@ export const decks: Deck[] = [
     slug: "qnet-engineer-information-processing",
     title: "정보처리기사",
     aliases: ["정처기", "정보처리", "software engineer"],
-    code: "QNET-1320",
     category: "IT",
     examTrack: "국가기술자격 · 기사",
     subjects: ["소프트웨어 설계", "데이터베이스", "프로그래밍 언어", "정보시스템 구축관리"],
@@ -124,7 +122,6 @@ export const decks: Deck[] = [
     slug: "qnet-engineer-industrial-safety",
     title: "산업안전기사",
     aliases: ["산안기", "산업안전", "safety"],
-    code: "QNET-1431",
     category: "안전",
     examTrack: "국가기술자격 · 기사",
     subjects: ["안전관리론", "인간공학", "기계안전", "전기안전", "건설안전"],
@@ -178,7 +175,6 @@ export const decks: Deck[] = [
     slug: "qnet-engineer-electricity",
     title: "전기기사",
     aliases: ["전기", "전기기사 필기", "electricity"],
-    code: "QNET-1150",
     category: "전기",
     examTrack: "국가기술자격 · 기사",
     subjects: ["회로이론", "전력공학", "전기기기", "전기설비기술기준"],
@@ -239,7 +235,6 @@ export const decks: Deck[] = [
     slug: "qnet-industrial-engineer-electricity",
     title: "전기산업기사",
     aliases: ["전산기", "전기산기"],
-    code: "QNET-2140",
     category: "전기",
     examTrack: "국가기술자격 · 산업기사",
     subjects: ["전기자기학", "전력공학", "전기기기", "회로이론"],
@@ -293,7 +288,6 @@ export const decks: Deck[] = [
     slug: "qnet-engineer-civil",
     title: "토목기사",
     aliases: ["토목", "civil"],
-    code: "QNET-1250",
     category: "토목",
     examTrack: "국가기술자격 · 기사",
     subjects: ["응용역학", "측량학", "수리수문학", "철근콘크리트", "토질"],
@@ -347,7 +341,6 @@ export const decks: Deck[] = [
     slug: "qnet-engineer-construction-materials",
     title: "건설재료시험기사",
     aliases: ["건재기", "건설재료", "materials"],
-    code: "QNET-1260",
     category: "토목",
     examTrack: "국가기술자격 · 기사",
     subjects: ["콘크리트", "아스팔트", "토질재료", "품질관리"],
@@ -401,7 +394,6 @@ export const decks: Deck[] = [
     slug: "qnet-engineer-architecture",
     title: "건축기사",
     aliases: ["건축", "architecture"],
-    code: "QNET-1630",
     category: "건축",
     examTrack: "국가기술자격 · 기사",
     subjects: ["건축계획", "건축시공", "건축구조", "건축설비", "건축법규"],
@@ -455,7 +447,6 @@ export const decks: Deck[] = [
     slug: "qnet-licensed-real-estate-agent",
     title: "공인중개사",
     aliases: ["공중사", "부동산", "real estate"],
-    code: "PRO-08",
     category: "부동산",
     examTrack: "국가전문자격",
     subjects: ["부동산학개론", "민법", "공법", "공시법", "세법", "중개사법"],
