@@ -5,9 +5,10 @@ import { ThumbsUp } from "lucide-react";
 
 type RecommendButtonProps = {
   initialCount: number;
+  slug?: string;
 };
 
-export function RecommendButton({ initialCount }: RecommendButtonProps) {
+export function RecommendButton({ initialCount, slug }: RecommendButtonProps) {
   const [recommended, setRecommended] = useState(false);
 
   return (
@@ -22,6 +23,7 @@ export function RecommendButton({ initialCount }: RecommendButtonProps) {
     >
       <ThumbsUp size={16} aria-hidden="true" />
       추천 {initialCount + (recommended ? 1 : 0)}
+      {slug ? <span className="sr-only">{slug}</span> : null}
     </button>
   );
 }

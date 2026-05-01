@@ -30,3 +30,20 @@ SAMPLE_VERSIONS = [
         "is_latest": True,
     }
 ]
+
+SAMPLE_REVIEW_QUEUE = [
+    {
+        "upload_id": "upload-20260501-001",
+        "title": "정보보안기사 필기 요약 덱",
+        "category": "IT",
+        "uploader": "sec-study",
+        "risk": "medium",
+    },
+    {
+        "upload_id": "upload-20260501-002",
+        "title": "소방설비기사 전기분야",
+        "category": "안전",
+        "uploader": "fire-note",
+        "risk": "low",
+    },
+]

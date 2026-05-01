@@ -7,10 +7,14 @@ import {
   GitBranch,
   Hash,
   MessageSquare,
+  ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { AppHeader } from "@/components/app-header";
 import { CommentThread } from "@/components/comment-thread";
+import { DownloadButton } from "@/components/download-button";
 import { RecommendButton } from "@/components/recommend-button";
+import { ReportButton } from "@/components/report-button";
 import { ShareButton } from "@/components/share-button";
 import { decks, getDeckBySlug } from "@/lib/deck-data";
 
@@ -70,9 +74,51 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <RecommendButton initialCount={deck.recommendations} />
+                  <RecommendButton initialCount={deck.recommendations} slug={deck.slug} />
                   <ShareButton slug={deck.slug} />
+                  <ReportButton slug={deck.slug} />
                 </div>
+              </div>
+            </section>
+
+            <section className="rounded-lg border border-zinc-200 bg-white p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-lg font-semibold leading-7">학습 범위</h2>
+                  <p className="text-sm text-zinc-500">
+                    업로더가 공개한 과목 커버리지와 샘플 카드입니다.
+                  </p>
+                </div>
+                <Sparkles size={20} className="text-zinc-500" aria-hidden="true" />
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                {deck.subjects.map((subject) => (
+                  <span
+                    className="rounded-md bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-700"
+                    key={subject}
+                  >
+                    {subject}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-5 grid gap-3 md:grid-cols-2">
+                {deck.sampleCards.map((card) => (
+                  <article
+                    className="rounded-lg border border-zinc-200 bg-zinc-50 p-4"
+                    key={card.front}
+                  >
+                    <p className="text-xs font-semibold text-teal-700">Front</p>
+                    <p className="mt-1 text-sm font-semibold text-zinc-900">
+                      {card.front}
+                    </p>
+                    <p className="mt-3 text-xs font-semibold text-zinc-500">Back</p>
+                    <p className="mt-1 text-sm leading-6 text-zinc-600">
+                      {card.back}
+                    </p>
+                  </article>
+                ))}
               </div>
             </section>
 
@@ -116,13 +162,9 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
                           {version.sha256}
                         </p>
                       </div>
-                      <button
-                        className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-3 text-sm font-semibold text-white transition hover:bg-teal-700"
-                        type="button"
-                      >
-                        <Download size={16} aria-hidden="true" />
-                        Download
-                      </button>
+                      <DownloadButton
+                        versionId={`${deck.slug}:${version.version}`}
+                      />
                     </div>
                   </article>
                 ))}
@@ -138,6 +180,8 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
               {[
                 [CalendarClock, "Category", deck.category],
                 [CalendarClock, "Track", deck.examTrack],
+                [ShieldCheck, "Quality", `${deck.qualityScore}점`],
+                [GitBranch, "Updated", deck.updatedAt],
                 [FileArchive, "Cards", deck.cards.toLocaleString()],
                 [Download, "Downloads", deck.downloads.toLocaleString()],
                 [MessageSquare, "Comments", deck.comments.length.toString()],
@@ -155,6 +199,23 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
                   </span>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-5 rounded-md bg-zinc-50 p-4">
+              <p className="text-sm font-semibold text-zinc-800">출처</p>
+              <a
+                className="mt-1 block text-sm text-teal-700 hover:underline"
+                href={deck.sourceUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {deck.sourceName}
+              </a>
+              <p className="mt-3 text-sm text-zinc-500">업로더 {deck.uploader}</p>
+              <p className="mt-1 text-sm text-zinc-500">{deck.license}</p>
+              <p className="mt-1 text-sm text-zinc-500">
+                검증일 {deck.verifiedAt}
+              </p>
             </div>
           </aside>
         </div>

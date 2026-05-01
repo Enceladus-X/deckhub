@@ -1,10 +1,5 @@
 import Link from "next/link";
-import {
-  FileArchive,
-  Search,
-  ShieldCheck,
-  UploadCloud,
-} from "lucide-react";
+import { FileArchive, Search, ShieldCheck, UploadCloud } from "lucide-react";
 
 type AppHeaderProps = {
   onSearchChange?: (value: string) => void;
@@ -47,6 +42,12 @@ export function AppHeader({ onSearchChange, searchValue = "" }: AppHeaderProps) 
             <ShieldCheck size={16} className="text-teal-600" aria-hidden="true" />
             Signed CDN
           </div>
+          <Link
+            className="inline-flex h-10 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm font-semibold text-zinc-700 transition hover:border-teal-500 hover:text-teal-700"
+            href="/admin/"
+          >
+            검수
+          </Link>
           <Link
             className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-3 text-sm font-semibold text-white transition hover:bg-teal-700"
             href="/upload/"

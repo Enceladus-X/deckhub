@@ -8,9 +8,23 @@ from typing import Any
 
 import boto3
 from boto3.dynamodb.conditions import Key
+from pydantic import ValidationError
 
-from .models import Deck, DeckVersion, DownloadToken
-from .sample_data import SAMPLE_DECKS, SAMPLE_VERSIONS
+from .models import (
+    CommentRequest,
+    CommentResult,
+    Deck,
+    DeckVersion,
+    DownloadToken,
+    ModerationDecision,
+    RecommendationResult,
+    ReportRequest,
+    ReportResult,
+    ReviewQueueItem,
+    UploadRequest,
+    UploadResult,
+)
+from .sample_data import SAMPLE_DECKS, SAMPLE_REVIEW_QUEUE, SAMPLE_VERSIONS
 from .signing import SigningNotConfigured, build_cloudfront_signed_url
 
 
@@ -32,6 +46,28 @@ def handler(event: dict[str, Any], _context: Any) -> dict[str, Any]:
         if method == "GET" and path == "/decks":
             return _json(200, {"items": [Deck(**deck).model_dump() for deck in _list_decks()]})
 
+        if method == "POST" and path == "/uploads":
+            upload = UploadRequest(**_body(event))
+            return _json(
+                202,
+                UploadResult(
+                    upload_id=f"upload_{int(time.time())}",
+                    status="review_pending",
+                    title=upload.title,
+                ).model_dump(),
+            )
+
+        if method == "GET" and path == "/admin/review-queue":
+            return _json(
+                200,
+                {
+                    "items": [
+                        ReviewQueueItem(**item).model_dump()
+                        for item in SAMPLE_REVIEW_QUEUE
+                    ]
+                },
+            )
+
         parts = [part for part in path.split("/") if part]
 
         if method == "GET" and len(parts) == 2 and parts[0] == "decks":
@@ -44,13 +80,60 @@ def handler(event: dict[str, Any], _context: Any) -> dict[str, Any]:
             versions = [DeckVersion(**item).model_dump() for item in _list_versions(parts[1])]
             return _json(200, {"items": versions})
 
+        if method == "POST" and len(parts) == 3 and parts[0] == "decks" and parts[2] == "recommendations":
+            deck = _get_deck_by_slug(parts[1])
+            if not deck:
+                raise ApiError(404, "Deck not found.")
+            return _json(
+                200,
+                RecommendationResult(
+                    slug=parts[1],
+                    recommendations=int(deck.get("recommendations", 0)) + 1,
+                ).model_dump(),
+            )
+
+        if method == "POST" and len(parts) == 3 and parts[0] == "decks" and parts[2] == "reports":
+            deck = _get_deck_by_slug(parts[1])
+            if not deck:
+                raise ApiError(404, "Deck not found.")
+            ReportRequest(**_body(event))
+            return _json(202, ReportResult(slug=parts[1], status="accepted").model_dump())
+
+        if method == "POST" and len(parts) == 3 and parts[0] == "decks" and parts[2] == "comments":
+            deck = _get_deck_by_slug(parts[1])
+            if not deck:
+                raise ApiError(404, "Deck not found.")
+            comment = CommentRequest(**_body(event))
+            return _json(
+                201,
+                CommentResult(
+                    id=f"comment_{int(time.time())}",
+                    author=comment.author,
+                    body=comment.body,
+                    created_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                ).model_dump(),
+            )
+
         if method == "POST" and len(parts) == 2 and parts[0] == "downloads":
             token = _create_download_token(parts[1])
             return _json(201, token.model_dump())
 
+        if method == "POST" and len(parts) == 3 and parts[:2] == ["admin", "review-queue"]:
+            decision = ModerationDecision(**_body(event))
+            return _json(
+                200,
+                {
+                    "upload_id": parts[2],
+                    "status": "approved" if decision.decision == "approve" else "rejected",
+                    "note": decision.note,
+                },
+            )
+
         raise ApiError(404, "Route not found.")
     except SigningNotConfigured as exc:
         return _json(501, {"message": str(exc)})
+    except ValidationError as exc:
+        return _json(422, {"message": "Request validation failed.", "details": exc.errors()})
     except ApiError as exc:
         return _json(exc.status_code, {"message": exc.message})
 
@@ -70,6 +153,18 @@ def _path(event: dict[str, Any]) -> str:
     if stage and stage != "$default" and path.startswith(f"/{stage}/"):
         path = path[len(stage) + 1 :]
     return path.rstrip("/") or "/"
+
+
+def _body(event: dict[str, Any]) -> dict[str, Any]:
+    body = event.get("body")
+    if not body:
+        return {}
+    if isinstance(body, dict):
+        return body
+    try:
+        return json.loads(body)
+    except json.JSONDecodeError as exc:
+        raise ApiError(400, "Invalid JSON body.") from exc
 
 
 def _json(status_code: int, body: Any) -> dict[str, Any]:
