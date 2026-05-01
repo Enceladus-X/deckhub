@@ -8,15 +8,9 @@ import {
   Link as LinkIcon,
   UploadCloud,
 } from "lucide-react";
+import { categories } from "@/lib/deck-data";
 
-const examDomains = [
-  "IT/정보통신",
-  "안전관리",
-  "전기/전자",
-  "건축",
-  "부동산/관리",
-  "전문서비스",
-];
+const uploadCategories = categories.filter((category) => category !== "전체");
 
 export function UploadForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -34,24 +28,20 @@ export function UploadForm() {
     >
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-zinc-800">
-            자격 분야
-          </span>
+          <span className="text-sm font-semibold text-zinc-800">분류</span>
           <select
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
-            defaultValue="IT/정보통신"
-            name="provider"
+            defaultValue="IT"
+            name="category"
           >
-            {examDomains.map((domain) => (
-              <option key={domain}>{domain}</option>
+            {uploadCategories.map((category) => (
+              <option key={category}>{category}</option>
             ))}
           </select>
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-zinc-800">
-            종목 코드
-          </span>
+          <span className="text-sm font-semibold text-zinc-800">종목 코드</span>
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="examCode"
@@ -61,9 +51,7 @@ export function UploadForm() {
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-zinc-800">
-            자격 구분
-          </span>
+          <span className="text-sm font-semibold text-zinc-800">자격 구분</span>
           <input
             className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="examTrack"
@@ -109,9 +97,7 @@ export function UploadForm() {
         </label>
 
         <label className="space-y-2 md:col-span-2">
-          <span className="text-sm font-semibold text-zinc-800">
-            변경 내용
-          </span>
+          <span className="text-sm font-semibold text-zinc-800">변경 내용</span>
           <textarea
             className="min-h-28 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
             name="changelog"

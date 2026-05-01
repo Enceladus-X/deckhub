@@ -56,6 +56,9 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
                       {deck.title}
                     </h1>
                     <span className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700">
+                      {deck.category}
+                    </span>
+                    <span className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700">
                       {deck.code}
                     </span>
                     <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-medium text-teal-700">
@@ -65,16 +68,6 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
                   <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
                     {deck.description}
                   </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {deck.tags.map((tag) => (
-                      <span
-                        className="rounded-md border border-zinc-200 px-2 py-1 text-xs font-medium text-zinc-500"
-                        key={tag}
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <RecommendButton initialCount={deck.recommendations} />
@@ -91,12 +84,19 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
                     최신 버전: v{deck.version}
                   </p>
                 </div>
-                <GitBranch size={20} className="text-zinc-500" aria-hidden="true" />
+                <GitBranch
+                  size={20}
+                  className="text-zinc-500"
+                  aria-hidden="true"
+                />
               </div>
 
               <div className="mt-5 divide-y divide-zinc-100">
                 {deck.versions.map((version) => (
-                  <article className="py-4 first:pt-0 last:pb-0" key={version.version}>
+                  <article
+                    className="py-4 first:pt-0 last:pb-0"
+                    key={version.version}
+                  >
                     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -136,12 +136,16 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
             <h2 className="text-lg font-semibold leading-7">요약</h2>
             <div className="mt-4 divide-y divide-zinc-100">
               {[
+                [CalendarClock, "Category", deck.category],
+                [CalendarClock, "Track", deck.examTrack],
                 [FileArchive, "Cards", deck.cards.toLocaleString()],
                 [Download, "Downloads", deck.downloads.toLocaleString()],
                 [MessageSquare, "Comments", deck.comments.length.toString()],
-                [CalendarClock, "Track", deck.examTrack],
               ].map(([Icon, label, value]) => (
-                <div className="flex items-center justify-between gap-4 py-3" key={label as string}>
+                <div
+                  className="flex items-center justify-between gap-4 py-3"
+                  key={label as string}
+                >
                   <span className="flex items-center gap-2 text-sm text-zinc-500">
                     <Icon size={15} aria-hidden="true" />
                     {label as string}

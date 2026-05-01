@@ -28,7 +28,7 @@ export default function UploadPage() {
                     Q-Net 자격시험 덱 업로드
                   </h1>
                   <p className="mt-1 text-sm leading-6 text-zinc-500">
-                    자격 종목, 구분, 버전, 변경 내용을 함께 제출합니다.
+                    분류, 종목, 버전, 변경 내용을 함께 제출합니다.
                   </p>
                 </div>
               </div>
