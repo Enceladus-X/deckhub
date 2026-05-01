@@ -8,7 +8,6 @@ import {
   FileArchive,
   GitBranch,
   MessageSquare,
-  Search,
   ThumbsUp,
 } from "lucide-react";
 import type { Deck } from "@/lib/deck-data";
@@ -16,10 +15,10 @@ import type { Deck } from "@/lib/deck-data";
 type DeckCatalogProps = {
   categories: string[];
   decks: Deck[];
+  query: string;
 };
 
-export function DeckCatalog({ categories, decks }: DeckCatalogProps) {
-  const [query, setQuery] = useState("");
+export function DeckCatalog({ categories, decks, query }: DeckCatalogProps) {
   const [activeCategory, setActiveCategory] = useState("전체");
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
 
@@ -49,25 +48,6 @@ export function DeckCatalog({ categories, decks }: DeckCatalogProps) {
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-6">
-      <div className="mb-5 rounded-lg border border-zinc-200 bg-white p-3">
-        <div className="relative">
-          <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
-            aria-hidden="true"
-          />
-          <input
-            className="h-12 w-full rounded-md border border-zinc-200 bg-zinc-50 pl-10 pr-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setExpandedSlug(null);
-            }}
-            placeholder="과목명, 분류, 종목코드 검색"
-            value={query}
-          />
-        </div>
-      </div>
-
       <div className="rounded-lg border border-zinc-200 bg-white p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -78,7 +58,7 @@ export function DeckCatalog({ categories, decks }: DeckCatalogProps) {
               전체 과목
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
-              과목을 클릭하면 설명, 최신 버전, 다운로드 액션이 카드 아래로 펼쳐집니다.
+              과목을 한 줄씩 훑고, 필요한 항목만 펼쳐서 설명과 다운로드를 확인합니다.
             </p>
           </div>
 
@@ -133,7 +113,7 @@ export function DeckCatalog({ categories, decks }: DeckCatalogProps) {
           })}
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-5 space-y-3">
           {filteredDecks.map((deck) => {
             const isExpanded = expandedSlug === deck.slug;
 
@@ -146,7 +126,7 @@ export function DeckCatalog({ categories, decks }: DeckCatalogProps) {
               >
                 <button
                   aria-expanded={isExpanded}
-                  className="flex w-full items-start justify-between gap-4 p-4 text-left"
+                  className="grid w-full gap-4 p-4 text-left lg:grid-cols-[1fr_360px_28px] lg:items-center"
                   onClick={() =>
                     setExpandedSlug((current) =>
                       current === deck.slug ? null : deck.slug,
@@ -162,12 +142,28 @@ export function DeckCatalog({ categories, decks }: DeckCatalogProps) {
                       {deck.title}
                     </span>
                     <span className="mt-1 block text-sm text-zinc-500">
-                      {deck.examTrack}
+                      {deck.examTrack} · {deck.code}
                     </span>
                   </span>
+
+                  <span className="grid grid-cols-2 gap-2 text-sm text-zinc-600 sm:grid-cols-4 lg:grid-cols-4">
+                    <span className="rounded-md bg-zinc-50 px-3 py-2">
+                      v{deck.version}
+                    </span>
+                    <span className="rounded-md bg-zinc-50 px-3 py-2">
+                      {deck.cards.toLocaleString()} cards
+                    </span>
+                    <span className="rounded-md bg-zinc-50 px-3 py-2">
+                      {deck.recommendations.toLocaleString()} 추천
+                    </span>
+                    <span className="rounded-md bg-zinc-50 px-3 py-2">
+                      {deck.downloads.toLocaleString()} DL
+                    </span>
+                  </span>
+
                   <ChevronDown
                     size={18}
-                    className={`mt-1 shrink-0 text-zinc-400 transition ${
+                    className={`mt-1 shrink-0 text-zinc-400 transition lg:mt-0 ${
                       isExpanded ? "rotate-180" : ""
                     }`}
                     aria-hidden="true"
@@ -176,47 +172,52 @@ export function DeckCatalog({ categories, decks }: DeckCatalogProps) {
 
                 {isExpanded ? (
                   <div className="border-t border-zinc-100 px-4 pb-4">
-                    <p className="pt-4 text-sm leading-6 text-zinc-600">
-                      {deck.description}
-                    </p>
+                    <div className="grid gap-4 pt-4 lg:grid-cols-[1fr_260px]">
+                      <div>
+                        <p className="text-sm leading-6 text-zinc-600">
+                          {deck.description}
+                        </p>
+                        <p className="mt-3 rounded-md bg-zinc-50 p-3 text-sm leading-6 text-zinc-600">
+                          {deck.versions[0]?.changelog}
+                        </p>
+                      </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-zinc-600">
-                      <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
-                        <GitBranch size={15} aria-hidden="true" />
-                        v{deck.version}
-                      </span>
-                      <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
-                        <FileArchive size={15} aria-hidden="true" />
-                        {deck.cards.toLocaleString()} cards
-                      </span>
-                      <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
-                        <ThumbsUp size={15} aria-hidden="true" />
-                        {deck.recommendations.toLocaleString()}
-                      </span>
-                      <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
-                        <MessageSquare size={15} aria-hidden="true" />
-                        {deck.comments.length}
-                      </span>
-                    </div>
+                      <div className="grid content-start gap-2">
+                        <div className="grid grid-cols-2 gap-2 text-sm text-zinc-600">
+                          <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
+                            <GitBranch size={15} aria-hidden="true" />
+                            v{deck.version}
+                          </span>
+                          <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
+                            <FileArchive size={15} aria-hidden="true" />
+                            {deck.cards.toLocaleString()}
+                          </span>
+                          <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
+                            <ThumbsUp size={15} aria-hidden="true" />
+                            {deck.recommendations.toLocaleString()}
+                          </span>
+                          <span className="flex items-center gap-1.5 rounded-md bg-zinc-50 px-3 py-2">
+                            <MessageSquare size={15} aria-hidden="true" />
+                            {deck.comments.length}
+                          </span>
+                        </div>
 
-                    <p className="mt-4 rounded-md bg-zinc-50 p-3 text-sm leading-6 text-zinc-600">
-                      {deck.versions[0]?.changelog}
-                    </p>
-
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <Link
-                        className="inline-flex h-10 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm font-semibold text-zinc-700 transition hover:border-teal-500"
-                        href={`/decks/${deck.slug}/`}
-                      >
-                        상세보기
-                      </Link>
-                      <button
-                        className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-3 text-sm font-semibold text-white transition hover:bg-teal-700"
-                        type="button"
-                      >
-                        <Download size={16} aria-hidden="true" />
-                        Download
-                      </button>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Link
+                            className="inline-flex h-10 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm font-semibold text-zinc-700 transition hover:border-teal-500"
+                            href={`/decks/${deck.slug}/`}
+                          >
+                            상세보기
+                          </Link>
+                          <button
+                            className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-3 text-sm font-semibold text-white transition hover:bg-teal-700"
+                            type="button"
+                          >
+                            <Download size={16} aria-hidden="true" />
+                            Download
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ) : null}
