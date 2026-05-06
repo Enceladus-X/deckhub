@@ -9,7 +9,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] text-zinc-950">
+    <main className="min-h-screen bg-[#f5f7fa] text-zinc-950">
       <AppHeader onSearchChange={setQuery} searchValue={query} />
       <DeckCatalog categories={categories} decks={decks} query={query} />
     </main>

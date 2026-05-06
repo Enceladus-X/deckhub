@@ -2,99 +2,87 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { CheckCircle2, FileWarning, ShieldCheck, XCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  FileWarning,
+  ShieldCheck,
+  UploadCloud,
+  XCircle,
+} from "lucide-react";
 import { AppHeader } from "@/components/app-header";
+import { Badge, cx, SectionTitle, StatCard, Surface } from "@/components/ui-kit";
 import { reviewQueue } from "@/lib/deck-data";
 
 type Decision = "approved" | "rejected";
 
 export default function AdminPage() {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
+  const approvedCount = Object.values(decisions).filter(
+    (decision) => decision === "approved",
+  ).length;
+  const rejectedCount = Object.values(decisions).filter(
+    (decision) => decision === "rejected",
+  ).length;
 
   return (
-    <main className="min-h-screen bg-[#f7f8fb] text-zinc-950">
+    <main className="min-h-screen bg-[#f5f7fa] text-zinc-950">
       <AppHeader />
 
       <section className="mx-auto max-w-7xl px-5 py-6">
         <Link
-          className="text-sm font-medium text-zinc-500 transition hover:text-teal-700"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-500 transition hover:text-teal-700"
           href="/"
         >
-          Catalog
+          <ArrowLeft size={15} aria-hidden="true" />
+          카탈로그
         </Link>
 
-        <div className="mt-4 rounded-lg border border-zinc-200 bg-white p-5">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-teal-700">
-                운영자 검수
-              </p>
-              <h1 className="mt-1 text-2xl font-semibold leading-8">
-                업로드 대기열
-              </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
-                공개 전 파일 형식, 중복 여부, 출처, 신고 가능성을 확인합니다.
-              </p>
-            </div>
+        <Surface className="mt-4 overflow-hidden">
+          <div className="border-b border-zinc-100 bg-zinc-950 p-6 text-white">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-1.5 text-sm font-semibold text-teal-100">
+                  <ShieldCheck size={15} aria-hidden="true" />
+                  Moderator Console
+                </div>
+                <h1 className="mt-3 text-3xl font-semibold leading-10">
+                  업로드 대기열
+                </h1>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-300">
+                  공개 전 파일 형식, 중복 여부, 출처, 신고 가능성을 한 화면에서 확인합니다.
+                </p>
+              </div>
 
-            <div className="grid grid-cols-3 gap-2 text-center text-sm">
-              <div className="rounded-md border border-zinc-200 px-3 py-2">
-                <p className="font-semibold text-zinc-900">
-                  {reviewQueue.length}
-                </p>
-                <p className="text-xs text-zinc-500">대기</p>
-              </div>
-              <div className="rounded-md border border-zinc-200 px-3 py-2">
-                <p className="font-semibold text-zinc-900">
-                  {
-                    Object.values(decisions).filter(
-                      (decision) => decision === "approved",
-                    ).length
-                  }
-                </p>
-                <p className="text-xs text-zinc-500">승인</p>
-              </div>
-              <div className="rounded-md border border-zinc-200 px-3 py-2">
-                <p className="font-semibold text-zinc-900">
-                  {
-                    Object.values(decisions).filter(
-                      (decision) => decision === "rejected",
-                    ).length
-                  }
-                </p>
-                <p className="text-xs text-zinc-500">반려</p>
+              <div className="grid gap-2 text-zinc-950 sm:grid-cols-3">
+                <StatCard label="대기" value={reviewQueue.length} icon={UploadCloud} />
+                <StatCard label="승인" value={approvedCount} icon={CheckCircle2} />
+                <StatCard label="반려" value={rejectedCount} icon={XCircle} />
               </div>
             </div>
           </div>
 
-          <div className="mt-5 space-y-3">
+          <div className="space-y-3 p-5">
             {reviewQueue.map((item) => {
               const decision = decisions[item.id];
+              const isLowRisk = item.risk === "낮음";
 
               return (
                 <article
                   className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm"
                   key={item.id}
                 >
-                  <div className="grid gap-4 lg:grid-cols-[1fr_320px] lg:items-start">
+                  <div className="grid gap-4 lg:grid-cols-[1fr_340px] lg:items-start">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-semibold text-zinc-700">
-                          {item.category}
-                        </span>
-                        <span
-                          className={`rounded-md px-2 py-1 text-xs font-semibold ${
-                            item.risk === "낮음"
-                              ? "bg-teal-50 text-teal-700"
-                              : "bg-amber-50 text-amber-700"
-                          }`}
-                        >
+                        <Badge>{item.category}</Badge>
+                        <Badge tone={isLowRisk ? "teal" : "amber"}>
                           위험도 {item.risk}
-                        </span>
+                        </Badge>
                         {decision ? (
-                          <span className="rounded-md bg-zinc-950 px-2 py-1 text-xs font-semibold text-white">
+                          <Badge tone="dark">
                             {decision === "approved" ? "승인됨" : "반려됨"}
-                          </span>
+                          </Badge>
                         ) : null}
                       </div>
                       <h2 className="mt-2 text-xl font-semibold text-zinc-950">
@@ -109,12 +97,9 @@ export default function AdminPage() {
                     </div>
 
                     <div className="space-y-3">
-                      <div className="rounded-md bg-zinc-50 p-3">
-                        <div className="flex items-center gap-2 text-sm font-semibold text-zinc-800">
-                          <FileWarning size={16} aria-hidden="true" />
-                          체크리스트
-                        </div>
-                        <ul className="mt-2 space-y-1 text-sm text-zinc-600">
+                      <div className="rounded-lg bg-zinc-50 p-3">
+                        <SectionTitle title="검수 체크" icon={FileWarning} />
+                        <ul className="mt-3 space-y-2 text-sm text-zinc-600">
                           {item.checks.map((check) => (
                             <li className="flex items-center gap-2" key={check}>
                               <ShieldCheck
@@ -130,7 +115,12 @@ export default function AdminPage() {
 
                       <div className="grid grid-cols-2 gap-2">
                         <button
-                          className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-3 text-sm font-semibold text-white transition hover:bg-teal-700"
+                          className={cx(
+                            "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition",
+                            decision === "approved"
+                              ? "bg-teal-50 text-teal-700"
+                              : "bg-zinc-950 text-white hover:bg-teal-700",
+                          )}
                           onClick={() =>
                             setDecisions((current) => ({
                               ...current,
@@ -143,7 +133,12 @@ export default function AdminPage() {
                           승인
                         </button>
                         <button
-                          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 px-3 text-sm font-semibold text-zinc-700 transition hover:border-amber-400 hover:text-amber-700"
+                          className={cx(
+                            "inline-flex h-10 items-center justify-center gap-2 rounded-lg border px-3 text-sm font-semibold transition",
+                            decision === "rejected"
+                              ? "border-amber-300 bg-amber-50 text-amber-700"
+                              : "border-zinc-200 text-zinc-700 hover:border-amber-400 hover:text-amber-700",
+                          )}
                           onClick={() =>
                             setDecisions((current) => ({
                               ...current,
@@ -162,7 +157,7 @@ export default function AdminPage() {
               );
             })}
           </div>
-        </div>
+        </Surface>
       </section>
     </main>
   );

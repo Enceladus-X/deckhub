@@ -5,7 +5,7 @@ import { UploadForm } from "@/components/upload-form";
 
 export default function UploadPage() {
   return (
-    <main className="min-h-screen bg-[#f7f8fb] text-zinc-950">
+    <main className="min-h-screen bg-[#f5f7fa] text-zinc-950">
       <AppHeader />
 
       <section className="mx-auto max-w-7xl px-5 py-6">

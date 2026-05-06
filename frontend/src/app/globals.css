@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f8fb;
+  --background: #f5f7fa;
   --foreground: #15171c;
 }
 
@@ -24,4 +24,9 @@ button,
 a,
 input {
   letter-spacing: 0;
+}
+
+button,
+a {
+  cursor: pointer;
 }
