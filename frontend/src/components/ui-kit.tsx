@@ -16,7 +16,7 @@ export function Surface({ children, className }: SurfaceProps) {
   return (
     <section
       className={cx(
-        "rounded-lg border border-zinc-200 bg-white shadow-sm shadow-zinc-200/30",
+        "rounded-lg border border-zinc-200 bg-white shadow-sm shadow-zinc-200/30 transition-all duration-200 motion-safe:animate-soft-enter",
         className,
       )}
     >

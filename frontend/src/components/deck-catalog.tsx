@@ -261,7 +261,7 @@ export function DeckCatalog({ categories, decks, query }: DeckCatalogProps) {
                     </button>
 
                     {isExpanded ? (
-                      <div className="border-t border-zinc-100 px-4 pb-4">
+                      <div className="border-t border-zinc-100 px-4 pb-4 motion-safe:animate-panel-open">
                         <div className="grid gap-4 pt-4 lg:grid-cols-[1fr_300px]">
                           <div className="rounded-lg bg-zinc-50 p-4">
                             <p className="text-sm font-semibold text-zinc-950">

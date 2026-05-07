@@ -30,3 +30,50 @@ button,
 a {
   cursor: pointer;
 }
+
+@keyframes soft-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gentle-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes panel-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-soft-enter {
+    animation: soft-enter 220ms ease-out both;
+  }
+
+  .animate-gentle-scale {
+    animation: gentle-scale 220ms ease-out both;
+  }
+
+  .animate-panel-open {
+    animation: panel-open 180ms ease-out both;
+  }
+}

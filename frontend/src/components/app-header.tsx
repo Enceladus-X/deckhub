@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { FileArchive, Search, ShieldCheck, UploadCloud } from "lucide-react";
+import {
+  FileArchive,
+  Palette,
+  Search,
+  ShieldCheck,
+  UploadCloud,
+} from "lucide-react";
 
 type AppHeaderProps = {
   onSearchChange?: (value: string) => void;
@@ -25,13 +31,20 @@ export function AppHeader({ onSearchChange, searchValue = "" }: AppHeaderProps) 
 
           <nav className="flex items-center gap-1 text-sm font-semibold text-zinc-600 sm:ml-4">
             <Link
-              className="rounded-md px-3 py-2 transition hover:bg-zinc-100 hover:text-teal-700"
+              className="rounded-md px-3 py-2 transition-all duration-200 hover:bg-zinc-100 hover:text-teal-700"
               href="/"
             >
               탐색
             </Link>
             <Link
-              className="rounded-md px-3 py-2 transition hover:bg-zinc-100 hover:text-teal-700"
+              className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 transition-all duration-200 hover:bg-zinc-100 hover:text-teal-700"
+              href="/templates/"
+            >
+              <Palette size={15} aria-hidden="true" />
+              템플릿
+            </Link>
+            <Link
+              className="rounded-md px-3 py-2 transition-all duration-200 hover:bg-zinc-100 hover:text-teal-700"
               href="/admin/"
             >
               검수
@@ -48,7 +61,7 @@ export function AppHeader({ onSearchChange, searchValue = "" }: AppHeaderProps) 
                 aria-hidden="true"
               />
               <input
-                className="h-10 w-full rounded-lg border border-zinc-200 bg-zinc-50 pl-9 pr-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white focus:shadow-sm"
+                className="h-10 w-full rounded-lg border border-zinc-200 bg-zinc-50 pl-9 pr-3 text-sm outline-none transition-all duration-200 focus:border-teal-600 focus:bg-white focus:shadow-sm"
                 onChange={(event) => onSearchChange(event.target.value)}
                 placeholder="과목, 분야, 설명 검색"
                 value={searchValue}
@@ -60,7 +73,7 @@ export function AppHeader({ onSearchChange, searchValue = "" }: AppHeaderProps) 
             Signed CDN
           </div>
           <Link
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-950 px-3 text-sm font-semibold text-white transition hover:bg-teal-700"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-950 px-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-teal-700 hover:shadow-sm"
             href="/upload/"
           >
             <UploadCloud size={17} aria-hidden="true" />

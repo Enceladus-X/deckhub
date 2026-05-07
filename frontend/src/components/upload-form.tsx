@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import {
   CheckCircle2,
@@ -11,44 +12,15 @@ import {
   Lock,
   PanelTop,
   ShieldCheck,
+  Sparkles,
   UploadCloud,
 } from "lucide-react";
+import { CardTemplatePreview } from "@/components/card-template-preview";
+import { Badge, cx } from "@/components/ui-kit";
+import { cardTemplates, getCardTemplateById } from "@/lib/card-templates";
 import { categories } from "@/lib/deck-data";
 
 const uploadCategories = categories.filter((category) => category !== "전체");
-
-const cardCss = `.deckhub-card {
-  min-height: 360px;
-  border: 1px solid #d4d4d8;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #18181b;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.65;
-}
-
-.deckhub-card__label {
-  color: #0f766e;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.deckhub-card__question {
-  font-size: 30px;
-  font-weight: 800;
-}
-
-.deckhub-card__answer {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.deckhub-card__note {
-  border-left: 3px solid #14b8a6;
-  background: #f4f4f5;
-  color: #52525b;
-}`;
 
 export function UploadForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -69,12 +41,16 @@ export function UploadForm() {
   const [signedIn, setSignedIn] = useState(false);
   const [reviewId, setReviewId] = useState("");
   const [previewSide, setPreviewSide] = useState<"front" | "back">("front");
+  const [templateId, setTemplateId] = useState(cardTemplates[0].id);
 
+  const selectedTemplate = getCardTemplateById(templateId);
   const fileLooksValid = fileName.toLowerCase().endsWith(".apkg");
   const deckTitle = title || "정보처리기사 필기 핵심 덱";
   const trackLabel = examTrack || "국가기술자격 · 기사";
   const versionLabel = version || "2026.05";
   const sourceLabel = sourceUrl || "참고 링크 미입력";
+  const selectedHtml =
+    previewSide === "front" ? selectedTemplate.frontHtml : selectedTemplate.backHtml;
 
   function submitUpload(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -87,10 +63,10 @@ export function UploadForm() {
 
   return (
     <form
-      className="rounded-lg border border-zinc-200 bg-white p-5"
+      className="rounded-lg border border-zinc-200 bg-white p-5 motion-safe:animate-soft-enter"
       onSubmit={submitUpload}
     >
-      <style>{cardCss}</style>
+      <style>{selectedTemplate.css}</style>
 
       <div className="mb-5 flex flex-col gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-start gap-3">
@@ -107,11 +83,12 @@ export function UploadForm() {
           </div>
         </div>
         <button
-          className={`inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-semibold transition ${
+          className={cx(
+            "inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-semibold transition",
             signedIn
               ? "bg-teal-50 text-teal-700"
-              : "bg-zinc-950 text-white hover:bg-teal-700"
-          }`}
+              : "bg-zinc-950 text-white hover:bg-teal-700",
+          )}
           onClick={() => setSignedIn((value) => !value)}
           type="button"
         >
@@ -121,7 +98,7 @@ export function UploadForm() {
 
       <div className="grid gap-6 xl:grid-cols-[440px_1fr]">
         <div className="space-y-5">
-          <section className="rounded-lg border border-zinc-200 p-4">
+          <section className="rounded-lg border border-zinc-200 p-4 motion-safe:animate-soft-enter">
             <div className="flex items-center gap-2">
               <Layers3 size={18} className="text-teal-600" aria-hidden="true" />
               <h2 className="text-lg font-semibold text-zinc-950">덱 정보</h2>
@@ -131,7 +108,7 @@ export function UploadForm() {
               <label className="space-y-2">
                 <span className="text-sm font-semibold text-zinc-800">분류</span>
                 <select
-                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="category"
                   onChange={(event) => setCategory(event.target.value)}
                   value={category}
@@ -147,7 +124,7 @@ export function UploadForm() {
                   자격 구분
                 </span>
                 <input
-                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="examTrack"
                   onChange={(event) => setExamTrack(event.target.value)}
                   placeholder="국가기술자격 · 기사"
@@ -161,7 +138,7 @@ export function UploadForm() {
                   덱 제목
                 </span>
                 <input
-                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="title"
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder="정보처리기사 필기 핵심 덱"
@@ -176,7 +153,7 @@ export function UploadForm() {
                   버전
                 </span>
                 <input
-                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="version"
                   onChange={(event) => setVersion(event.target.value)}
                   placeholder="2026.05"
@@ -191,7 +168,7 @@ export function UploadForm() {
                   참고 링크
                 </span>
                 <input
-                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="sourceUrl"
                   onChange={(event) => setSourceUrl(event.target.value)}
                   placeholder="https://www.q-net.or.kr/..."
@@ -205,7 +182,7 @@ export function UploadForm() {
                   변경 내용
                 </span>
                 <textarea
-                  className="min-h-28 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="min-h-28 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="changelog"
                   onChange={(event) => setChangelog(event.target.value)}
                   placeholder="추가/수정한 범위, 출제기준 반영 여부, 카드 품질 메모"
@@ -217,6 +194,53 @@ export function UploadForm() {
           </section>
 
           <section className="rounded-lg border border-zinc-200 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Sparkles size={18} className="text-teal-600" aria-hidden="true" />
+                <h2 className="text-lg font-semibold text-zinc-950">템플릿 선택</h2>
+              </div>
+              <Link
+                className="text-sm font-semibold text-teal-700 hover:underline"
+                href="/templates/"
+              >
+                공유장 보기
+              </Link>
+            </div>
+
+            <div className="mt-4 grid gap-2">
+              {cardTemplates.map((template) => {
+                const isActive = selectedTemplate.id === template.id;
+
+                return (
+                  <button
+                    className={cx(
+                      "rounded-lg border p-3 text-left transition-all duration-200",
+                      isActive
+                        ? "border-teal-500 bg-teal-50 shadow-sm"
+                        : "border-zinc-200 bg-white hover:border-teal-300 hover:bg-zinc-50",
+                    )}
+                    key={template.id}
+                    onClick={() => setTemplateId(template.id)}
+                    type="button"
+                  >
+                    <span className="flex items-center justify-between gap-3">
+                      <span className="font-semibold text-zinc-950">
+                        {template.name}
+                      </span>
+                      <Badge tone={isActive ? "teal" : "zinc"}>
+                        {template.recommendations} 추천
+                      </Badge>
+                    </span>
+                    <span className="mt-1 block text-sm leading-6 text-zinc-500">
+                      {template.summary}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-zinc-200 p-4">
             <div className="flex items-center gap-2">
               <PanelTop size={18} className="text-teal-600" aria-hidden="true" />
               <h2 className="text-lg font-semibold text-zinc-950">카드 구성</h2>
@@ -224,11 +248,9 @@ export function UploadForm() {
 
             <div className="mt-4 space-y-4">
               <label className="space-y-2">
-                <span className="text-sm font-semibold text-zinc-800">
-                  앞면
-                </span>
+                <span className="text-sm font-semibold text-zinc-800">앞면</span>
                 <textarea
-                  className="min-h-24 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="min-h-24 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="front"
                   onChange={(event) => setFront(event.target.value)}
                   required
@@ -237,11 +259,9 @@ export function UploadForm() {
               </label>
 
               <label className="space-y-2">
-                <span className="text-sm font-semibold text-zinc-800">
-                  뒷면
-                </span>
+                <span className="text-sm font-semibold text-zinc-800">뒷면</span>
                 <textarea
-                  className="min-h-28 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="min-h-28 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="back"
                   onChange={(event) => setBack(event.target.value)}
                   required
@@ -254,7 +274,7 @@ export function UploadForm() {
                   보충 설명
                 </span>
                 <textarea
-                  className="min-h-24 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none focus:border-teal-600 focus:bg-white"
+                  className="min-h-24 w-full resize-y rounded-md border border-zinc-200 bg-zinc-50 px-3 py-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white"
                   name="extra"
                   onChange={(event) => setExtra(event.target.value)}
                   value={extra}
@@ -300,17 +320,18 @@ export function UploadForm() {
                   카드 디자인 미리보기
                 </h2>
                 <p className="mt-1 text-sm text-zinc-500">
-                  CSS가 적용된 앞면과 뒷면을 크게 확인합니다.
+                  선택한 템플릿의 HTML 구조와 CSS가 적용된 앞/뒷면을 확인합니다.
                 </p>
               </div>
               <div className="flex rounded-md border border-zinc-200 bg-white p-1">
                 {(["front", "back"] as const).map((side) => (
                   <button
-                    className={`h-9 rounded px-4 text-sm font-semibold transition ${
+                    className={cx(
+                      "h-9 rounded px-4 text-sm font-semibold transition",
                       previewSide === side
                         ? "bg-zinc-950 text-white"
-                        : "text-zinc-600 hover:bg-zinc-50"
-                    }`}
+                        : "text-zinc-600 hover:bg-zinc-50",
+                    )}
                     key={side}
                     onClick={() => setPreviewSide(side)}
                     type="button"
@@ -321,30 +342,17 @@ export function UploadForm() {
               </div>
             </div>
 
-            <div className="mt-4 deckhub-card flex flex-col justify-between p-8 shadow-sm">
-              <div>
-                <p className="deckhub-card__label">
-                  {previewSide === "front" ? "Question" : "Answer"}
-                </p>
-                {previewSide === "front" ? (
-                  <p className="deckhub-card__question mt-5">
-                    {front || "앞면 내용을 입력하세요."}
-                  </p>
-                ) : (
-                  <div className="mt-5 space-y-6">
-                    <p className="deckhub-card__answer">
-                      {back || "뒷면 내용을 입력하세요."}
-                    </p>
-                    <p className="deckhub-card__note rounded-md p-4 text-base">
-                      {extra || "보충 설명을 입력하면 이 영역에 표시됩니다."}
-                    </p>
-                  </div>
-                )}
-              </div>
-              <div className="mt-10 flex items-center justify-between border-t border-zinc-200 pt-4 text-sm text-zinc-500">
-                <span>{deckTitle}</span>
-                <span>v{versionLabel}</span>
-              </div>
+            <div className="mt-4" key={`${selectedTemplate.id}-${previewSide}`}>
+              <CardTemplatePreview
+                back={back}
+                category={category}
+                deckTitle={deckTitle}
+                extra={extra}
+                front={front}
+                side={previewSide}
+                template={selectedTemplate}
+                version={versionLabel}
+              />
             </div>
           </section>
 
@@ -359,6 +367,7 @@ export function UploadForm() {
                   ["버전", versionLabel],
                   ["출처", sourceLabel],
                   ["파일", fileName || ".apkg 파일 미선택"],
+                  ["템플릿", selectedTemplate.name],
                   ["공개 상태", "검토 대기"],
                 ].map(([label, value]) => (
                   <div
@@ -378,11 +387,11 @@ export function UploadForm() {
               <h2 className="text-lg font-semibold text-zinc-950">카드 구성</h2>
               <div className="mt-4 divide-y divide-zinc-100">
                 {[
-                  ["노트 타입", "DeckHub Basic"],
+                  ["노트 타입", "DeckHub Template"],
                   ["필드", "Front / Back / Extra"],
-                  ["앞면 템플릿", "질문 + 덱 제목"],
-                  ["뒷면 템플릿", "답변 + 보충 설명"],
-                  ["스타일", "아래 CSS 코드 적용"],
+                  ["앞면 HTML", selectedTemplate.frontHtml.includes("{{Front}}") ? "Front 사용" : "사용자 정의"],
+                  ["뒷면 HTML", selectedTemplate.backHtml.includes("{{Back}}") ? "Back 사용" : "사용자 정의"],
+                  ["스타일", `${selectedTemplate.name} CSS`],
                 ].map(([label, value]) => (
                   <div
                     className="flex items-start justify-between gap-4 py-3 first:pt-0 last:pb-0"
@@ -398,14 +407,28 @@ export function UploadForm() {
             </div>
           </section>
 
-          <section className="rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-white">
-            <div className="flex items-center gap-2">
-              <Code2 size={18} className="text-teal-300" aria-hidden="true" />
-              <h2 className="text-lg font-semibold">카드 CSS</h2>
+          <section className="grid gap-5 lg:grid-cols-2">
+            <div className="rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-white">
+              <div className="flex items-center gap-2">
+                <Code2 size={18} className="text-teal-300" aria-hidden="true" />
+                <h2 className="text-lg font-semibold">
+                  {previewSide === "front" ? "앞면 HTML" : "뒷면 HTML"}
+                </h2>
+              </div>
+              <pre className="mt-4 max-h-80 overflow-auto rounded-md bg-black/35 p-4 text-xs leading-5 text-zinc-100">
+                <code>{selectedHtml}</code>
+              </pre>
             </div>
-            <pre className="mt-4 max-h-80 overflow-auto rounded-md bg-black/35 p-4 text-xs leading-5 text-zinc-100">
-              <code>{cardCss}</code>
-            </pre>
+
+            <div className="rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-white">
+              <div className="flex items-center gap-2">
+                <Code2 size={18} className="text-teal-300" aria-hidden="true" />
+                <h2 className="text-lg font-semibold">카드 CSS</h2>
+              </div>
+              <pre className="mt-4 max-h-80 overflow-auto rounded-md bg-black/35 p-4 text-xs leading-5 text-zinc-100">
+                <code>{selectedTemplate.css}</code>
+              </pre>
+            </div>
           </section>
         </div>
       </div>
@@ -414,7 +437,7 @@ export function UploadForm() {
         {[
           [ShieldCheck, "파일 검사", fileLooksValid ? "확장자 통과" : ".apkg 필요"],
           [ShieldCheck, "카드 검사", front && back ? "앞/뒤 필드 확인" : "앞/뒤 필드 필요"],
-          [ShieldCheck, "공개 상태", "검토 대기"],
+          [ShieldCheck, "템플릿", selectedTemplate.name],
         ].map(([Icon, label, value]) => (
           <div className="flex items-start gap-2" key={label as string}>
             <Icon
@@ -450,7 +473,7 @@ export function UploadForm() {
       </div>
 
       {submitted ? (
-        <div className="mt-5 flex items-start gap-3 rounded-md border border-teal-200 bg-teal-50 p-4 text-sm text-teal-800">
+        <div className="mt-5 flex items-start gap-3 rounded-md border border-teal-200 bg-teal-50 p-4 text-sm text-teal-800 motion-safe:animate-soft-enter">
           <CheckCircle2 size={19} aria-hidden="true" />
           <p>
             {deckTitle}이 검토 대기열에 추가되었습니다. 접수번호는 {reviewId}입니다.
