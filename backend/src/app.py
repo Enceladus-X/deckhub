@@ -279,8 +279,13 @@ def _list_card_templates() -> list[dict[str, Any]]:
     table = _dynamodb_table("CARD_TEMPLATES_TABLE_NAME")
     if table is None:
         return SAMPLE_CARD_TEMPLATES
+
+    templates = {template["template_id"]: template for template in SAMPLE_CARD_TEMPLATES}
     response = table.scan(Limit=50)
-    return response.get("Items", [])
+    for item in response.get("Items", []):
+        if item.get("status") == "published":
+            templates[item["template_id"]] = item
+    return list(templates.values())
 
 
 def _get_card_template_by_id(template_id: str) -> dict[str, Any] | None:
@@ -296,7 +301,17 @@ def _get_card_template_by_id(template_id: str) -> dict[str, Any] | None:
         )
 
     response = table.get_item(Key={"template_id": template_id})
-    return response.get("Item")
+    item = response.get("Item")
+    if item and item.get("status") == "published":
+        return item
+    return next(
+        (
+            template
+            for template in SAMPLE_CARD_TEMPLATES
+            if template["template_id"] == template_id
+        ),
+        None,
+    )
 
 
 def _get_version_by_id(version_id: str) -> dict[str, Any] | None:
