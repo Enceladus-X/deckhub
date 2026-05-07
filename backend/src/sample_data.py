@@ -45,3 +45,32 @@ SAMPLE_REVIEW_QUEUE = [
         "risk": "low",
     },
 ]
+
+SAMPLE_CARD_TEMPLATES = [
+    {
+        "template_id": "clean-review",
+        "name": "Clean Review",
+        "author": "DeckHub",
+        "summary": "A calm default template for certification terminology and short answers.",
+        "tone": "clinical",
+        "recommendations": 148,
+        "downloads": 932,
+        "front_html": '<div class="deckhub-card"><p class="deckhub-card__label">Question</p><h1 class="deckhub-card__question">{{Front}}</h1><footer>{{DeckTitle}} · v{{Version}}</footer></div>',
+        "back_html": '<div class="deckhub-card"><p class="deckhub-card__label">Answer</p><h1 class="deckhub-card__answer">{{Back}}</h1><p class="deckhub-card__note">{{Extra}}</p><footer>{{DeckTitle}} · v{{Version}}</footer></div>',
+        "css": ".deckhub-card { min-height: 360px; border: 1px solid #d4d4d8; border-radius: 8px; background: #ffffff; color: #18181b; } .deckhub-card__label { color: #0f766e; font-weight: 800; } .deckhub-card__question { font-size: 30px; font-weight: 800; } .deckhub-card__answer { font-size: 22px; font-weight: 700; }",
+        "status": "published",
+    },
+    {
+        "template_id": "exam-contrast",
+        "name": "Exam Contrast",
+        "author": "study-lab",
+        "summary": "A high-contrast template for formulas, statutes, and last-minute review.",
+        "tone": "exam",
+        "recommendations": 96,
+        "downloads": 544,
+        "front_html": '<div class="deckhub-card"><p class="deckhub-card__label">EXAM PROMPT</p><h1 class="deckhub-card__question">{{Front}}</h1><footer>{{Category}} · {{DeckTitle}}</footer></div>',
+        "back_html": '<div class="deckhub-card"><p class="deckhub-card__label">KEY ANSWER</p><h1 class="deckhub-card__answer">{{Back}}</h1><p class="deckhub-card__note">{{Extra}}</p><footer>Updated v{{Version}}</footer></div>',
+        "css": ".deckhub-card { min-height: 360px; border: 1px solid #f59e0b; border-radius: 8px; background: #fffbeb; color: #1c1917; } .deckhub-card__label { color: #b45309; font-weight: 900; } .deckhub-card__question { font-size: 32px; font-weight: 900; } .deckhub-card__answer { font-size: 23px; font-weight: 800; }",
+        "status": "published",
+    },
+]

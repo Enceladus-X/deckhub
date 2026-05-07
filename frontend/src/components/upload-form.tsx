@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import {
   CheckCircle2,
-  Code2,
   FileArchive,
   GitBranch,
   Layers3,
@@ -16,6 +15,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { CardTemplatePreview } from "@/components/card-template-preview";
+import { CopyCodeBlock } from "@/components/copy-code-block";
 import { Badge, cx } from "@/components/ui-kit";
 import { cardTemplates, getCardTemplateById } from "@/lib/card-templates";
 import { categories } from "@/lib/deck-data";
@@ -346,9 +346,11 @@ export function UploadForm() {
               <CardTemplatePreview
                 back={back}
                 category={category}
+                className="p-10"
                 deckTitle={deckTitle}
                 extra={extra}
                 front={front}
+                minHeight={460}
                 side={previewSide}
                 template={selectedTemplate}
                 version={versionLabel}
@@ -408,27 +410,16 @@ export function UploadForm() {
           </section>
 
           <section className="grid gap-5 lg:grid-cols-2">
-            <div className="rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-white">
-              <div className="flex items-center gap-2">
-                <Code2 size={18} className="text-teal-300" aria-hidden="true" />
-                <h2 className="text-lg font-semibold">
-                  {previewSide === "front" ? "앞면 HTML" : "뒷면 HTML"}
-                </h2>
-              </div>
-              <pre className="mt-4 max-h-80 overflow-auto rounded-md bg-black/35 p-4 text-xs leading-5 text-zinc-100">
-                <code>{selectedHtml}</code>
-              </pre>
-            </div>
-
-            <div className="rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-white">
-              <div className="flex items-center gap-2">
-                <Code2 size={18} className="text-teal-300" aria-hidden="true" />
-                <h2 className="text-lg font-semibold">카드 CSS</h2>
-              </div>
-              <pre className="mt-4 max-h-80 overflow-auto rounded-md bg-black/35 p-4 text-xs leading-5 text-zinc-100">
-                <code>{selectedTemplate.css}</code>
-              </pre>
-            </div>
+            <CopyCodeBlock
+              code={selectedHtml}
+              description="선택 중인 카드 면의 HTML 구조입니다."
+              title={previewSide === "front" ? "앞면 HTML" : "뒷면 HTML"}
+            />
+            <CopyCodeBlock
+              code={selectedTemplate.css}
+              description={`${selectedTemplate.name} 템플릿의 카드 스타일입니다.`}
+              title="카드 CSS"
+            />
           </section>
         </div>
       </div>

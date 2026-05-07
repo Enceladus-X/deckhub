@@ -59,6 +59,59 @@ def test_upload_creates_review_pending_record():
     assert body["status"] == "review_pending"
 
 
+def test_list_card_templates_uses_seed_data_without_table_env():
+    response = handler(event("GET", "/card-templates"), None)
+    body = json.loads(response["body"])
+
+    assert response["statusCode"] == 200
+    assert body["items"][0]["template_id"] == "clean-review"
+    assert body["items"][0]["front_html"]
+
+
+def test_card_template_submission_creates_review_pending_record():
+    response = handler(
+        event(
+            "POST",
+            "/card-templates",
+            {
+                "name": "Mobile Review",
+                "author": "guest",
+                "summary": "Readable mobile-first card layout.",
+                "tone": "clinical",
+                "front_html": '<div class="deckhub-card">{{Front}}</div>',
+                "back_html": '<div class="deckhub-card">{{Back}} {{Extra}}</div>',
+                "css": ".deckhub-card { min-height: 360px; color: #111827; }",
+            },
+        ),
+        None,
+    )
+    body = json.loads(response["body"])
+
+    assert response["statusCode"] == 202
+    assert body["status"] == "review_pending"
+
+
+def test_card_template_submission_rejects_scripts():
+    response = handler(
+        event(
+            "POST",
+            "/card-templates",
+            {
+                "name": "Bad Template",
+                "author": "guest",
+                "summary": "This should not pass validation.",
+                "tone": "clinical",
+                "front_html": "<script>alert(1)</script><div>{{Front}}</div>",
+                "back_html": '<div class="deckhub-card">{{Back}}</div>',
+                "css": ".deckhub-card { min-height: 360px; color: #111827; }",
+            },
+        ),
+        None,
+    )
+
+    assert response["statusCode"] == 422
+
+
 def test_recommendation_endpoint_returns_incremented_count():
     response = handler(
         event("POST", "/decks/aws-solutions-architect-associate/recommendations"),

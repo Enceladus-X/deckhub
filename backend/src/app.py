@@ -13,6 +13,7 @@ from pydantic import ValidationError
 from .models import (
     CommentRequest,
     CommentResult,
+    CardTemplate,
     Deck,
     DeckVersion,
     DownloadToken,
@@ -21,10 +22,17 @@ from .models import (
     ReportRequest,
     ReportResult,
     ReviewQueueItem,
+    TemplateSubmissionRequest,
+    TemplateSubmissionResult,
     UploadRequest,
     UploadResult,
 )
-from .sample_data import SAMPLE_DECKS, SAMPLE_REVIEW_QUEUE, SAMPLE_VERSIONS
+from .sample_data import (
+    SAMPLE_CARD_TEMPLATES,
+    SAMPLE_DECKS,
+    SAMPLE_REVIEW_QUEUE,
+    SAMPLE_VERSIONS,
+)
 from .signing import SigningNotConfigured, build_cloudfront_signed_url
 
 
@@ -45,6 +53,39 @@ def handler(event: dict[str, Any], _context: Any) -> dict[str, Any]:
 
         if method == "GET" and path == "/decks":
             return _json(200, {"items": [Deck(**deck).model_dump() for deck in _list_decks()]})
+
+        if method == "GET" and path == "/card-templates":
+            return _json(
+                200,
+                {
+                    "items": [
+                        CardTemplate(**template).model_dump()
+                        for template in _list_card_templates()
+                    ]
+                },
+            )
+
+        if method == "POST" and path == "/card-templates":
+            submission = TemplateSubmissionRequest(**_body(event))
+            template_id = f"template_{int(time.time())}"
+            item = {
+                **submission.model_dump(),
+                "template_id": template_id,
+                "status": "review_pending",
+                "recommendations": 0,
+                "downloads": 0,
+            }
+            table = _dynamodb_table("CARD_TEMPLATES_TABLE_NAME")
+            if table is not None:
+                table.put_item(Item=item)
+            return _json(
+                202,
+                TemplateSubmissionResult(
+                    template_id=template_id,
+                    status="review_pending",
+                    name=submission.name,
+                ).model_dump(),
+            )
 
         if method == "POST" and path == "/uploads":
             upload = UploadRequest(**_body(event))
@@ -75,6 +116,12 @@ def handler(event: dict[str, Any], _context: Any) -> dict[str, Any]:
             if not deck:
                 raise ApiError(404, "Deck not found.")
             return _json(200, Deck(**deck).model_dump())
+
+        if method == "GET" and len(parts) == 2 and parts[0] == "card-templates":
+            template = _get_card_template_by_id(parts[1])
+            if not template:
+                raise ApiError(404, "Card template not found.")
+            return _json(200, CardTemplate(**template).model_dump())
 
         if method == "GET" and len(parts) == 3 and parts[0] == "decks" and parts[2] == "versions":
             versions = [DeckVersion(**item).model_dump() for item in _list_versions(parts[1])]
@@ -181,6 +228,8 @@ def _json(status_code: int, body: Any) -> dict[str, Any]:
 def _to_jsonable(value: Any) -> Any:
     if isinstance(value, Decimal):
         return int(value) if value % 1 == 0 else float(value)
+    if isinstance(value, BaseException):
+        return str(value)
     if isinstance(value, list):
         return [_to_jsonable(item) for item in value]
     if isinstance(value, dict):
@@ -224,6 +273,30 @@ def _list_versions(deck_id: str) -> list[dict[str, Any]]:
 
     response = table.query(KeyConditionExpression=Key("deck_id").eq(deck_id))
     return response.get("Items", [])
+
+
+def _list_card_templates() -> list[dict[str, Any]]:
+    table = _dynamodb_table("CARD_TEMPLATES_TABLE_NAME")
+    if table is None:
+        return SAMPLE_CARD_TEMPLATES
+    response = table.scan(Limit=50)
+    return response.get("Items", [])
+
+
+def _get_card_template_by_id(template_id: str) -> dict[str, Any] | None:
+    table = _dynamodb_table("CARD_TEMPLATES_TABLE_NAME")
+    if table is None:
+        return next(
+            (
+                template
+                for template in SAMPLE_CARD_TEMPLATES
+                if template["template_id"] == template_id
+            ),
+            None,
+        )
+
+    response = table.get_item(Key={"template_id": template_id})
+    return response.get("Item")
 
 
 def _get_version_by_id(version_id: str) -> dict[str, Any] | None:

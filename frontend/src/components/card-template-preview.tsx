@@ -1,12 +1,15 @@
+import type { CSSProperties } from "react";
 import type { CardTemplate } from "@/lib/card-templates";
 import { cx } from "@/components/ui-kit";
 
 type CardTemplatePreviewProps = {
   back: string;
   category?: string;
+  className?: string;
   deckTitle: string;
   extra: string;
   front: string;
+  minHeight?: number;
   side: "front" | "back";
   template: CardTemplate;
   version: string;
@@ -15,21 +18,26 @@ type CardTemplatePreviewProps = {
 export function CardTemplatePreview({
   back,
   category = "IT",
+  className,
   deckTitle,
   extra,
   front,
+  minHeight,
   side,
   template,
   version,
 }: CardTemplatePreviewProps) {
   const isBack = side === "back";
+  const style: CSSProperties | undefined = minHeight ? { minHeight } : undefined;
 
   return (
     <div
       className={cx(
         "deckhub-card motion-safe:animate-soft-enter flex flex-col justify-between p-8 shadow-sm transition-all duration-300",
         template.tone === "dark" && "shadow-zinc-950/20",
+        className,
       )}
+      style={style}
     >
       <div>
         <p className="deckhub-card__label">

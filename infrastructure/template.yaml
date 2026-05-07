@@ -35,6 +35,7 @@ Globals:
       Variables:
         DECKS_TABLE_NAME: !Ref DecksTable
         DECK_VERSIONS_TABLE_NAME: !Ref DeckVersionsTable
+        CARD_TEMPLATES_TABLE_NAME: !Ref CardTemplatesTable
         DOWNLOAD_DOMAIN: !GetAtt DeckFilesDistribution.DomainName
         DOWNLOAD_URL_TTL_SECONDS: "300"
         CLOUDFRONT_KEY_PAIR_ID: !Ref CloudFrontKeyPairId
@@ -69,6 +70,8 @@ Resources:
             TableName: !Ref DecksTable
         - DynamoDBCrudPolicy:
             TableName: !Ref DeckVersionsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CardTemplatesTable
         - !If
           - HasPrivateKeySecret
           - Statement:
@@ -131,6 +134,26 @@ Resources:
         - IndexName: VersionIdIndex
           KeySchema:
             - AttributeName: version_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  CardTemplatesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: template_id
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+      KeySchema:
+        - AttributeName: template_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: StatusIndex
+          KeySchema:
+            - AttributeName: status
               KeyType: HASH
           Projection:
             ProjectionType: ALL
@@ -283,6 +306,8 @@ Outputs:
     Value: !GetAtt FrontendDistribution.DomainName
   DeckFilesBucketName:
     Value: !Ref DeckFilesBucket
+  CardTemplatesTableName:
+    Value: !Ref CardTemplatesTable
   DeckFilesDistributionId:
     Value: !Ref DeckFilesDistribution
   DeckFilesDistributionDomain:

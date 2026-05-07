@@ -16,6 +16,9 @@ python -m venv .venv
 - `GET /decks`
 - `GET /decks/{slug}`
 - `GET /decks/{deck_id}/versions`
+- `GET /card-templates`
+- `GET /card-templates/{template_id}`
+- `POST /card-templates`
 - `POST /downloads/{version_id}`
 
 Download URLs require `DOWNLOAD_DOMAIN`, `CLOUDFRONT_KEY_PAIR_ID`, and a CloudFront private key supplied directly for local use or through Secrets Manager in AWS.
