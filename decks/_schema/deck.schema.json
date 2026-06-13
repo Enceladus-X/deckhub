@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Enceladus-X/deckhub/decks/_schema/deck.schema.json",
+  "title": "DeckHub deck manifest",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "slug",
+    "title",
+    "summary",
+    "category",
+    "exam",
+    "license",
+    "maintainers",
+    "versions"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "description": "Optional deck type such as vocabulary, exam-review, formulas, or problem-bank."
+    },
+    "exam": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "language": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1
+    },
+    "maintainers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "url"],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "versions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/version"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "apkg": {
+      "type": "object",
+      "required": ["assetName", "downloadUrl", "sha256", "sizeBytes"],
+      "properties": {
+        "assetName": {
+          "type": "string",
+          "pattern": "\\.apkg$"
+        },
+        "downloadUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$"
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "stats": {
+      "type": "object",
+      "required": ["cards", "notes", "media"],
+      "properties": {
+        "cards": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "media": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "segment": {
+      "type": "object",
+      "required": ["id", "label", "cards"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cards": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "apkg": {
+          "$ref": "#/$defs/apkg"
+        }
+      },
+      "additionalProperties": true
+    },
+    "noteType": {
+      "type": "object",
+      "required": ["name", "fields"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "version": {
+      "type": "object",
+      "required": ["version", "releasedAt", "stats", "apkg"],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "releasedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "changes": {
+          "type": "string"
+        },
+        "stats": {
+          "$ref": "#/$defs/stats"
+        },
+        "apkg": {
+          "$ref": "#/$defs/apkg"
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/segment"
+          }
+        },
+        "noteTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/noteType"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
