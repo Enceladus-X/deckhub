@@ -2,168 +2,86 @@
 
 # DeckHub
 
-**Maintainer-curated Anki deck archive**
+**직접 제작한 Anki 덱을 모아두는 공개 아카이브**
 
-[GitHub Pages](https://enceladus-x.github.io/deckhub/)
-· [Releases](https://github.com/Enceladus-X/deckhub/releases)
-· [Catalog JSON](./catalog/decks.json)
-· [Architecture](./docs/architecture.md)
+[덱 보러가기](https://enceladus-x.github.io/deckhub/)
+· [다운로드 파일](https://github.com/Enceladus-X/deckhub/releases)
+· [카탈로그 데이터](./catalog/decks.json)
 
 </div>
 
-DeckHub is a small, GitHub-native archive for Anki `.apkg` decks that are
-created and maintained by the repository owner.
+DeckHub는 시험 공부용 Anki `.apkg` 덱을 정리해서 배포하는 개인 아카이브입니다.
+방문자는 GitHub Pages에서 공개된 덱을 찾고, GitHub Releases에 올라간 APKG 파일을
+다운로드할 수 있습니다.
 
-Public login and external deck submissions are intentionally disabled for now.
-Users browse the catalog and download decks. The maintainer publishes new decks
-by attaching APKG files to GitHub Releases and updating `decks/**/deck.json`
-manifests.
+현재는 누구나 업로드하는 플랫폼이 아닙니다. 덱은 저장소 관리자가 직접 만들고 검토한
+것만 공개합니다. 이 방식 덕분에 로그인, 업로드 검수, 서버 운영 없이도 덱 파일과 버전
+이력을 투명하게 관리할 수 있습니다.
 
-This keeps the first version simple:
+## 바로가기
 
-- No account system
-- No moderation queue
-- No runtime database
-- No file storage bill
-- Every deck update is a reviewable Git diff
-- GitHub Actions rebuilds the static catalog
+- 사이트: [https://enceladus-x.github.io/deckhub/](https://enceladus-x.github.io/deckhub/)
+- APKG 파일: [GitHub Releases](https://github.com/Enceladus-X/deckhub/releases)
+- 덱 목록 원본: [`catalog/decks.json`](./catalog/decks.json)
 
-## Current Catalog
+## 현재 공개 상태
 
-No public decks are registered yet.
+아직 공개된 덱은 없습니다.
 
-| Metric | Count |
+| 항목 | 수량 |
 | --- | ---: |
-| Decks | 0 |
-| Cards | 0 |
-| Split downloads | 0 |
+| 덱 | 0 |
+| 카드 | 0 |
+| 분할 다운로드 | 0 |
 
-When a manifest is added under `decks/**/deck.json`, the generated
-[`catalog/decks.json`](./catalog/decks.json) and the GitHub Pages site are
-updated by the catalog workflow.
+새 덱이 공개되면 GitHub Pages의 카탈로그에 자동으로 표시됩니다.
 
-## How It Works
+## 다운로드 방식
 
 ```mermaid
 flowchart LR
-    A["Maintainer exports APKG"] --> B["GitHub Release asset"]
-    A --> C["deck.json manifest"]
-    C --> D["catalog validation"]
-    D --> E["catalog/decks.json"]
-    E --> F["GitHub Pages catalog"]
-    B --> F
+    A["APKG 파일"] --> B["GitHub Release"]
+    C["deck.json"] --> D["Catalog JSON"]
+    D --> E["GitHub Pages"]
+    B --> E
 ```
 
-## Repository Layout
+덱 파일 자체는 Git 저장소에 직접 넣지 않습니다. APKG는 GitHub Release에 보관하고,
+`decks/<category>/<slug>/deck.json` manifest가 제목, 시험명, 버전, 카드 수, SHA256,
+다운로드 링크를 관리합니다.
 
-| Path | Purpose |
-| --- | --- |
-| [`decks/`](./decks) | Maintainer-authored deck manifests. |
-| [`catalog/`](./catalog) | Generated catalog JSON consumed by readers and tooling. |
-| [`frontend/`](./frontend) | Static Next.js catalog UI for GitHub Pages or any static host. |
-| [`backend/`](./backend) | Optional Lambda API path for signed downloads later. |
-| [`infrastructure/`](./infrastructure) | Optional AWS SAM stack for S3, CloudFront, API Gateway, Lambda. |
-| [`scripts/`](./scripts) | Catalog generation and bootstrap scripts. |
-| [`.github/`](./.github) | Maintainer checklist and catalog validation workflow. |
+## 관리자를 위한 발행 절차
 
-## Publish a Deck
+APKG를 Release에 올린 뒤 manifest를 생성합니다.
 
-1. Export an Anki `.apkg` file.
-2. Attach the APKG to a GitHub Release.
-3. Compute SHA256:
-
-   ```powershell
-   Get-FileHash .\deck.apkg -Algorithm SHA256
-   ```
-
-4. Create a manifest:
-
-   ```powershell
-   npm run deck:new -- language hsk-vocabulary
-   ```
-
-5. Edit `decks/<category>/<slug>/deck.json`.
-6. Rebuild and validate:
-
-   ```powershell
-   npm run catalog:build
-   npm run catalog:check
-   npm run frontend:build
-   ```
-
-Detailed guide: [`docs/publish-deck.md`](./docs/publish-deck.md)
-
-## Manifest Model
-
-Each deck can include split segments so one large APKG can still be useful in
-smaller pieces:
-
-```json
-{
-  "slug": "hsk-vocabulary",
-  "title": "HSK 1-3 Vocabulary",
-  "category": "language",
-  "exam": {
-    "name": "HSK",
-    "scope": ["Level 1", "Level 2", "Level 3"]
-  },
-  "versions": [
-    {
-      "version": "2026.06",
-      "apkg": {
-        "assetName": "hsk-vocabulary.apkg",
-        "downloadUrl": "https://github.com/Enceladus-X/deckhub/releases/download/hsk-v2026.06/hsk-vocabulary.apkg",
-        "sha256": "64-character-sha256-digest",
-        "sizeBytes": 1200000
-      },
-      "segments": [
-        {
-          "id": "level-1",
-          "label": "Level 1",
-          "cards": 150
-        }
-      ]
-    }
-  ]
-}
+```powershell
+npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --cards 600 --notes 600 --media 0 --scope "Level 1,Level 2,Level 3"
 ```
 
-Schema: [`decks/_schema/deck.schema.json`](./decks/_schema/deck.schema.json)
-
-## Local Development
+카탈로그를 갱신하고 검증합니다.
 
 ```powershell
 npm run catalog:build
-npm --prefix frontend install
-npm run frontend:dev
+npm run catalog:check
+npm run frontend:build
 ```
 
-Backend tests remain available for the optional AWS path:
+`main`에 푸시되면 GitHub Actions가 GitHub Pages를 다시 배포합니다.
 
-```powershell
-python -m venv backend/.venv
-backend/.venv/Scripts/python.exe -m pip install -r backend/requirements-dev.txt
-backend/.venv/Scripts/python.exe -m pytest backend
-```
+자세한 내용은 [`docs/publish-deck.md`](./docs/publish-deck.md)를 참고하세요.
 
-## Quality Gates
+## 프로젝트 구조
 
-The catalog workflow checks:
+| 경로 | 설명 |
+| --- | --- |
+| [`decks/`](./decks) | 덱 manifest 원본 |
+| [`catalog/`](./catalog) | 자동 생성되는 공개 카탈로그 JSON |
+| [`frontend/`](./frontend) | GitHub Pages로 배포되는 정적 사이트 |
+| [`scripts/`](./scripts) | manifest 생성과 catalog 빌드 도구 |
+| [`.github/workflows/catalog.yml`](./.github/workflows/catalog.yml) | Pages 배포 workflow |
 
-- Generated catalog is up to date.
-- Deck slugs and version IDs are unique.
-- APKG SHA256 values are valid and not duplicated.
-- APKG URLs, sizes, dates, stats, and split segment metadata are valid.
-- The static frontend lints and builds.
+## 나중에 확장할 수 있는 것
 
-## Optional AWS Deployment
-
-The original serverless path remains in the repository for later production use:
-
-- S3 private bucket for APKG files
-- CloudFront OAC and signed URLs
-- Lambda/API Gateway download token API
-- DynamoDB if runtime writes are needed
-- GitHub Actions OIDC deployment
-
-See [`infrastructure/README.md`](./infrastructure/README.md) when this becomes necessary.
+현재는 정적 사이트와 GitHub Releases만 사용합니다. 트래픽이 커지거나 비공개 배포가
+필요해지면 S3, CloudFront Signed URL, Lambda API를 다시 붙일 수 있도록 기존 AWS
+인프라 폴더는 남겨두었습니다.

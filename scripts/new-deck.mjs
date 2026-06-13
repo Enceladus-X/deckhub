@@ -10,12 +10,12 @@ if (!categoryArg || !slugArg) {
   process.exit(1);
 }
 
-if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(categoryArg)) {
+if (!isSlug(categoryArg)) {
   console.error("Category must use lowercase letters, numbers, and hyphens.");
   process.exit(1);
 }
 
-if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slugArg)) {
+if (!isSlug(slugArg)) {
   console.error("Slug must use lowercase letters, numbers, and hyphens.");
   process.exit(1);
 }
@@ -42,29 +42,24 @@ function buildTemplate(category, slug) {
     "$schema": "../../_schema/deck.schema.json",
     schemaVersion: 1,
     slug,
-    title: "덱 제목",
-    summary: "무엇을 공부하기 위한 덱인지 한 문장으로 적어주세요.",
+    title: "Deck title",
+    summary: "Describe what this Anki deck helps people study.",
     category,
     kind: "vocabulary",
     exam: {
-      name: "시험명",
-      provider: "시행 기관",
-      scope: ["예: 1급", "예: Part 1", "예: 전체 범위"],
+      name: "Exam or subject",
+      provider: "Provider",
+      scope: ["Full scope"],
     },
     language: "ko",
     license: "CC BY-NC-SA 4.0",
-    maintainers: ["@github-id"],
-    links: [
-      {
-        label: "공식 범위",
-        url: "https://example.com",
-      },
-    ],
+    maintainers: ["@Enceladus-X"],
+    links: [],
     versions: [
       {
         version: "2026.06",
         releasedAt: "2026-06-13",
-        changes: "첫 공개 버전",
+        changes: "Initial public release",
         stats: {
           cards: 0,
           notes: 0,
@@ -82,4 +77,8 @@ function buildTemplate(category, slug) {
       },
     ],
   };
+}
+
+function isSlug(value) {
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
 }

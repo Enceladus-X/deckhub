@@ -1,75 +1,55 @@
 # Publish a Deck
 
-DeckHub is currently a maintainer-curated archive. External deck submissions
-are disabled. A deck becomes public only when the maintainer adds a manifest
-and merges it into the repository.
+DeckHub is a maintainer-curated archive. External deck submissions are disabled.
+A deck appears on GitHub Pages only after the maintainer uploads an APKG file to
+GitHub Releases and commits a manifest under `decks/`.
 
-## 1. Export the APKG
+## 1. Export APKG
 
-Export your deck from Anki as `.apkg`.
+Export the deck from Anki as `.apkg`.
 
-Compute a SHA256 digest:
+Compute SHA256:
 
 ```powershell
 Get-FileHash .\deck.apkg -Algorithm SHA256
 ```
 
-Record:
+Record the card count, note count, media count, and optional scope labels such
+as `Level 1`, `Part 2`, or `Full scope`.
 
-- File name
-- SHA256
-- File size in bytes
-- Card count
-- Note count
-- Media count
-- Optional split ranges such as `Level 1`, `Part 2`, `Beginner`, or `Full scope`
+## 2. Create a GitHub Release
 
-## 2. Attach the APKG to a GitHub Release
+Create a release tag, then attach the APKG file.
 
-Create a release tag such as:
+Example tag:
 
 ```text
 hsk-vocabulary-v2026.06
 ```
 
-Attach the APKG file to that release. Do not commit APKG files directly.
+Do not commit APKG files directly to Git.
 
-## 3. Add or update the manifest
+## 3. Link the Release to the Catalog
 
-Create a manifest skeleton:
+Run the helper script from the repository root:
 
 ```powershell
-npm run deck:new -- language hsk-vocabulary
+npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --cards 600 --notes 600 --media 0 --scope "Level 1,Level 2,Level 3"
 ```
 
-Edit:
+This creates:
 
 ```text
 decks/language/hsk-vocabulary/deck.json
 ```
 
-If the same deck should be downloadable in smaller pieces, add `segments`:
-
-```json
-{
-  "id": "level-1",
-  "label": "Level 1",
-  "description": "Only Level 1 vocabulary",
-  "scope": ["Level 1"],
-  "cards": 150
-}
-```
-
-If a segment has its own APKG file, add an `apkg` object inside that segment.
-
-## 4. Build and validate
+## 4. Build and Validate
 
 ```powershell
 npm run catalog:build
 npm run catalog:check
-npm run frontend:lint
 npm run frontend:build
 ```
 
-Push the commit. GitHub Actions will publish the updated static catalog to
-GitHub Pages after the change lands on `main`.
+Commit and push to `main`. GitHub Actions will publish the updated static
+catalog to GitHub Pages.

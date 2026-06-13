@@ -4,6 +4,7 @@
   "scripts": {
     "catalog:build": "node scripts/build-catalog.mjs",
     "catalog:check": "node scripts/build-catalog.mjs --check",
+    "deck:link-release": "node scripts/link-release-deck.mjs",
     "deck:new": "node scripts/new-deck.mjs",
     "frontend:dev": "npm --prefix frontend run dev",
     "frontend:build": "npm --prefix frontend run build",
