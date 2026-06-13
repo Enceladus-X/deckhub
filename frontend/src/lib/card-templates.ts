@@ -13,12 +13,15 @@ export type CardTemplate = {
   backHtml: string;
 };
 
+const baseFont =
+  'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
 export const cardTemplates: CardTemplate[] = [
   {
     id: "clean-review",
     name: "Clean Review",
     author: "DeckHub",
-    summary: "자격증 용어와 짧은 답변을 가장 안정적으로 보여주는 기본 템플릿입니다.",
+    summary: "A quiet, readable card style for definitions and short answers.",
     tone: "clinical",
     recommendations: 148,
     downloads: 932,
@@ -28,8 +31,9 @@ export const cardTemplates: CardTemplate[] = [
   border-radius: 8px;
   background: #ffffff;
   color: #18181b;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: ${baseFont};
   line-height: 1.65;
+  padding: 32px;
 }
 
 .deckhub-card__label {
@@ -53,24 +57,25 @@ export const cardTemplates: CardTemplate[] = [
   border-left: 3px solid #14b8a6;
   background: #f4f4f5;
   color: #52525b;
+  padding: 16px;
 }`,
     frontHtml: `<div class="deckhub-card">
   <p class="deckhub-card__label">Question</p>
   <h1 class="deckhub-card__question">{{Front}}</h1>
-  <footer>{{DeckTitle}} · v{{Version}}</footer>
+  <footer>{{DeckTitle}} - v{{Version}}</footer>
 </div>`,
     backHtml: `<div class="deckhub-card">
   <p class="deckhub-card__label">Answer</p>
   <h1 class="deckhub-card__answer">{{Back}}</h1>
   <p class="deckhub-card__note">{{Extra}}</p>
-  <footer>{{DeckTitle}} · v{{Version}}</footer>
+  <footer>{{DeckTitle}} - v{{Version}}</footer>
 </div>`,
   },
   {
     id: "exam-contrast",
     name: "Exam Contrast",
-    author: "study-lab",
-    summary: "공식, 법령, 키워드를 강하게 대비시켜 시험 직전 복습에 맞춘 템플릿입니다.",
+    author: "DeckHub",
+    summary: "A high-contrast layout for formulas, rules, and final review notes.",
     tone: "exam",
     recommendations: 96,
     downloads: 544,
@@ -78,41 +83,43 @@ export const cardTemplates: CardTemplate[] = [
   min-height: 360px;
   border: 1px solid #f59e0b;
   border-radius: 8px;
-  background: #fffbeb;
+  background: #fff7ed;
   color: #1c1917;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.7;
+  font-family: ${baseFont};
+  line-height: 1.65;
+  padding: 32px;
 }
 
 .deckhub-card__label {
   color: #b45309;
   font-size: 12px;
   font-weight: 900;
-  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .deckhub-card__question {
-  font-size: 32px;
-  font-weight: 900;
+  font-size: 30px;
+  font-weight: 850;
 }
 
 .deckhub-card__answer {
-  font-size: 23px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 850;
 }
 
 .deckhub-card__note {
-  border: 1px solid #fde68a;
+  border: 1px solid #fed7aa;
   background: #ffffff;
   color: #57534e;
+  padding: 16px;
 }`,
     frontHtml: `<div class="deckhub-card">
-  <p class="deckhub-card__label">EXAM PROMPT</p>
+  <p class="deckhub-card__label">Prompt</p>
   <h1 class="deckhub-card__question">{{Front}}</h1>
-  <footer>{{Category}} · {{DeckTitle}}</footer>
+  <footer>{{Category}} - {{DeckTitle}}</footer>
 </div>`,
     backHtml: `<div class="deckhub-card">
-  <p class="deckhub-card__label">KEY ANSWER</p>
+  <p class="deckhub-card__label">Key Answer</p>
   <h1 class="deckhub-card__answer">{{Back}}</h1>
   <p class="deckhub-card__note">{{Extra}}</p>
   <footer>Updated v{{Version}}</footer>
@@ -121,8 +128,8 @@ export const cardTemplates: CardTemplate[] = [
   {
     id: "night-focus",
     name: "Night Focus",
-    author: "late-review",
-    summary: "어두운 환경에서 긴 설명형 카드를 읽기 쉽게 만든 다크 템플릿입니다.",
+    author: "DeckHub",
+    summary: "A dark card style for long evening review sessions.",
     tone: "dark",
     recommendations: 121,
     downloads: 681,
@@ -132,8 +139,9 @@ export const cardTemplates: CardTemplate[] = [
   border-radius: 8px;
   background: #111827;
   color: #f8fafc;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: ${baseFont};
   line-height: 1.7;
+  padding: 32px;
 }
 
 .deckhub-card__label {
@@ -159,6 +167,7 @@ export const cardTemplates: CardTemplate[] = [
   border-left: 3px solid #2dd4bf;
   background: #1f2937;
   color: #cbd5e1;
+  padding: 16px;
 }`,
     frontHtml: `<div class="deckhub-card">
   <p class="deckhub-card__label">Focus</p>

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DeckHub | Certification Deck Hub for Anki",
-  description: "Certification Anki deck archive with immutable versions.",
+  title: "DeckHub | GitHub-native Anki Deck Archive",
+  description: "GitHub Releases and manifests for verified Anki APKG sharing.",
 };
 
 export default function RootLayout({

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/build-catalog.mjs",
+  "checksum": "4f53cda18c2baa0c",
+  "summary": {
+    "decks": 0,
+    "latestVersions": 0,
+    "cards": 0,
+    "segments": 0,
+    "categories": []
+  },
+  "decks": []
+}

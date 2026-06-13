@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: DeckHub catalog
+    url: https://enceladus-x.github.io/deckhub/
+    about: DeckHub is currently a maintainer-curated archive. External deck submissions are disabled.

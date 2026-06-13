@@ -2,17 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  Download,
-  Heart,
-  LayoutTemplate,
-  Palette,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { Code2, LayoutTemplate, Palette } from "lucide-react";
 import { CardTemplatePreview } from "@/components/card-template-preview";
 import { CopyCodeBlock } from "@/components/copy-code-block";
-import { Badge, InfoList, SectionTitle, StatCard, Surface, cx } from "@/components/ui-kit";
+import { Badge, SectionTitle, Surface, cx } from "@/components/ui-kit";
 import {
   cardTemplates,
   getScopedTemplateCss,
@@ -20,12 +13,12 @@ import {
 } from "@/lib/card-templates";
 
 const sample = {
-  back: "정답은 반복 가능한 최소 단위로 쪼개고, 보충 설명에는 예외 조건이나 시험 포인트를 적습니다.",
-  category: "IT",
-  deckTitle: "정보처리기사",
-  extra: "긴 문장은 뒷면 설명으로 분리하면 모바일 복습에서도 가독성이 유지됩니다.",
-  front: "DeckHub 카드 템플릿은 무엇을 공유하나요?",
-  version: "2026.05",
+  back: "Break the answer into repeatable minimum units, and keep exceptions or exam traps in the extra note.",
+  category: "Language",
+  deckTitle: "HSK Vocabulary",
+  extra: "Use the extra field for examples, nuance, or source notes.",
+  front: "What should a reusable Anki card template include?",
+  version: "2026.06",
 };
 
 export function TemplateMarketplace() {
@@ -33,14 +26,6 @@ export function TemplateMarketplace() {
   const [previewMode, setPreviewMode] = useState<"both" | "front" | "back">("both");
   const activeTemplate =
     cardTemplates.find((template) => template.id === activeTemplateId) ?? cardTemplates[0];
-  const totalRecommendations = cardTemplates.reduce(
-    (sum, template) => sum + template.recommendations,
-    0,
-  );
-  const totalDownloads = cardTemplates.reduce(
-    (sum, template) => sum + template.downloads,
-    0,
-  );
   const bundleCode = JSON.stringify(
     {
       id: activeTemplate.id,
@@ -56,7 +41,7 @@ export function TemplateMarketplace() {
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-6">
+    <section className="mx-auto max-w-6xl px-5 py-6">
       <style>{cardTemplates.map(getScopedTemplateCss).join("\n\n")}</style>
 
       <Link
@@ -70,35 +55,25 @@ export function TemplateMarketplace() {
         <Surface className="p-5">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
             <SectionTitle
-              body="덱 업로더가 앞면 HTML, 뒷면 HTML, 카드 CSS를 고르고 바로 복사할 수 있는 템플릿 공유장입니다."
-              eyebrow="Shared Card System"
+              body="Read-only card templates for decks published by the repository maintainer. Copy the HTML and CSS into Anki when preparing a release."
+              eyebrow="Template Library"
               icon={Palette}
-              title="카드 템플릿 공유장"
+              title="Card template reference"
             />
-            <Link
-              className="inline-flex h-10 w-fit items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-teal-700 hover:shadow-sm"
-              href="/upload/"
+            <a
+              className="inline-flex h-10 w-fit items-center justify-center gap-2 rounded-md bg-zinc-950 px-4 text-sm font-semibold text-white transition hover:bg-teal-700"
+              href="https://github.com/Enceladus-X/deckhub/blob/main/docs/publish-deck.md"
             >
               <LayoutTemplate size={17} aria-hidden="true" />
-              업로드에서 사용
-            </Link>
-          </div>
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <StatCard
-              icon={LayoutTemplate}
-              label="공유 템플릿"
-              value={cardTemplates.length}
-            />
-            <StatCard icon={Heart} label="추천 합계" value={totalRecommendations} />
-            <StatCard icon={Download} label="사용 합계" value={totalDownloads} />
+              Publish guide
+            </a>
           </div>
         </Surface>
 
         <div className="grid gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
           <Surface className="h-fit p-4 lg:sticky lg:top-24">
             <div className="flex items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold text-zinc-950">템플릿 선택</h2>
+              <h2 className="text-lg font-semibold text-zinc-950">Templates</h2>
               <Badge tone="teal">{cardTemplates.length}</Badge>
             </div>
 
@@ -118,12 +93,7 @@ export function TemplateMarketplace() {
                     onClick={() => setActiveTemplateId(template.id)}
                     type="button"
                   >
-                    <span className="flex items-center justify-between gap-3">
-                      <span className="font-semibold text-zinc-950">{template.name}</span>
-                      <span className="text-xs font-semibold text-zinc-500">
-                        {template.downloads}
-                      </span>
-                    </span>
+                    <span className="font-semibold text-zinc-950">{template.name}</span>
                     <span className="mt-1 block text-sm leading-6 text-zinc-500">
                       {template.summary}
                     </span>
@@ -153,9 +123,9 @@ export function TemplateMarketplace() {
 
                   <div className="flex rounded-md border border-zinc-200 bg-white p-1">
                     {[
-                      ["both", "앞/뒤"],
-                      ["front", "앞면"],
-                      ["back", "뒷면"],
+                      ["both", "Both"],
+                      ["front", "Front"],
+                      ["back", "Back"],
                     ].map(([mode, label]) => (
                       <button
                         className={cx(
@@ -175,12 +145,7 @@ export function TemplateMarketplace() {
                 </div>
               </div>
 
-              <div
-                className={cx(
-                  "bg-white p-5",
-                  getTemplateScopeClass(activeTemplate.id),
-                )}
-              >
+              <div className={cx("bg-white p-5", getTemplateScopeClass(activeTemplate.id))}>
                 {previewMode === "both" ? (
                   <div className="grid gap-5 xl:grid-cols-2">
                     <CardTemplatePreview
@@ -227,84 +192,42 @@ export function TemplateMarketplace() {
 
             <Surface className="p-5">
               <SectionTitle
-                body="필요한 코드만 따로 복사하거나, JSON 패키지 전체를 가져가서 Anki 노트 타입에 붙일 수 있습니다."
+                body="Copy only the part you need, or copy the full JSON package for archive notes."
                 eyebrow="Copy Ready"
-                icon={Sparkles}
-                title="복사 가능한 템플릿 코드"
+                icon={Code2}
+                title="Template code"
               />
 
               <div className="mt-5 grid gap-5 xl:grid-cols-2">
                 <CopyCodeBlock
                   code={activeTemplate.frontHtml}
-                  description="{{Front}}, {{DeckTitle}}, {{Version}} 필드를 사용합니다."
+                  description="Uses {{Front}}, {{DeckTitle}}, and {{Version}}."
                   maxHeightClass="max-h-72"
-                  title="앞면 HTML"
+                  title="Front HTML"
                 />
                 <CopyCodeBlock
                   code={activeTemplate.backHtml}
-                  description="{{Back}}, {{Extra}} 필드를 사용합니다."
+                  description="Uses {{Back}} and {{Extra}}."
                   maxHeightClass="max-h-72"
-                  title="뒷면 HTML"
+                  title="Back HTML"
                 />
                 <CopyCodeBlock
                   className="xl:col-span-2"
                   code={activeTemplate.css}
-                  description="Anki 카드 스타일 영역에 붙여 넣는 CSS입니다."
+                  description="Scoped CSS for Anki card styling."
                   maxHeightClass="max-h-96"
-                  title="카드 CSS"
+                  title="Card CSS"
                 />
                 <CopyCodeBlock
                   className="xl:col-span-2"
                   code={bundleCode}
-                  description="나중에 템플릿 업로드 API와 연결하기 쉬운 구조의 전체 패키지입니다."
+                  description="Full template package for maintainer notes."
                   maxHeightClass="max-h-96"
-                  title="템플릿 패키지 JSON"
+                  title="Template JSON"
                   tone="light"
                 />
               </div>
             </Surface>
-
-            <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
-              <Surface className="p-5">
-                <SectionTitle
-                  body="사용자가 직접 HTML/CSS 템플릿을 올릴 때 필요한 검수 기준입니다. 실제 저장 API가 붙으면 이 기준을 그대로 서버 검증으로 옮기면 됩니다."
-                  eyebrow="Submission Rules"
-                  icon={ShieldCheck}
-                  title="공유 전 체크리스트"
-                />
-                <div className="mt-5 grid gap-3 md:grid-cols-3">
-                  {[
-                    ["스크립트 금지", "HTML 구조와 CSS만 허용"],
-                    ["필드 명확성", "{{Front}}, {{Back}}, {{Extra}} 사용"],
-                    ["모바일 우선", "긴 문장과 작은 화면에서 가독성 확인"],
-                  ].map(([title, body]) => (
-                    <div
-                      className="rounded-lg border border-zinc-200 bg-zinc-50 p-4"
-                      key={title}
-                    >
-                      <p className="text-sm font-semibold text-zinc-950">{title}</p>
-                      <p className="mt-2 text-sm leading-6 text-zinc-500">{body}</p>
-                    </div>
-                  ))}
-                </div>
-              </Surface>
-
-              <Surface className="p-5">
-                <h2 className="text-lg font-semibold leading-7 text-zinc-950">
-                  Anki 적용 흐름
-                </h2>
-                <div className="mt-4">
-                  <InfoList
-                    items={[
-                      ["노트 필드", "Front / Back / Extra"],
-                      ["앞면", "앞면 HTML 복사"],
-                      ["뒷면", "뒷면 HTML 복사"],
-                      ["스타일", "카드 CSS 복사"],
-                    ]}
-                  />
-                </div>
-              </Surface>
-            </div>
           </div>
         </div>
       </div>
