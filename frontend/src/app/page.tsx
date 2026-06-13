@@ -3,8 +3,8 @@ import {
   Boxes,
   CheckCircle2,
   FileArchive,
-  GitPullRequestArrow,
   Github,
+  Rocket,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -25,7 +25,7 @@ export default function Home() {
             </div>
             <div>
               <p className="text-lg font-semibold leading-6">DeckHub</p>
-              <p className="text-xs text-zinc-500">GitHub-native Anki archive</p>
+              <p className="text-xs text-zinc-500">Maintainer-curated Anki archive</p>
             </div>
           </div>
           <nav className="flex items-center gap-2">
@@ -38,10 +38,10 @@ export default function Home() {
             </a>
             <a
               className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-3 text-sm font-semibold text-white transition hover:bg-teal-700"
-              href="https://github.com/Enceladus-X/deckhub/issues/new?template=deck_submission.yml"
+              href="https://github.com/Enceladus-X/deckhub/releases"
             >
-              <GitPullRequestArrow aria-hidden="true" size={17} />
-              제출
+              <Rocket aria-hidden="true" size={17} />
+              Releases
             </a>
           </nav>
         </div>
@@ -53,15 +53,15 @@ export default function Home() {
             <div className="bg-zinc-950 p-6 text-white sm:p-8">
               <div className="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-1.5 text-xs font-semibold text-teal-200">
                 <Sparkles aria-hidden="true" size={14} />
-                Repository as Archive
+                Owner Managed
               </div>
               <h1 className="mt-5 max-w-2xl text-3xl font-semibold leading-tight sm:text-4xl">
-                Anki 덱을 GitHub 릴리즈와 manifest로 검증해서 공유합니다.
+                Curated Anki decks, published directly from this repository.
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-300 sm:text-base">
-                APKG는 Release 자산으로 보관하고, `decks/`의 작은 JSON manifest가 검색,
-                버전, SHA256, 세부 범위 정보를 담당합니다. 서버 없이 시작하고 필요해질 때
-                CDN/API를 붙일 수 있습니다.
+                DeckHub does not accept external deck submissions yet. APKG files are
+                attached to GitHub Releases, and small JSON manifests describe search metadata,
+                versions, SHA256 hashes, and optional split download ranges.
               </p>
               <div className="mt-6 flex flex-col gap-2 sm:flex-row">
                 <a
@@ -69,24 +69,24 @@ export default function Home() {
                   href="https://github.com/Enceladus-X/deckhub/releases"
                 >
                   <FileArchive aria-hidden="true" size={17} />
-                  Releases
+                  Browse Releases
                 </a>
                 <a
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 px-4 text-sm font-semibold text-white transition hover:bg-white/10"
-                  href="https://github.com/Enceladus-X/deckhub/tree/main/decks"
+                  href="https://github.com/Enceladus-X/deckhub/blob/main/docs/publish-deck.md"
                 >
                   <BookOpenCheck aria-hidden="true" size={17} />
-                  Manifest
+                  Publish Guide
                 </a>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-px bg-zinc-200 lg:grid-cols-1">
               {[
-                ["덱", formatCount(summary.decks)],
-                ["카드", formatCount(summary.cards)],
-                ["분할 파일", formatCount(summary.segments)],
-                ["분류", formatCount(summary.categories.length)],
+                ["Decks", formatCount(summary.decks)],
+                ["Cards", formatCount(summary.cards)],
+                ["Split files", formatCount(summary.segments)],
+                ["Categories", formatCount(summary.categories.length)],
               ].map(([label, value]) => (
                 <div className="bg-white p-5" key={label}>
                   <p className="text-sm font-medium text-zinc-500">{label}</p>
@@ -101,18 +101,18 @@ export default function Home() {
           {[
             {
               icon: FileArchive,
-              title: "Release에 APKG 저장",
-              body: "대용량 파일은 Git 히스토리에 넣지 않고 Release asset으로 관리합니다.",
+              title: "Release assets",
+              body: "Large APKG files stay out of Git history and live as GitHub Release assets.",
             },
             {
               icon: ShieldCheck,
-              title: "SHA256 중복 방지",
-              body: "동일 APKG 해시가 manifest에 다시 들어오면 CI가 막습니다.",
+              title: "SHA256 guardrail",
+              body: "The catalog workflow blocks duplicate APKG hashes and malformed manifests.",
             },
             {
               icon: Boxes,
-              title: "세부 범위 분할",
-              body: "같은 덱 안에서도 1급, Part 2, 초급처럼 필요한 단위만 받을 수 있습니다.",
+              title: "Split ranges",
+              body: "A single deck can expose smaller ranges such as Level 1, Part 2, or full scope.",
             },
           ].map((item) => (
             <article className="rounded-lg border border-zinc-200 bg-white p-4" key={item.title}>
@@ -131,14 +131,14 @@ export default function Home() {
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.08em] text-teal-700">
-                Contributor Flow
+                Publish Flow
               </p>
               <h2 className="mt-1 text-xl font-semibold text-zinc-950">
-                덱 제출은 게시판보다 GitHub PR에 가깝게
+                Update decks with one release and one manifest diff.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
-                사용자는 Issue로 덱을 제안하거나 PR로 manifest를 추가합니다. 검증이 통과하면
-                Pages 카탈로그와 README가 같은 데이터에서 갱신됩니다.
+                Export an APKG, attach it to a GitHub Release, update the manifest, and let
+                Actions rebuild the static catalog. Visitors only see a clean download page.
               </p>
             </div>
             <a
@@ -146,7 +146,7 @@ export default function Home() {
               href="https://github.com/Enceladus-X/deckhub/actions/workflows/catalog.yml"
             >
               <CheckCircle2 aria-hidden="true" size={17} />
-              검증 상태
+              Workflow
             </a>
           </div>
         </section>

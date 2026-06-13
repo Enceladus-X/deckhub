@@ -2,26 +2,35 @@
 
 # DeckHub
 
-**GitHub-native Anki deck archive for certification and language study**
+**Maintainer-curated Anki deck archive**
 
-[덱 제출](https://github.com/Enceladus-X/deckhub/issues/new?template=deck_submission.yml)
-· [릴리즈](https://github.com/Enceladus-X/deckhub/releases)
-· [카탈로그 데이터](./catalog/decks.json)
-· [운영 설계](./docs/architecture.md)
+[GitHub Pages](https://enceladus-x.github.io/deckhub/)
+· [Releases](https://github.com/Enceladus-X/deckhub/releases)
+· [Catalog JSON](./catalog/decks.json)
+· [Architecture](./docs/architecture.md)
 
 </div>
 
-DeckHub는 APKG 파일을 GitHub Release에 보관하고, 작은 JSON manifest로 덱의
-검색 정보, 버전, SHA256, 세부 범위, 노트 유형 정보를 관리하는 Anki 덱 공유
-아카이브입니다.
+DeckHub is a small, GitHub-native archive for Anki `.apkg` decks that are
+created and maintained by the repository owner.
 
-처음부터 서버를 크게 띄우지 않습니다. 레포 자체를 신뢰 가능한 공유 페이지로 만들고,
-GitHub Actions가 manifest를 검증한 뒤 정적 카탈로그와 GitHub Pages 화면을 생성합니다.
-트래픽이나 비공개 배포가 필요해지는 시점에만 S3, CloudFront, Lambda 경로를 붙입니다.
+Public login and external deck submissions are intentionally disabled for now.
+Users browse the catalog and download decks. The maintainer publishes new decks
+by attaching APKG files to GitHub Releases and updating `decks/**/deck.json`
+manifests.
+
+This keeps the first version simple:
+
+- No account system
+- No moderation queue
+- No runtime database
+- No file storage bill
+- Every deck update is a reviewable Git diff
+- GitHub Actions rebuilds the static catalog
 
 ## Current Catalog
 
-아직 공개 덱은 등록되어 있지 않습니다.
+No public decks are registered yet.
 
 | Metric | Count |
 | --- | ---: |
@@ -29,14 +38,15 @@ GitHub Actions가 manifest를 검증한 뒤 정적 카탈로그와 GitHub Pages 
 | Cards | 0 |
 | Split downloads | 0 |
 
-덱이 추가되면 `decks/**/deck.json`에서 생성된 [`catalog/decks.json`](./catalog/decks.json)에
-자동 반영됩니다.
+When a manifest is added under `decks/**/deck.json`, the generated
+[`catalog/decks.json`](./catalog/decks.json) and the GitHub Pages site are
+updated by the catalog workflow.
 
 ## How It Works
 
 ```mermaid
 flowchart LR
-    A["APKG export"] --> B["GitHub Release asset"]
+    A["Maintainer exports APKG"] --> B["GitHub Release asset"]
     A --> C["deck.json manifest"]
     C --> D["catalog validation"]
     D --> E["catalog/decks.json"]
@@ -48,15 +58,15 @@ flowchart LR
 
 | Path | Purpose |
 | --- | --- |
-| [`decks/`](./decks) | Human-authored deck manifests. |
+| [`decks/`](./decks) | Maintainer-authored deck manifests. |
 | [`catalog/`](./catalog) | Generated catalog JSON consumed by readers and tooling. |
 | [`frontend/`](./frontend) | Static Next.js catalog UI for GitHub Pages or any static host. |
 | [`backend/`](./backend) | Optional Lambda API path for signed downloads later. |
 | [`infrastructure/`](./infrastructure) | Optional AWS SAM stack for S3, CloudFront, API Gateway, Lambda. |
 | [`scripts/`](./scripts) | Catalog generation and bootstrap scripts. |
-| [`.github/`](./.github) | Issue templates, PR checklist, catalog validation workflow. |
+| [`.github/`](./.github) | Maintainer checklist and catalog validation workflow. |
 
-## Add a Deck
+## Publish a Deck
 
 1. Export an Anki `.apkg` file.
 2. Attach the APKG to a GitHub Release.
@@ -81,21 +91,21 @@ flowchart LR
    npm run frontend:build
    ```
 
-Detailed guide: [`docs/submit-deck.md`](./docs/submit-deck.md)
+Detailed guide: [`docs/publish-deck.md`](./docs/publish-deck.md)
 
 ## Manifest Model
 
-Each deck can include split segments so one large deck can still be useful in
+Each deck can include split segments so one large APKG can still be useful in
 smaller pieces:
 
 ```json
 {
   "slug": "hsk-vocabulary",
-  "title": "HSK 1~3급 600단어 예문",
+  "title": "HSK 1-3 Vocabulary",
   "category": "language",
   "exam": {
     "name": "HSK",
-    "scope": ["1급", "2급", "3급"]
+    "scope": ["Level 1", "Level 2", "Level 3"]
   },
   "versions": [
     {
@@ -109,7 +119,7 @@ smaller pieces:
       "segments": [
         {
           "id": "level-1",
-          "label": "1급",
+          "label": "Level 1",
           "cards": 150
         }
       ]

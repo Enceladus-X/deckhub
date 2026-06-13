@@ -17,9 +17,9 @@ type CatalogBrowserProps = {
 };
 
 const sortOptions = [
-  { id: "recent", label: "최신" },
-  { id: "cards", label: "카드 수" },
-  { id: "title", label: "이름" },
+  { id: "recent", label: "Recent" },
+  { id: "cards", label: "Cards" },
+  { id: "title", label: "Name" },
 ] as const;
 
 type SortOption = (typeof sortOptions)[number]["id"];
@@ -76,7 +76,7 @@ export function CatalogBrowser({ decks, categories }: CatalogBrowserProps) {
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-teal-700">
               Catalog
             </p>
-            <h2 className="mt-1 text-xl font-semibold text-zinc-950">공개 덱</h2>
+            <h2 className="mt-1 text-xl font-semibold text-zinc-950">Published decks</h2>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             <label className="relative">
@@ -88,7 +88,7 @@ export function CatalogBrowser({ decks, categories }: CatalogBrowserProps) {
               <input
                 className="h-10 w-full rounded-md border border-zinc-200 bg-zinc-50 pl-9 pr-3 text-sm outline-none transition focus:border-teal-600 focus:bg-white sm:w-72"
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="시험명, 범위, 설명 검색"
+                placeholder="Search exam, scope, or description"
                 value={query}
               />
             </label>
@@ -121,7 +121,7 @@ export function CatalogBrowser({ decks, categories }: CatalogBrowserProps) {
             onClick={() => setCategory("all")}
             type="button"
           >
-            전체 {decks.length}
+            All {decks.length}
           </button>
           {categories.map((item) => (
             <button
@@ -146,24 +146,24 @@ export function CatalogBrowser({ decks, categories }: CatalogBrowserProps) {
             <FileArchive aria-hidden="true" size={24} />
           </div>
           <h3 className="mt-4 text-lg font-semibold text-zinc-950">
-            아직 공개된 덱이 없습니다
+            No decks are published yet
           </h3>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-600">
-            APKG 파일은 GitHub Release에 올리고, `decks/` manifest가 병합되면 이 목록에
-            자동으로 표시됩니다.
+            Once the maintainer attaches an APKG to a GitHub Release and updates a
+            deck manifest, it will appear here automatically.
           </p>
           <div className="mt-5 flex flex-col justify-center gap-2 sm:flex-row">
             <a
               className="inline-flex h-10 items-center justify-center rounded-md bg-zinc-950 px-4 text-sm font-semibold text-white transition hover:bg-teal-700"
-              href="https://github.com/Enceladus-X/deckhub/issues/new?template=deck_submission.yml"
+              href="https://github.com/Enceladus-X/deckhub/blob/main/docs/publish-deck.md"
             >
-              덱 제출하기
+              Publish guide
             </a>
             <a
               className="inline-flex h-10 items-center justify-center rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 transition hover:bg-zinc-100"
-              href="https://github.com/Enceladus-X/deckhub/tree/main/decks"
+              href="https://github.com/Enceladus-X/deckhub/releases"
             >
-              manifest 보기
+              Releases
             </a>
           </div>
         </div>
@@ -197,8 +197,8 @@ export function CatalogBrowser({ decks, categories }: CatalogBrowserProps) {
                       <span>{releaseLabel(latestVersion)}</span>
                       {latestVersion ? (
                         <>
-                          <span>카드 {formatCount(latestVersion.stats.cards)}</span>
-                          <span>세그먼트 {formatCount(latestVersion.segments.length)}</span>
+                          <span>Cards {formatCount(latestVersion.stats.cards)}</span>
+                          <span>Segments {formatCount(latestVersion.segments.length)}</span>
                           <span>{formatBytes(latestVersion.apkg.sizeBytes)}</span>
                         </>
                       ) : null}
@@ -210,7 +210,7 @@ export function CatalogBrowser({ decks, categories }: CatalogBrowserProps) {
                       href={latestVersion.apkg.downloadUrl}
                     >
                       <Download aria-hidden="true" size={17} />
-                      다운로드
+                      Download
                     </a>
                   ) : null}
                 </div>
@@ -222,7 +222,8 @@ export function CatalogBrowser({ decks, categories }: CatalogBrowserProps) {
 
       <div className="flex items-center gap-2 border-t border-zinc-200 bg-zinc-50 px-4 py-3 text-xs text-zinc-500 sm:px-5">
         <SlidersHorizontal aria-hidden="true" size={14} />
-        SHA256 중복, slug 중복, 버전 manifest는 GitHub Actions에서 검증됩니다.
+        Duplicate SHA256 values, duplicate slugs, and malformed version manifests are
+        checked by GitHub Actions.
       </div>
     </section>
   );
