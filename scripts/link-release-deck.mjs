@@ -5,6 +5,9 @@ import process from "node:process";
 
 const repo = "Enceladus-X/deckhub";
 const options = parseArgs(process.argv.slice(2));
+if (options["deck-version"] && !options.version) {
+  options.version = options["deck-version"];
+}
 
 const required = [
   "category",

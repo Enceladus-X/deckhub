@@ -26,15 +26,19 @@ DeckHub는 시험 공부용 Anki `.apkg` 덱을 정리해서 배포하는 개인
 
 ## 현재 공개 상태
 
-아직 공개된 덱은 없습니다.
+현재 공개된 덱은 아래와 같습니다.
 
 | 항목 | 수량 |
 | --- | ---: |
-| 덱 | 0 |
-| 카드 | 0 |
-| 분할 다운로드 | 0 |
+| 덱 | 1 |
+| 카드 | 600 |
+| 분할 범위 | 3 |
 
-새 덱이 공개되면 GitHub Pages의 카탈로그에 자동으로 표시됩니다.
+| 덱 | 범위 | 카드 | 다운로드 |
+| --- | --- | ---: | --- |
+| HSK 1~3급 600단어 예문 | 1급 150, 2급 150, 3급 300 | 600 | [APKG](https://github.com/Enceladus-X/deckhub/releases/download/hsk-1-3-vocabulary-v2026.06/hsk-1-3-600-vocabulary-examples.apkg) |
+
+새 덱이 공개되면 GitHub Pages의 카탈로그에도 자동으로 표시됩니다.
 
 ## 다운로드 방식
 
@@ -52,10 +56,16 @@ flowchart LR
 
 ## 관리자를 위한 발행 절차
 
+APKG를 분석해서 카드 수, 노트 수, 미디어 수, 태그별 범위를 확인합니다.
+
+```powershell
+python scripts/analyze-apkg.py .\deck.apkg
+```
+
 APKG를 Release에 올린 뒤 manifest를 생성합니다.
 
 ```powershell
-npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --cards 600 --notes 600 --media 0 --scope "Level 1,Level 2,Level 3"
+npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --deck-version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --cards 600 --notes 600 --media 0 --scope "Level 1,Level 2,Level 3"
 ```
 
 카탈로그를 갱신하고 검증합니다.
@@ -77,7 +87,7 @@ npm run frontend:build
 | [`decks/`](./decks) | 덱 manifest 원본 |
 | [`catalog/`](./catalog) | 자동 생성되는 공개 카탈로그 JSON |
 | [`frontend/`](./frontend) | GitHub Pages로 배포되는 정적 사이트 |
-| [`scripts/`](./scripts) | manifest 생성과 catalog 빌드 도구 |
+| [`scripts/`](./scripts) | APKG 분석, manifest 생성, catalog 빌드 도구 |
 | [`.github/workflows/catalog.yml`](./.github/workflows/catalog.yml) | Pages 배포 workflow |
 
 ## 나중에 확장할 수 있는 것

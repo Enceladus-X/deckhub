@@ -14,8 +14,22 @@ Compute SHA256:
 Get-FileHash .\deck.apkg -Algorithm SHA256
 ```
 
-Record the card count, note count, media count, and optional scope labels such
-as `Level 1`, `Part 2`, or `Full scope`.
+Analyze the APKG so the manifest can use real card, note, media, note type, and
+tag counts:
+
+```powershell
+python scripts/analyze-apkg.py .\deck.apkg
+```
+
+If the APKG uses Anki's newer zstd-compressed format, install the optional
+Python dependency once:
+
+```powershell
+python -m pip install zstandard
+```
+
+Use tag counts as optional scope labels such as `Level 1`, `Part 2`, or
+`Full scope`.
 
 ## 2. Create a GitHub Release
 
@@ -34,7 +48,7 @@ Do not commit APKG files directly to Git.
 Run the helper script from the repository root:
 
 ```powershell
-npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --cards 600 --notes 600 --media 0 --scope "Level 1,Level 2,Level 3"
+npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --deck-version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --cards 600 --notes 600 --media 0 --scope "Level 1,Level 2,Level 3"
 ```
 
 This creates:
