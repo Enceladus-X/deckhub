@@ -24,8 +24,16 @@ def main() -> int:
         description="Extract cards, notes, media, note types, decks, and tag counts from APKG.",
     )
     parser.add_argument("apkg", type=Path, help="Path to an .apkg file exported from Anki.")
+    parser.add_argument(
+        "output_path",
+        nargs="?",
+        type=Path,
+        help="Optional JSON output path, useful when running through npm.",
+    )
     parser.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
+    parser.add_argument("--output", type=Path, help="Write machine-readable JSON as UTF-8.")
     args = parser.parse_args()
+    output_path = args.output or args.output_path
 
     try:
         result = analyze_apkg(args.apkg)
@@ -33,9 +41,15 @@ def main() -> int:
         print(f"error: {error}", file=sys.stderr)
         return 1
 
+    serialized = json.dumps(result, ensure_ascii=False, indent=2)
+    if output_path:
+        output_path.write_text(f"{serialized}\n", encoding="utf-8")
+        if not args.json:
+            print(f"Wrote {output_path}")
+
     if args.json:
-        print(json.dumps(result, ensure_ascii=False, indent=2))
-    else:
+        print(serialized)
+    elif not output_path:
         print_summary(result)
 
     return 0

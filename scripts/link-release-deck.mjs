@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 
@@ -7,6 +7,19 @@ const repo = "Enceladus-X/deckhub";
 const options = parseArgs(process.argv.slice(2));
 if (options["deck-version"] && !options.version) {
   options.version = options["deck-version"];
+}
+const analysis = options["analysis-json"] ? readAnalysis(options["analysis-json"]) : undefined;
+
+if (analysis) {
+  if (analysis.cards !== undefined) {
+    options.cards ??= String(analysis.cards);
+  }
+  if (analysis.notes !== undefined) {
+    options.notes ??= String(analysis.notes);
+  }
+  if (analysis.media !== undefined) {
+    options.media ??= String(analysis.media);
+  }
 }
 
 const required = [
@@ -80,6 +93,9 @@ const links = options.source
       },
     ]
   : [];
+const shouldBuildTagSegments =
+  (options["segments-from-tags"] || (!options.segments && hasEntries(analysis?.tagCounts))) &&
+  Boolean(analysis);
 
 const manifest = {
   "$schema": "../../_schema/deck.schema.json",
@@ -114,8 +130,10 @@ const manifest = {
         sha256: options.sha256.toLowerCase(),
         sizeBytes,
       },
-      segments: buildSegments(options.segments),
-      noteTypes: [],
+      segments: shouldBuildTagSegments
+        ? buildSegmentsFromTagCounts(analysis?.tagCounts)
+        : buildSegments(options.segments),
+      noteTypes: buildNoteTypes(analysis?.noteTypes),
     },
   ],
 };
@@ -128,7 +146,12 @@ console.log(`Wrote ${path.relative(process.cwd(), target)}`);
 console.log("Next: npm run catalog:build && npm run catalog:check");
 
 function parseArgs(args) {
+  if (args[0] && !args[0].startsWith("--")) {
+    return parsePositionalArgs(args);
+  }
+
   const parsed = {};
+  const booleanFlags = new Set(["force", "segments-from-tags"]);
 
   for (let index = 0; index < args.length; index += 1) {
     const token = args[index];
@@ -137,8 +160,8 @@ function parseArgs(args) {
     }
 
     const key = token.slice(2);
-    if (key === "force") {
-      parsed.force = true;
+    if (booleanFlags.has(key)) {
+      parsed[key] = true;
       continue;
     }
 
@@ -152,6 +175,48 @@ function parseArgs(args) {
   }
 
   return parsed;
+}
+
+function parsePositionalArgs(args) {
+  const keys = [
+    "category",
+    "slug",
+    "title",
+    "summary",
+    "exam",
+    "version",
+    "release",
+    "asset",
+    "sha256",
+    "analysis-json",
+  ];
+
+  if (args.length < 9) {
+    fail(
+      "Positional mode requires: category slug title summary exam version release asset sha256 [analysis-json]",
+    );
+  }
+
+  const parsed = {};
+  keys.forEach((key, index) => {
+    if (args[index]) {
+      parsed[key] = args[index];
+    }
+  });
+
+  return parsed;
+}
+
+function readAnalysis(filePath) {
+  try {
+    const analysis = JSON.parse(readFileSync(path.resolve(filePath), "utf8"));
+    if (!isPlainObject(analysis)) {
+      fail("--analysis-json must point to a JSON object.");
+    }
+    return analysis;
+  } catch (error) {
+    fail(`Could not read --analysis-json ${filePath}: ${error.message}`);
+  }
 }
 
 function readRelease(tag) {
@@ -177,17 +242,45 @@ function releaseDownloadUrl(tag, assetName) {
 
 function buildSegments(value) {
   return splitCsv(value).map((label, index) => {
-    const id = label
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
     return {
-      id: id || `segment-${index + 1}`,
+      id: toSlug(label) || `segment-${index + 1}`,
       label,
       cards: 0,
     };
   });
+}
+
+function buildSegmentsFromTagCounts(tagCounts) {
+  if (!isPlainObject(tagCounts) || Object.keys(tagCounts).length === 0) {
+    fail("--segments-from-tags requires --analysis-json with a non-empty tagCounts object.");
+  }
+
+  return Object.entries(tagCounts)
+    .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
+    .map(([label, cards], index) => ({
+      id: toSlug(label) || `segment-${index + 1}`,
+      label,
+      scope: [label],
+      cards: toNonNegativeInteger(String(cards), `tagCounts.${label}`),
+    }));
+}
+
+function buildNoteTypes(noteTypes) {
+  if (!Array.isArray(noteTypes)) {
+    return [];
+  }
+
+  return noteTypes
+    .filter((noteType) => isPlainObject(noteType) && nonEmptyString(noteType.name))
+    .map((noteType) => ({
+      name: noteType.name,
+      fields: Array.isArray(noteType.fields) ? noteType.fields.filter(nonEmptyString) : [],
+      templates: Array.isArray(noteType.templates)
+        ? noteType.templates.filter(nonEmptyString).map((name) => ({ name }))
+        : [],
+      ...(Number.isInteger(noteType.notes) ? { notes: noteType.notes } : {}),
+      ...(Number.isInteger(noteType.cards) ? { cards: noteType.cards } : {}),
+    }));
 }
 
 function splitCsv(value) {
@@ -211,6 +304,25 @@ function toNonNegativeInteger(value, label) {
 
 function isSlug(value) {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+}
+
+function toSlug(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function hasEntries(value) {
+  return isPlainObject(value) && Object.keys(value).length > 0;
+}
+
+function nonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
 }
 
 function fail(message) {

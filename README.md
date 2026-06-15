@@ -59,13 +59,13 @@ flowchart LR
 APKG를 분석해서 카드 수, 노트 수, 미디어 수, 태그별 범위를 확인합니다.
 
 ```powershell
-python scripts/analyze-apkg.py .\deck.apkg
+npm run deck:analyze -- .\deck.apkg .\analysis.json
 ```
 
 APKG를 Release에 올린 뒤 manifest를 생성합니다.
 
 ```powershell
-npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --deck-version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --cards 600 --notes 600 --media 0 --scope "Level 1,Level 2,Level 3"
+npm run deck:link-release -- --category language --slug hsk-vocabulary --title "HSK Vocabulary" --summary "HSK vocabulary deck." --exam HSK --deck-version 2026.06 --release hsk-vocabulary-v2026.06 --asset hsk-vocabulary.apkg --sha256 <64-char-sha256> --analysis-json .\analysis.json --segments-from-tags
 ```
 
 카탈로그를 갱신하고 검증합니다.
