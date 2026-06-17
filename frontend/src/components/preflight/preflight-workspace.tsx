@@ -29,6 +29,7 @@ import {
   buildIssueTsv,
   buildSummaryPrompt,
   defaultReasonFor,
+  makeManualIssue,
   parseDeckText,
 } from "@/lib/preflight/validators";
 
@@ -41,6 +42,7 @@ type StoredSession = {
 };
 
 type IssueFilter = IssueType | "all";
+type ReviewMode = "issues" | "clean_cards";
 type SeverityFilter = IssueSeverity | "all";
 
 type ReadyItem = {
@@ -57,6 +59,7 @@ export function PreflightWorkspace() {
   const [readyItems, setReadyItems] = useState<ReadyItem[]>([]);
   const [draftNotes, setDraftNotes] = useState<Record<string, string>>({});
   const [issueFilter, setIssueFilter] = useState<IssueFilter>("all");
+  const [reviewMode, setReviewMode] = useState<ReviewMode>("issues");
   const [severityFilter, setSeverityFilter] = useState<SeverityFilter>("all");
   const [issueCursor, setIssueCursor] = useState(0);
   const [copyState, setCopyState] = useState("");
@@ -75,6 +78,10 @@ export function PreflightWorkspace() {
     () => new Set(readyItems.map((item) => item.issue.id)),
     [readyItems],
   );
+  const issueCardIds = useMemo(
+    () => new Set(report?.issues.map((issue) => issue.cardId) ?? []),
+    [report],
+  );
 
   const filteredIssues = useMemo(() => {
     if (!report) {
@@ -86,15 +93,26 @@ export function PreflightWorkspace() {
       return typeOk && severityOk && !readyIds.has(issue.id);
     });
   }, [issueFilter, readyIds, report, severityFilter]);
+  const cleanCardIssues = useMemo(() => {
+    if (!report) {
+      return [];
+    }
+    return report.cards
+      .filter((card) => card.fields.length === industrialSafetyProfile.expectedFields)
+      .filter((card) => !issueCardIds.has(card.id))
+      .map((card) => makeManualIssue(card))
+      .filter((issue) => !readyIds.has(issue.id));
+  }, [issueCardIds, readyIds, report]);
+  const reviewItems = reviewMode === "issues" ? filteredIssues : cleanCardIssues;
 
-  const maxIssueCursor = filteredIssues.length
-    ? Math.floor((filteredIssues.length - 1) / ISSUE_PAGE_SIZE) * ISSUE_PAGE_SIZE
+  const maxIssueCursor = reviewItems.length
+    ? Math.floor((reviewItems.length - 1) / ISSUE_PAGE_SIZE) * ISSUE_PAGE_SIZE
     : 0;
   const safeIssueCursor = Math.min(issueCursor, maxIssueCursor);
-  const visibleIssues = filteredIssues.slice(safeIssueCursor, safeIssueCursor + ISSUE_PAGE_SIZE);
+  const visibleIssues = reviewItems.slice(safeIssueCursor, safeIssueCursor + ISSUE_PAGE_SIZE);
   const issueTypes = report ? Object.keys(report.issueCounts).sort() as IssueType[] : [];
-  const currentRangeStart = filteredIssues.length ? safeIssueCursor + 1 : 0;
-  const currentRangeEnd = Math.min(safeIssueCursor + ISSUE_PAGE_SIZE, filteredIssues.length);
+  const currentRangeStart = reviewItems.length ? safeIssueCursor + 1 : 0;
+  const currentRangeEnd = Math.min(safeIssueCursor + ISSUE_PAGE_SIZE, reviewItems.length);
 
   function analyze() {
     const currentText = inputRef.current?.value ?? inputText;
@@ -119,6 +137,7 @@ export function PreflightWorkspace() {
     setReadyItems([]);
     setDraftNotes({});
     setIssueCursor(0);
+    setReviewMode("issues");
     setCopyState("");
   }
 
@@ -144,7 +163,7 @@ export function PreflightWorkspace() {
       return;
     }
     await copyText(buildSummaryPrompt(report, sourceName));
-    setCopyState("검수 요약 MD 복사됨");
+    setCopyState("전체 이슈 MD 복사됨");
   }
 
   async function copyFixRequest() {
@@ -263,7 +282,7 @@ export function PreflightWorkspace() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <SectionTitle
               title="검수 요약"
-              body="이슈 분포와 대표 샘플을 Markdown 프롬프트로 복사할 수 있습니다."
+              body="이슈 분포와 전체 이슈 목록을 Markdown 프롬프트로 복사할 수 있습니다."
               icon={ListChecks}
             />
             <button
@@ -273,7 +292,7 @@ export function PreflightWorkspace() {
               type="button"
             >
               <Copy size={16} aria-hidden="true" />
-              요약 MD 복사
+              전체 이슈 MD 복사
             </button>
           </div>
 
@@ -286,7 +305,7 @@ export function PreflightWorkspace() {
 
           {report ? (
             <div className="mt-5 grid gap-4">
-              <SummaryBucket title="과목 분포" empty="과목 정보 없음" entries={report.subjectCounts} />
+              <SubjectDistributionChart entries={report.subjectCounts} />
               <SummaryBucket title="이슈 분포" entries={report.issueCounts} highlight />
             </div>
           ) : (
@@ -302,12 +321,24 @@ export function PreflightWorkspace() {
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <SectionTitle
               title="자동 검출 목록"
-              body="10개씩 확인합니다. 카드 아래 사유 버튼을 누르면 바로 복사 대기로 이동합니다."
+              body="검출 이슈와 이슈 없는 문항을 10개씩 확인합니다. 사유 버튼을 누르면 바로 복사 대기로 이동합니다."
               icon={Filter}
             />
             <div className="flex flex-col gap-2 sm:flex-row">
               <select
                 className="h-10 rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-teal-600"
+                onChange={(event) => {
+                  setReviewMode(event.target.value as ReviewMode);
+                  setIssueCursor(0);
+                }}
+                value={reviewMode}
+              >
+                <option value="issues">검출 이슈</option>
+                <option value="clean_cards">이슈 없는 문항</option>
+              </select>
+              <select
+                className="h-10 rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-teal-600"
+                disabled={reviewMode !== "issues"}
                 onChange={(event) => {
                   setSeverityFilter(event.target.value as SeverityFilter);
                   setIssueCursor(0);
@@ -321,6 +352,7 @@ export function PreflightWorkspace() {
               </select>
               <select
                 className="h-10 rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-teal-600"
+                disabled={reviewMode !== "issues"}
                 onChange={(event) => {
                   setIssueFilter(event.target.value as IssueFilter);
                   setIssueCursor(0);
@@ -339,7 +371,7 @@ export function PreflightWorkspace() {
 
           <div className="mt-4 flex flex-col gap-2 border-y border-zinc-100 py-3 text-sm text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
             <span>
-              {currentRangeStart}-{currentRangeEnd} / {filteredIssues.length}
+              {currentRangeStart}-{currentRangeEnd} / {reviewItems.length}
             </span>
             <div className="flex gap-2">
               <button
@@ -352,7 +384,7 @@ export function PreflightWorkspace() {
               </button>
               <button
                 className="h-9 rounded-md border border-zinc-200 px-3 font-semibold text-zinc-700 transition hover:bg-zinc-50 disabled:opacity-40"
-                disabled={safeIssueCursor + ISSUE_PAGE_SIZE >= filteredIssues.length}
+                disabled={safeIssueCursor + ISSUE_PAGE_SIZE >= reviewItems.length}
                 onClick={() => setIssueCursor(Math.min(maxIssueCursor, safeIssueCursor + ISSUE_PAGE_SIZE))}
                 type="button"
               >
@@ -376,7 +408,9 @@ export function PreflightWorkspace() {
               ))
             ) : (
               <div className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center text-sm text-zinc-500">
-                표시할 자동 검출 항목이 없습니다.
+                {reviewMode === "issues"
+                  ? "표시할 자동 검출 항목이 없습니다."
+                  : "표시할 이슈 없는 문항이 없습니다."}
               </div>
             )}
           </div>
@@ -465,6 +499,44 @@ export function PreflightWorkspace() {
         </Surface>
       </div>
     </section>
+  );
+}
+
+function SubjectDistributionChart({ entries }: { entries: Record<string, number> }) {
+  const rows = Object.entries(entries).sort((left, right) => right[1] - left[1]);
+  const total = rows.reduce((sum, [, count]) => sum + count, 0);
+  const max = Math.max(...rows.map(([, count]) => count), 1);
+
+  return (
+    <div>
+      <p className="text-sm font-semibold text-zinc-700">과목 분포</p>
+      {rows.length ? (
+        <div className="mt-3 grid gap-3">
+          {rows.map(([subject, count]) => {
+            const width = Math.max(8, Math.round((count / max) * 100));
+            const percent = total ? Math.round((count / total) * 100) : 0;
+            return (
+              <div className="grid gap-1" key={subject}>
+                <div className="flex items-center justify-between gap-3 text-xs">
+                  <span className="truncate font-semibold text-zinc-700">{subject}</span>
+                  <span className="shrink-0 text-zinc-500">
+                    {count} · {percent}%
+                  </span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-zinc-100">
+                  <div
+                    className="h-full rounded-full bg-teal-600"
+                    style={{ width: `${width}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="mt-2 text-sm text-zinc-500">과목 정보 없음</p>
+      )}
+    </div>
   );
 }
 

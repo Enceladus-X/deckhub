@@ -199,7 +199,7 @@ function flagCard(card: ParsedCard, profile: DeckProfile): IssueType[] {
 
   const expected = expectedCount(front);
   if (expected) {
-    const actual = countableItems(back).length;
+    const actual = countAnswerItems(back, expected);
     if (actual > 0 && actual !== expected) {
       flags.add("count_mismatch");
     }
@@ -283,14 +283,39 @@ function expectedCount(front: string): number | undefined {
   return match ? Number(match[1]) : undefined;
 }
 
+function countAnswerItems(text: string, expected: number): number {
+  const stripped = stripParenthetical(text);
+
+  if (text.includes(" / ")) {
+    return text.split(" / ").map((part) => part.trim()).filter(Boolean).length;
+  }
+  if (stripped.includes(",")) {
+    return stripped.split(",").map((part) => part.trim()).filter(Boolean).length;
+  }
+  if (expected === 2 && /와|과|및/.test(stripped)) {
+    return 2;
+  }
+
+  return 0;
+}
+
 function countableItems(text: string): string[] {
   if (text.includes(" / ")) {
     return text.split(" / ").map((part) => part.trim()).filter(Boolean);
   }
-  if (text.includes(",")) {
-    return text.split(",").map((part) => part.trim()).filter(Boolean);
+  const stripped = stripParenthetical(text);
+  if (stripped.includes(",")) {
+    return stripped.split(",").map((part) => part.trim()).filter(Boolean);
   }
   return [];
+}
+
+function stripParenthetical(text: string): string {
+  return text
+    .replace(/\([^)]*\)/g, "")
+    .replace(/\[[^\]]*]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function countBy<T extends Record<string, unknown>>(
@@ -377,7 +402,7 @@ export function buildSummaryPrompt(report: PreflightReport, sourceName: string):
   const lines = [
     "# ANKI_PREFLIGHT_SUMMARY",
     `source: ${sourceName}`,
-    "task: 아래 자동 검수 요약을 보고 구조적 문제가 많은 유형부터 덱 수정 우선순위와 수정 지침을 제안할 것",
+    "task: 아래 전체 자동 검출 이슈를 보고 구조적 문제가 많은 유형부터 덱 수정 우선순위와 수정 지침을 제안할 것",
     "",
     "## 전체 요약",
     `- total_cards: ${report.totalCards}`,
@@ -395,17 +420,29 @@ export function buildSummaryPrompt(report: PreflightReport, sourceName: string):
       .sort((left, right) => right[1] - left[1])
       .map(([type, count]) => `- ${type}: ${count}`),
     "",
-    "## 이슈 유형별 샘플",
+    "## 전체 이슈 목록",
   ];
 
-  Object.entries(groupIssues(report.issues)).forEach(([type, issues]) => {
+  const groupedIssues = Object.entries(groupIssues(report.issues));
+  if (groupedIssues.length === 0) {
+    lines.push("- 자동 검출 이슈 없음");
+  }
+
+  groupedIssues.forEach(([type, issues]) => {
     lines.push("");
     lines.push(`### ${type}`);
-    issues.slice(0, 3).forEach((issue) => {
-      lines.push(`- line ${issue.lineNo} ${issue.ref}`);
+    issues.forEach((issue, index) => {
+      lines.push(`- item ${index + 1}`);
+      lines.push(`  - line_no: ${issue.lineNo}`);
+      lines.push(`  - ref: ${issue.ref}`);
+      lines.push(`  - severity: ${issue.severity}`);
       lines.push(`  - front: ${issue.front}`);
       lines.push(`  - back: ${issue.back}`);
+      lines.push(`  - extra: ${issue.extra}`);
       lines.push(`  - detail: ${issue.detail}`);
+      if (issue.suggestion) {
+        lines.push(`  - suggestion: ${issue.suggestion}`);
+      }
     });
   });
 
