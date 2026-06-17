@@ -69,23 +69,23 @@ export const defaultAnkiTxtProfile: DeckProfile = {
   ],
 };
 
-export const industrialSafetyProfile: DeckProfile = {
+export const examConceptCardProfile: DeckProfile = {
   ...defaultAnkiTxtProfile,
-  id: "industrial-safety-engineer",
-  name: "산업안전기사 개념카드",
+  id: "exam-concept-card",
+  name: "시험 개념카드",
   description:
-    "출처 필드의 과목 정보, OX 문장, 보기 의존 객관식 흔적을 산업안전기사 덱 기준으로 검사합니다.",
+    "출처 필드의 과목 정보, OX 문장, 보기 의존 객관식 흔적을 시험 개념카드 기준으로 검사합니다.",
   subjectPattern: /([1-6])과목\s*:\s*([^\]]+)/,
 };
 
 export const preflightProfiles = [
-  industrialSafetyProfile,
+  examConceptCardProfile,
   defaultAnkiTxtProfile,
 ] as const;
 
 export function getPreflightProfile(profileId: string): DeckProfile {
   return (
     preflightProfiles.find((profile) => profile.id === profileId) ??
-    industrialSafetyProfile
+    examConceptCardProfile
   );
 }

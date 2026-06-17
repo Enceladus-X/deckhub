@@ -15,7 +15,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { Badge, SectionTitle, StatCard, Surface } from "@/components/ui-kit";
-import { industrialSafetyProfile } from "@/lib/preflight/profiles";
+import { examConceptCardProfile } from "@/lib/preflight/profiles";
 import type {
   IssueSeverity,
   IssueType,
@@ -97,8 +97,8 @@ export function PreflightWorkspace() {
     if (!report) {
       return [];
     }
-    return report.cards
-      .filter((card) => card.fields.length === industrialSafetyProfile.expectedFields)
+      return report.cards
+      .filter((card) => card.fields.length === examConceptCardProfile.expectedFields)
       .filter((card) => !issueCardIds.has(card.id))
       .map((card) => makeManualIssue(card))
       .filter((issue) => !readyIds.has(issue.id));
@@ -117,7 +117,7 @@ export function PreflightWorkspace() {
   function analyze() {
     const currentText = inputRef.current?.value ?? inputText;
     setInputText(currentText);
-    setReport(parseDeckText(currentText, industrialSafetyProfile, sourceName));
+    setReport(parseDeckText(currentText, examConceptCardProfile, sourceName));
     resetReviewState();
   }
 
@@ -129,7 +129,7 @@ export function PreflightWorkspace() {
     const text = await file.text();
     setInputText(text);
     setSourceName(file.name);
-    setReport(parseDeckText(text, industrialSafetyProfile, file.name));
+    setReport(parseDeckText(text, examConceptCardProfile, file.name));
     resetReviewState();
   }
 
