@@ -2,12 +2,14 @@ import {
   BookOpenCheck,
   Boxes,
   CheckCircle2,
+  ClipboardCheck,
   FileArchive,
   Github,
   Rocket,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import Link from "next/link";
 
 import { CatalogBrowser } from "@/components/catalog-browser";
 import { deckCatalog, formatCount } from "@/lib/catalog";
@@ -29,6 +31,13 @@ export default function Home() {
             </div>
           </div>
           <nav className="flex items-center gap-2">
+            <Link
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-800 transition hover:bg-zinc-50"
+              href="/preflight/"
+            >
+              <ClipboardCheck aria-hidden="true" size={17} />
+              검수 도구
+            </Link>
             <a
               className="hidden h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 sm:inline-flex"
               href="https://github.com/Enceladus-X/deckhub"
@@ -71,6 +80,13 @@ export default function Home() {
                   <FileArchive aria-hidden="true" size={17} />
                   APKG 파일 보기
                 </a>
+                <Link
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-teal-500 px-4 text-sm font-semibold text-zinc-950 transition hover:bg-teal-300"
+                  href="/preflight/"
+                >
+                  <ClipboardCheck aria-hidden="true" size={17} />
+                  TXT 검수
+                </Link>
                 <a
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 px-4 text-sm font-semibold text-white transition hover:bg-white/10"
                   href="https://github.com/Enceladus-X/deckhub/blob/main/docs/publish-deck.md"
