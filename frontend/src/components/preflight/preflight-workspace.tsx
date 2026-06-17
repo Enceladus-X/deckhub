@@ -12,15 +12,13 @@ import {
   FileUp,
   Filter,
   ListChecks,
-  Shuffle,
   Trash2,
 } from "lucide-react";
-import { Badge, cx, SectionTitle, StatCard, Surface } from "@/components/ui-kit";
-import { getPreflightProfile, preflightProfiles } from "@/lib/preflight/profiles";
+import { Badge, SectionTitle, StatCard, Surface } from "@/components/ui-kit";
+import { industrialSafetyProfile } from "@/lib/preflight/profiles";
 import type {
   IssueSeverity,
   IssueType,
-  ParsedCard,
   PreflightIssue,
   PreflightReport,
   ReviewReason,
@@ -29,18 +27,17 @@ import { reviewReasons } from "@/lib/preflight/types";
 import {
   buildFixRequest,
   buildIssueTsv,
+  buildSummaryPrompt,
   defaultReasonFor,
-  makeManualIssue,
   parseDeckText,
-  sampleCards,
 } from "@/lib/preflight/validators";
 
-const SESSION_KEY = "deckhub:preflight-session:v1";
+const SESSION_KEY = "deckhub:preflight-session:v2";
+const ISSUE_PAGE_SIZE = 10;
 
 type StoredSession = {
   inputText: string;
   sourceName: string;
-  profileId: string;
 };
 
 type IssueFilter = IssueType | "all";
@@ -56,53 +53,53 @@ export function PreflightWorkspace() {
   const [initialSession] = useState(readStoredSession);
   const [inputText, setInputText] = useState(initialSession.inputText);
   const [sourceName, setSourceName] = useState(initialSession.sourceName);
-  const [profileId, setProfileId] = useState(initialSession.profileId);
   const [report, setReport] = useState<PreflightReport | null>(null);
-  const [selectedIssues, setSelectedIssues] = useState<Record<string, PreflightIssue>>({});
   const [readyItems, setReadyItems] = useState<ReadyItem[]>([]);
-  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [draftNotes, setDraftNotes] = useState<Record<string, string>>({});
   const [issueFilter, setIssueFilter] = useState<IssueFilter>("all");
   const [severityFilter, setSeverityFilter] = useState<SeverityFilter>("all");
-  const [sampleSize, setSampleSize] = useState(10);
-  const [sampledCards, setSampledCards] = useState<ParsedCard[]>([]);
-  const [seenSampleIds, setSeenSampleIds] = useState<Set<string>>(new Set());
+  const [issueCursor, setIssueCursor] = useState(0);
   const [copyState, setCopyState] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const session: StoredSession = { inputText, sourceName, profileId };
+    const session: StoredSession = { inputText, sourceName };
     try {
       window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     } catch {
       // Large pasted decks can exceed localStorage. The tool still works without persistence.
     }
-  }, [inputText, sourceName, profileId]);
+  }, [inputText, sourceName]);
 
-  const profile = useMemo(() => getPreflightProfile(profileId), [profileId]);
-  const selectedList = useMemo(
-    () => Object.values(selectedIssues).sort((left, right) => left.lineNo - right.lineNo),
-    [selectedIssues],
-  );
   const readyIds = useMemo(
     () => new Set(readyItems.map((item) => item.issue.id)),
     [readyItems],
   );
-  const visibleIssues = useMemo(() => {
+
+  const filteredIssues = useMemo(() => {
     if (!report) {
       return [];
     }
     return report.issues.filter((issue) => {
       const typeOk = issueFilter === "all" || issue.type === issueFilter;
       const severityOk = severityFilter === "all" || issue.severity === severityFilter;
-      return typeOk && severityOk;
+      return typeOk && severityOk && !readyIds.has(issue.id);
     });
-  }, [issueFilter, report, severityFilter]);
+  }, [issueFilter, readyIds, report, severityFilter]);
+
+  const maxIssueCursor = filteredIssues.length
+    ? Math.floor((filteredIssues.length - 1) / ISSUE_PAGE_SIZE) * ISSUE_PAGE_SIZE
+    : 0;
+  const safeIssueCursor = Math.min(issueCursor, maxIssueCursor);
+  const visibleIssues = filteredIssues.slice(safeIssueCursor, safeIssueCursor + ISSUE_PAGE_SIZE);
+  const issueTypes = report ? Object.keys(report.issueCounts).sort() as IssueType[] : [];
+  const currentRangeStart = filteredIssues.length ? safeIssueCursor + 1 : 0;
+  const currentRangeEnd = Math.min(safeIssueCursor + ISSUE_PAGE_SIZE, filteredIssues.length);
 
   function analyze() {
     const currentText = inputRef.current?.value ?? inputText;
     setInputText(currentText);
-    const nextReport = parseDeckText(currentText, profile, sourceName);
-    setReport(nextReport);
+    setReport(parseDeckText(currentText, industrialSafetyProfile, sourceName));
     resetReviewState();
   }
 
@@ -114,47 +111,24 @@ export function PreflightWorkspace() {
     const text = await file.text();
     setInputText(text);
     setSourceName(file.name);
-    const nextReport = parseDeckText(text, profile, file.name);
-    setReport(nextReport);
+    setReport(parseDeckText(text, industrialSafetyProfile, file.name));
     resetReviewState();
   }
 
   function resetReviewState() {
-    setSampledCards([]);
-    setSeenSampleIds(new Set());
-    setSelectedIssues({});
     setReadyItems([]);
-    setNotes({});
+    setDraftNotes({});
+    setIssueCursor(0);
     setCopyState("");
   }
 
-  function toggleIssue(issue: PreflightIssue) {
-    if (readyIds.has(issue.id)) {
-      return;
-    }
-    setSelectedIssues((current) => {
-      const next = { ...current };
-      if (next[issue.id]) {
-        delete next[issue.id];
-      } else {
-        next[issue.id] = issue;
-      }
-      return next;
-    });
-  }
-
   function commitIssue(issue: PreflightIssue, reason: ReviewReason) {
-    const note = notes[issue.id] ?? "";
-    setSelectedIssues((current) => {
-      const next = { ...current };
-      delete next[issue.id];
-      return next;
-    });
+    const note = draftNotes[issue.id] ?? "";
     setReadyItems((current) => [
       ...current.filter((item) => item.issue.id !== issue.id),
       { issue, reason, note },
     ]);
-    setNotes((current) => {
+    setDraftNotes((current) => {
       const next = { ...current };
       delete next[issue.id];
       return next;
@@ -165,25 +139,12 @@ export function PreflightWorkspace() {
     setReadyItems((current) => current.filter((item) => item.issue.id !== issueId));
   }
 
-  function drawSample() {
+  async function copySummaryPrompt() {
     if (!report) {
       return;
     }
-    const sample = sampleCards(report.cards, sampleSize, seenSampleIds);
-    setSampledCards(sample);
-    setSeenSampleIds((current) => {
-      const next = new Set(current);
-      sample.forEach((card) => next.add(card.id));
-      if (next.size >= report.cards.length) {
-        return new Set(sample.map((card) => card.id));
-      }
-      return next;
-    });
-  }
-
-  function addSampleToReview(card: ParsedCard) {
-    const issue = makeManualIssue(card);
-    toggleIssue(issue);
+    await copyText(buildSummaryPrompt(report, sourceName));
+    setCopyState("검수 요약 MD 복사됨");
   }
 
   async function copyFixRequest() {
@@ -201,11 +162,13 @@ export function PreflightWorkspace() {
   }
 
   async function copyTsv() {
-    const issues = readyItems.length ? readyItems.map((item) => item.issue) : visibleIssues;
-    const reasons = readyItems.length
-      ? Object.fromEntries(readyItems.map((item) => [item.issue.id, item.reason]))
-      : {};
-    const payload = buildIssueTsv(issues, reasons);
+    if (readyItems.length === 0) {
+      return;
+    }
+    const payload = buildIssueTsv(
+      readyItems.map((item) => item.issue),
+      Object.fromEntries(readyItems.map((item) => [item.issue.id, item.reason])),
+    );
     await copyText(payload);
     setCopyState("TSV 복사됨");
   }
@@ -229,38 +192,18 @@ export function PreflightWorkspace() {
     window.localStorage.removeItem(SESSION_KEY);
   }
 
-  const issueTypes = report ? Object.keys(report.issueCounts).sort() as IssueType[] : [];
-
   return (
     <section className="mx-auto max-w-7xl px-5 py-6">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.65fr)]">
         <Surface className="p-5">
           <SectionTitle
             eyebrow="DeckHub Preflight"
             title="Anki TXT 검수"
-            body="파일은 브라우저 안에서만 읽습니다. 업로드 서버 없이 필드 구조와 카드 신호를 확인합니다."
+            body="TXT를 브라우저 안에서만 읽고, 구조적으로 다시 볼 카드만 추려냅니다."
             icon={FileText}
           />
 
           <div className="mt-5 grid gap-3">
-            <label className="grid gap-1.5 text-sm font-semibold text-zinc-700">
-              프로필
-              <select
-                className="h-10 rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-teal-600"
-                onChange={(event) => setProfileId(event.target.value)}
-                value={profileId}
-              >
-                {preflightProfiles.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-              <span className="text-xs font-normal leading-5 text-zinc-500">
-                {profile.description}
-              </span>
-            </label>
-
             <label className="grid gap-1.5 text-sm font-semibold text-zinc-700">
               TXT 파일
               <span className="relative flex h-24 items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 text-center transition hover:border-teal-500 hover:bg-teal-50/40">
@@ -316,100 +259,42 @@ export function PreflightWorkspace() {
           </div>
         </Surface>
 
-        <div className="space-y-5">
-          <Surface className="p-5">
+        <Surface className="p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <SectionTitle
               title="검수 요약"
-              body="오류는 구조적으로 고쳐야 할 항목, 경고는 학습자 관점에서 다시 볼 항목입니다."
+              body="이슈 분포와 대표 샘플을 Markdown 프롬프트로 복사할 수 있습니다."
               icon={ListChecks}
             />
+            <button
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md bg-zinc-950 px-4 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!report}
+              onClick={copySummaryPrompt}
+              type="button"
+            >
+              <Copy size={16} aria-hidden="true" />
+              요약 MD 복사
+            </button>
+          </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard label="카드" value={report?.totalCards ?? 0} icon={FileText} />
-              <StatCard label="이슈" value={report?.issueRecords ?? 0} icon={AlertTriangle} />
-              <StatCard label="오류" value={report?.severityCounts.error ?? 0} icon={AlertTriangle} />
-              <StatCard label="검수함" value={selectedList.length} icon={CheckCircle2} />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <StatCard label="카드" value={report?.totalCards ?? 0} icon={FileText} />
+            <StatCard label="이슈" value={report?.issueRecords ?? 0} icon={AlertTriangle} />
+            <StatCard label="오류" value={report?.severityCounts.error ?? 0} icon={AlertTriangle} />
+            <StatCard label="복사 대기" value={readyItems.length} icon={CheckCircle2} />
+          </div>
+
+          {report ? (
+            <div className="mt-5 grid gap-4">
+              <SummaryBucket title="과목 분포" empty="과목 정보 없음" entries={report.subjectCounts} />
+              <SummaryBucket title="이슈 분포" entries={report.issueCounts} highlight />
             </div>
-
-            {report ? (
-              <div className="mt-5 grid gap-4 lg:grid-cols-2">
-                <div>
-                  <p className="text-sm font-semibold text-zinc-700">과목 분포</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {Object.entries(report.subjectCounts).length ? (
-                      Object.entries(report.subjectCounts).map(([subject, count]) => (
-                        <Badge key={subject} tone="zinc">
-                          {subject} {count}
-                        </Badge>
-                      ))
-                    ) : (
-                      <span className="text-sm text-zinc-500">과목 정보 없음</span>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-zinc-700">이슈 분포</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {Object.entries(report.issueCounts).map(([type, count]) => (
-                      <Badge key={type} tone={count > 0 ? "amber" : "zinc"}>
-                        {type} {count}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <p className="mt-5 rounded-md bg-zinc-50 p-4 text-sm text-zinc-500">
-                TXT를 업로드하거나 붙여넣은 뒤 검수 실행을 누르세요.
-              </p>
-            )}
-          </Surface>
-
-          <Surface className="p-5">
-            <SectionTitle
-              title="무작위 샘플"
-              body="자동 QC가 잡지 못한 카드를 사람이 직접 골라 검수함에 넣습니다."
-              icon={Shuffle}
-            />
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-              <input
-                className="h-10 w-24 rounded-md border border-zinc-200 px-3 text-sm outline-none focus:border-teal-600"
-                max={100}
-                min={1}
-                onChange={(event) => setSampleSize(Number(event.target.value))}
-                type="number"
-                value={sampleSize}
-              />
-              <button
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={!report}
-                onClick={drawSample}
-                type="button"
-              >
-                <Shuffle size={16} aria-hidden="true" />
-                새로 뽑기
-              </button>
-            </div>
-            {sampledCards.length ? (
-              <div className="mt-4 grid gap-2">
-                {sampledCards.map((card) => (
-                  <button
-                    className="rounded-md border border-zinc-200 bg-zinc-50 p-3 text-left transition hover:border-teal-500 hover:bg-white"
-                    key={card.id}
-                    onClick={() => addSampleToReview(card)}
-                    type="button"
-                  >
-                    <p className="text-xs font-semibold text-zinc-500">
-                      {card.ref || `line ${card.lineNo}`}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-zinc-900">{card.front}</p>
-                    <p className="mt-1 text-sm text-zinc-600">{card.back}</p>
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </Surface>
-        </div>
+          ) : (
+            <p className="mt-5 rounded-md bg-zinc-50 p-4 text-sm text-zinc-500">
+              TXT를 업로드하거나 붙여넣은 뒤 검수 실행을 누르세요.
+            </p>
+          )}
+        </Surface>
       </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
@@ -417,13 +302,16 @@ export function PreflightWorkspace() {
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <SectionTitle
               title="자동 검출 목록"
-              body="카드 전체를 클릭하면 검수함으로 이동합니다."
+              body="10개씩 확인합니다. 카드 아래 사유 버튼을 누르면 바로 복사 대기로 이동합니다."
               icon={Filter}
             />
             <div className="flex flex-col gap-2 sm:flex-row">
               <select
                 className="h-10 rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-teal-600"
-                onChange={(event) => setSeverityFilter(event.target.value as SeverityFilter)}
+                onChange={(event) => {
+                  setSeverityFilter(event.target.value as SeverityFilter);
+                  setIssueCursor(0);
+                }}
                 value={severityFilter}
               >
                 <option value="all">모든 심각도</option>
@@ -433,7 +321,10 @@ export function PreflightWorkspace() {
               </select>
               <select
                 className="h-10 rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-teal-600"
-                onChange={(event) => setIssueFilter(event.target.value as IssueFilter)}
+                onChange={(event) => {
+                  setIssueFilter(event.target.value as IssueFilter);
+                  setIssueCursor(0);
+                }}
                 value={issueFilter}
               >
                 <option value="all">모든 이슈</option>
@@ -446,15 +337,41 @@ export function PreflightWorkspace() {
             </div>
           </div>
 
-          <div className="mt-5 grid gap-2">
+          <div className="mt-4 flex flex-col gap-2 border-y border-zinc-100 py-3 text-sm text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              {currentRangeStart}-{currentRangeEnd} / {filteredIssues.length}
+            </span>
+            <div className="flex gap-2">
+              <button
+                className="h-9 rounded-md border border-zinc-200 px-3 font-semibold text-zinc-700 transition hover:bg-zinc-50 disabled:opacity-40"
+                disabled={safeIssueCursor === 0}
+                onClick={() => setIssueCursor(Math.max(0, safeIssueCursor - ISSUE_PAGE_SIZE))}
+                type="button"
+              >
+                이전 10개
+              </button>
+              <button
+                className="h-9 rounded-md border border-zinc-200 px-3 font-semibold text-zinc-700 transition hover:bg-zinc-50 disabled:opacity-40"
+                disabled={safeIssueCursor + ISSUE_PAGE_SIZE >= filteredIssues.length}
+                onClick={() => setIssueCursor(Math.min(maxIssueCursor, safeIssueCursor + ISSUE_PAGE_SIZE))}
+                type="button"
+              >
+                다음 10개
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3">
             {visibleIssues.length ? (
-              visibleIssues.slice(0, 300).map((issue) => (
-                <IssueRow
+              visibleIssues.map((issue) => (
+                <IssueReviewCard
                   issue={issue}
                   key={issue.id}
-                  onToggle={toggleIssue}
-                  selected={Boolean(selectedIssues[issue.id])}
-                  committed={readyIds.has(issue.id)}
+                  note={draftNotes[issue.id] ?? ""}
+                  onCommit={commitIssue}
+                  onNoteChange={(nextNote) =>
+                    setDraftNotes((current) => ({ ...current, [issue.id]: nextNote }))
+                  }
                 />
               ))
             ) : (
@@ -467,112 +384,83 @@ export function PreflightWorkspace() {
 
         <Surface className="p-5">
           <SectionTitle
-            title="검수함"
-            body="사유를 선택하면 복사 대기열로 이동하고 이 영역에서는 사라집니다."
+            title="복사 대기"
+            body="사유 버튼을 누른 문항만 여기에 쌓입니다."
             icon={ClipboardCheck}
           />
 
-          <div className="mt-4 grid max-h-[360px] gap-3 overflow-auto pr-1">
-            {selectedList.length ? (
-              selectedList.map((issue) => (
-                <ReviewCard
-                  issue={issue}
-                  key={issue.id}
-                  note={notes[issue.id] ?? ""}
-                  onCommit={commitIssue}
-                  onNoteChange={(nextNote) =>
-                    setNotes((current) => ({ ...current, [issue.id]: nextNote }))
-                  }
-                  onRemove={() => toggleIssue(issue)}
-                />
+          <div className="mt-4 flex flex-col gap-2">
+            <button
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-4 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!readyItems.length}
+              onClick={copyFixRequest}
+              type="button"
+            >
+              <Copy size={16} aria-hidden="true" />
+              수정 요청 복사
+            </button>
+            <button
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!readyItems.length}
+              onClick={copyTsv}
+              type="button"
+            >
+              <Copy size={16} aria-hidden="true" />
+              TSV 복사
+            </button>
+            <button
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!report}
+              onClick={downloadReport}
+              type="button"
+            >
+              <Download size={16} aria-hidden="true" />
+              리포트 저장
+            </button>
+            <button
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!readyItems.length}
+              onClick={() => setReadyItems([])}
+              type="button"
+            >
+              <Trash2 size={16} aria-hidden="true" />
+              복사 대기 비우기
+            </button>
+            {copyState ? <p className="text-sm text-teal-700">{copyState}</p> : null}
+          </div>
+
+          <div className="mt-4 grid max-h-[760px] gap-2 overflow-auto pr-1">
+            {readyItems.length ? (
+              readyItems.map((item) => (
+                <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3" key={item.issue.id}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <Badge tone="teal">{item.reason}</Badge>
+                      <p className="mt-2 text-xs font-semibold text-zinc-500">
+                        {item.issue.ref || `line ${item.issue.lineNo}`}
+                      </p>
+                    </div>
+                    <button
+                      className="rounded-md p-1.5 text-zinc-400 transition hover:bg-white hover:text-zinc-700"
+                      onClick={() => removeReadyItem(item.issue.id)}
+                      title="복사 대기에서 제거"
+                      type="button"
+                    >
+                      <Trash2 size={16} aria-hidden="true" />
+                    </button>
+                  </div>
+                  <p className="mt-2 text-sm font-semibold text-zinc-900">{item.issue.front}</p>
+                  <p className="mt-1 text-sm text-zinc-600">{item.issue.back}</p>
+                  {item.note ? (
+                    <p className="mt-2 text-xs leading-5 text-zinc-500">메모: {item.note}</p>
+                  ) : null}
+                </div>
               ))
             ) : (
               <p className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 p-5 text-sm text-zinc-500">
-                자동 검출 목록이나 무작위 샘플을 클릭하면 여기에 모입니다.
+                자동 검출 목록에서 사유를 선택하면 여기에 쌓입니다.
               </p>
             )}
-          </div>
-
-          <div className="mt-6 border-t border-zinc-100 pt-5">
-            <SectionTitle
-              title="복사 대기"
-              body="사유 선택이 끝난 문항만 복사됩니다."
-              icon={Copy}
-            />
-
-            <div className="mt-4 flex flex-col gap-2">
-              <button
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-4 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={!readyItems.length}
-                onClick={copyFixRequest}
-                type="button"
-              >
-                <Copy size={16} aria-hidden="true" />
-                수정 요청 복사
-              </button>
-              <button
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={!report}
-                onClick={copyTsv}
-                type="button"
-              >
-                <Copy size={16} aria-hidden="true" />
-                TSV 복사
-              </button>
-              <button
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={!report}
-                onClick={downloadReport}
-                type="button"
-              >
-                <Download size={16} aria-hidden="true" />
-                리포트 저장
-              </button>
-              <button
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={!readyItems.length}
-                onClick={() => setReadyItems([])}
-                type="button"
-              >
-                <Trash2 size={16} aria-hidden="true" />
-                복사 대기 비우기
-              </button>
-              {copyState ? <p className="text-sm text-teal-700">{copyState}</p> : null}
-            </div>
-
-            <div className="mt-4 grid max-h-[260px] gap-2 overflow-auto pr-1">
-              {readyItems.length ? (
-                readyItems.map((item) => (
-                  <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3" key={item.issue.id}>
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <Badge tone="teal">{item.reason}</Badge>
-                        <p className="mt-2 text-xs font-semibold text-zinc-500">
-                          {item.issue.ref || `line ${item.issue.lineNo}`}
-                        </p>
-                      </div>
-                      <button
-                        className="rounded-md p-1.5 text-zinc-400 transition hover:bg-white hover:text-zinc-700"
-                        onClick={() => removeReadyItem(item.issue.id)}
-                        title="복사 대기에서 제거"
-                        type="button"
-                      >
-                        <Trash2 size={16} aria-hidden="true" />
-                      </button>
-                    </div>
-                    <p className="mt-2 text-sm font-semibold text-zinc-900">{item.issue.front}</p>
-                    <p className="mt-1 text-sm text-zinc-600">{item.issue.back}</p>
-                    {item.note ? (
-                      <p className="mt-2 text-xs leading-5 text-zinc-500">메모: {item.note}</p>
-                    ) : null}
-                  </div>
-                ))
-              ) : (
-                <p className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 p-5 text-sm text-zinc-500">
-                  사유를 선택한 문항이 여기에 쌓입니다.
-                </p>
-              )}
-            </div>
           </div>
         </Surface>
       </div>
@@ -580,30 +468,49 @@ export function PreflightWorkspace() {
   );
 }
 
-function IssueRow({
+function SummaryBucket({
+  entries,
+  empty = "없음",
+  highlight = false,
+  title,
+}: {
+  entries: Record<string, number>;
+  empty?: string;
+  highlight?: boolean;
+  title: string;
+}) {
+  const rows = Object.entries(entries).sort((left, right) => right[1] - left[1]);
+  return (
+    <div>
+      <p className="text-sm font-semibold text-zinc-700">{title}</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {rows.length ? (
+          rows.map(([label, count]) => (
+            <Badge key={label} tone={highlight ? "amber" : "zinc"}>
+              {label} {count}
+            </Badge>
+          ))
+        ) : (
+          <span className="text-sm text-zinc-500">{empty}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function IssueReviewCard({
   issue,
-  onToggle,
-  selected,
-  committed,
+  note,
+  onCommit,
+  onNoteChange,
 }: {
   issue: PreflightIssue;
-  onToggle: (issue: PreflightIssue) => void;
-  selected: boolean;
-  committed: boolean;
+  note: string;
+  onCommit: (issue: PreflightIssue, reason: ReviewReason) => void;
+  onNoteChange: (note: string) => void;
 }) {
   return (
-    <button
-      aria-pressed={selected}
-      className={cx(
-        "rounded-md border p-3 text-left transition",
-        selected
-          ? "border-teal-500 bg-teal-50"
-          : "border-zinc-200 bg-white hover:border-teal-400 hover:bg-zinc-50",
-        committed && "opacity-60",
-      )}
-      onClick={() => onToggle(issue)}
-      type="button"
-    >
+    <article className="rounded-md border border-zinc-200 bg-white p-3">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -617,53 +524,21 @@ function IssueRow({
             {issue.ref || `line ${issue.lineNo}`}
           </p>
         </div>
-        {selected ? <Badge tone="teal">선택됨</Badge> : null}
-        {committed ? <Badge tone="zinc">대기 중</Badge> : null}
+        <button
+          className="h-8 rounded-md border border-zinc-200 px-2 text-xs font-semibold text-zinc-500 transition hover:border-zinc-300 hover:bg-zinc-50"
+          onClick={() => onCommit(issue, defaultReasonFor(issue.type))}
+          type="button"
+        >
+          추천 사유
+        </button>
       </div>
+
       <p className="mt-2 text-sm font-semibold leading-6 text-zinc-900">{issue.front}</p>
       <p className="mt-1 text-sm leading-6 text-zinc-600">{issue.back}</p>
       <p className="mt-2 text-xs leading-5 text-zinc-500">{issue.detail}</p>
       {issue.suggestion ? (
         <p className="mt-1 text-xs leading-5 text-teal-700">{issue.suggestion}</p>
       ) : null}
-    </button>
-  );
-}
-
-function ReviewCard({
-  issue,
-  note,
-  onCommit,
-  onNoteChange,
-  onRemove,
-}: {
-  issue: PreflightIssue;
-  note: string;
-  onCommit: (issue: PreflightIssue, reason: ReviewReason) => void;
-  onNoteChange: (note: string) => void;
-  onRemove: () => void;
-}) {
-  return (
-    <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <Badge tone={issue.severity === "error" ? "amber" : "zinc"}>{issue.title}</Badge>
-          <p className="mt-2 text-xs font-semibold text-zinc-500">
-            {issue.ref || `line ${issue.lineNo}`}
-          </p>
-        </div>
-        <button
-          className="rounded-md p-1.5 text-zinc-400 transition hover:bg-white hover:text-zinc-700"
-          onClick={onRemove}
-          title="검수함에서 제거"
-          type="button"
-        >
-          <Trash2 size={16} aria-hidden="true" />
-        </button>
-      </div>
-
-      <p className="mt-2 text-sm font-semibold text-zinc-900">{issue.front}</p>
-      <p className="mt-1 text-sm text-zinc-600">{issue.back}</p>
 
       <label className="mt-3 grid gap-1 text-xs font-semibold text-zinc-600">
         메모
@@ -675,10 +550,10 @@ function ReviewCard({
         />
       </label>
 
-      <div className="mt-3 grid grid-cols-2 gap-2">
+      <div className="mt-3 grid gap-2 sm:grid-cols-4">
         {reviewReasons.map((reason) => (
           <button
-            className="min-h-9 rounded-md border border-zinc-200 bg-white px-2 py-1.5 text-left text-xs font-semibold text-zinc-700 transition hover:border-teal-400 hover:text-teal-700"
+            className="min-h-9 rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1.5 text-left text-xs font-semibold text-zinc-700 transition hover:border-teal-400 hover:bg-white hover:text-teal-700"
             key={reason}
             onClick={() => onCommit(issue, reason)}
             type="button"
@@ -687,15 +562,7 @@ function ReviewCard({
           </button>
         ))}
       </div>
-
-      <button
-        className="mt-2 text-xs font-semibold text-zinc-400 transition hover:text-teal-700"
-        onClick={() => onCommit(issue, defaultReasonFor(issue.type))}
-        type="button"
-      >
-        추천 사유로 이동
-      </button>
-    </div>
+    </article>
   );
 }
 
@@ -703,7 +570,6 @@ function readStoredSession(): StoredSession {
   const fallback: StoredSession = {
     inputText: "",
     sourceName: "pasted.txt",
-    profileId: preflightProfiles[0].id,
   };
   if (typeof window === "undefined") {
     return fallback;
@@ -717,7 +583,6 @@ function readStoredSession(): StoredSession {
     return {
       inputText: session.inputText ?? fallback.inputText,
       sourceName: session.sourceName ?? fallback.sourceName,
-      profileId: session.profileId ?? fallback.profileId,
     };
   } catch {
     window.localStorage.removeItem(SESSION_KEY);

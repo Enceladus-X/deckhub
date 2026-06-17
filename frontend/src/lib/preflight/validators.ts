@@ -15,7 +15,7 @@ const issueMeta: Record<
   field_broken: {
     severity: "error",
     title: "필드 개수 오류",
-    detail: "세미콜론 필드 개수가 프로필 기준과 맞지 않습니다.",
+    detail: "세미콜론 필드 개수가 덱 기준과 맞지 않습니다.",
   },
   choice_dependent: {
     severity: "error",
@@ -52,11 +52,6 @@ const issueMeta: Record<
     title: "긴 목록 정답",
     detail: "정답 목록이 많아 학습 강도가 높습니다.",
   },
-  comma_list: {
-    severity: "info",
-    title: "쉼표 목록",
-    detail: "목록 구분자가 불명확합니다. 필요하면 슬래시 목록으로 정리합니다.",
-  },
   numeric_no_unit: {
     severity: "warning",
     title: "수치 단독 정답",
@@ -85,7 +80,7 @@ const issueMeta: Record<
   manual_review: {
     severity: "info",
     title: "수동 검수",
-    detail: "무작위 샘플에서 사용자가 직접 검수 대상으로 선택했습니다.",
+    detail: "사용자가 직접 검수 대상으로 선택했습니다.",
   },
 };
 
@@ -195,13 +190,10 @@ function flagCard(card: ParsedCard, profile: DeckProfile): IssueType[] {
   if (back.length > 220) {
     flags.add("long_back");
   }
-  if (slashCount(back) >= 4) {
+  if (countableItems(back).length >= 6 || slashCount(back) >= 5) {
     flags.add("heavy_list");
   }
-  if (back.includes(",") && !back.includes(" / ") && back.split(",").length >= 3) {
-    flags.add("comma_list");
-  }
-  if (/^\d+(?:\.\d+)?$/.test(back)) {
+  if (isNumericAnswerWithoutContext(front, back)) {
     flags.add("numeric_no_unit");
   }
 
@@ -274,6 +266,16 @@ function isCompleteOxStatement(front: string): boolean {
 
 function slashCount(text: string): number {
   return (text.match(/ \/ /g) ?? []).length;
+}
+
+function isNumericAnswerWithoutContext(front: string, back: string): boolean {
+  if (!/^\d+(?:\.\d+)?$/.test(back)) {
+    return false;
+  }
+  if (/코드|비트|bit|진수|이진|해밍|패리티|번호|순서|단계|개수/i.test(front)) {
+    return false;
+  }
+  return /몇|얼마|거리|시간|전압|전류|저항|압력|온도|중량|하중|속도|강도율|도수율|율|면적|체적|농도|질량|열량/.test(front);
 }
 
 function expectedCount(front: string): number | undefined {
@@ -369,6 +371,53 @@ export function buildIssueTsv(
     ),
   ];
   return rows.join("\n");
+}
+
+export function buildSummaryPrompt(report: PreflightReport, sourceName: string): string {
+  const lines = [
+    "# ANKI_PREFLIGHT_SUMMARY",
+    `source: ${sourceName}`,
+    "task: 아래 자동 검수 요약을 보고 구조적 문제가 많은 유형부터 덱 수정 우선순위와 수정 지침을 제안할 것",
+    "",
+    "## 전체 요약",
+    `- total_cards: ${report.totalCards}`,
+    `- valid_cards: ${report.validCards}`,
+    `- issue_records: ${report.issueRecords}`,
+    `- errors: ${report.severityCounts.error ?? 0}`,
+    `- warnings: ${report.severityCounts.warning ?? 0}`,
+    `- info: ${report.severityCounts.info ?? 0}`,
+    "",
+    "## 과목 분포",
+    ...Object.entries(report.subjectCounts).map(([subject, count]) => `- ${subject}: ${count}`),
+    "",
+    "## 이슈 분포",
+    ...Object.entries(report.issueCounts)
+      .sort((left, right) => right[1] - left[1])
+      .map(([type, count]) => `- ${type}: ${count}`),
+    "",
+    "## 이슈 유형별 샘플",
+  ];
+
+  Object.entries(groupIssues(report.issues)).forEach(([type, issues]) => {
+    lines.push("");
+    lines.push(`### ${type}`);
+    issues.slice(0, 3).forEach((issue) => {
+      lines.push(`- line ${issue.lineNo} ${issue.ref}`);
+      lines.push(`  - front: ${issue.front}`);
+      lines.push(`  - back: ${issue.back}`);
+      lines.push(`  - detail: ${issue.detail}`);
+    });
+  });
+
+  return lines.join("\n");
+}
+
+function groupIssues(issues: PreflightIssue[]): Record<string, PreflightIssue[]> {
+  return issues.reduce<Record<string, PreflightIssue[]>>((groups, issue) => {
+    groups[issue.type] = groups[issue.type] ?? [];
+    groups[issue.type].push(issue);
+    return groups;
+  }, {});
 }
 
 export function defaultReasonFor(type: IssueType): ReviewReason {

@@ -9,7 +9,6 @@ export type IssueType =
   | "long_ox_front"
   | "long_back"
   | "heavy_list"
-  | "comma_list"
   | "numeric_no_unit"
   | "count_mismatch"
   | "vague_front"
