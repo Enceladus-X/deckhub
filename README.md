@@ -21,6 +21,7 @@ DeckHub는 시험 공부용 Anki `.apkg` 덱을 정리해서 배포하는 개인
 ## 바로가기
 
 - 사이트: [https://enceladus-x.github.io/deckhub/](https://enceladus-x.github.io/deckhub/)
+- Preflight 검수: [https://enceladus-x.github.io/deckhub/preflight/](https://enceladus-x.github.io/deckhub/preflight/)
 - APKG 파일: [GitHub Releases](https://github.com/Enceladus-X/deckhub/releases)
 - 덱 목록 원본: [`catalog/decks.json`](./catalog/decks.json)
 
@@ -77,6 +78,12 @@ npm run frontend:build
 ```
 
 `main`에 푸시되면 GitHub Actions가 GitHub Pages를 다시 배포합니다.
+
+## Preflight 검수 도구
+
+`/preflight/`는 Anki TXT를 브라우저 안에서만 읽어 검수하는 정적 도구입니다.
+세미콜론 필드 구조, 보기 의존 문항, 부정형 객관식 흔적, OX 미완성 문장, 긴 정답,
+수치 단위 누락 등을 확인하고 `ANKI_REVIEW_FIX_REQUEST` 형식으로 복사할 수 있습니다.
 
 자세한 내용은 [`docs/publish-deck.md`](./docs/publish-deck.md)를 참고하세요.
 

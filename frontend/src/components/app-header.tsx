@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, FileArchive, Palette } from "lucide-react";
+import { ClipboardCheck, ExternalLink, FileArchive, Palette } from "lucide-react";
 
 export function AppHeader() {
   return (
@@ -22,6 +22,13 @@ export function AppHeader() {
           >
             <Palette size={15} aria-hidden="true" />
             Templates
+          </Link>
+          <Link
+            className="hidden items-center gap-1.5 rounded-md px-3 py-2 text-zinc-600 transition hover:bg-zinc-100 hover:text-teal-700 sm:inline-flex"
+            href="/preflight/"
+          >
+            <ClipboardCheck size={15} aria-hidden="true" />
+            Preflight
           </Link>
           <a
             className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-zinc-950 px-3 text-white transition hover:bg-teal-700"
