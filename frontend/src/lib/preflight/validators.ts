@@ -124,6 +124,7 @@ export function parseDeckText(
   return {
     profileId: profile.id,
     sourceName,
+    sourceFingerprint: buildSourceFingerprint(lines, cards),
     totalLines: lines.length,
     totalCards: cards.length,
     validCards: cards.filter((card) => card.fields.length === profile.expectedFields).length,
@@ -168,14 +169,15 @@ function flagCard(card: ParsedCard, profile: DeckProfile): IssueType[] {
   const flags = new Set<IssueType>();
   const front = card.front.trim();
   const back = card.back.trim();
+  const hasChoiceDependency = profile.choiceDependentTokens.some((token) => front.includes(token));
 
-  if (profile.choiceDependentTokens.some((token) => front.includes(token))) {
+  if (hasChoiceDependency) {
     flags.add("choice_dependent");
   }
-  if (profile.negativeTokens.some((token) => front.includes(token))) {
+  if (!hasChoiceDependency && hasNegativeQuestionResidue(front, profile)) {
     flags.add("negative_trace");
   }
-  if (profile.vagueFrontTokens.some((token) => front.endsWith(token)) && !hasClearAxis(front, profile)) {
+  if (isVagueFront(front, profile)) {
     flags.add("vague_front");
   }
   if (!front.startsWith("[OX]") && front.length > 130) {
@@ -205,7 +207,7 @@ function flagCard(card: ParsedCard, profile: DeckProfile): IssueType[] {
     }
   }
 
-  if (!front.startsWith("[OX]") && front.length < 24 && !hasClearAxis(front, profile)) {
+  if (!hasChoiceDependency && !front.startsWith("[OX]") && front.length < 24 && !hasClearAxis(front, profile)) {
     flags.add("weak_axis");
   }
 
@@ -257,6 +259,37 @@ function hasClearAxis(front: string, profile: DeckProfile): boolean {
     return true;
   }
   return profile.clearAxisTokens.some((token) => front.includes(token));
+}
+
+function hasNegativeQuestionResidue(front: string, profile: DeckProfile): boolean {
+  if (!profile.negativeTokens.some((token) => front.includes(token))) {
+    return false;
+  }
+  if (/다음\s*중|보기|제시|고른/.test(front)) {
+    return true;
+  }
+  return /(?:해당하지|속하지|분류되지|볼 수 없|옳지 않|틀린|아닌|잘못|맞지 않|적합하지|적절하지|관련 없)(?:는|은|한)?[^?]*(?:것|항목|설명|시설|장비|방법|대상|예|기능|종류)(?:은|는)?\?$/.test(front);
+}
+
+function isVagueFront(front: string, profile: DeckProfile): boolean {
+  if (!profile.vagueFrontTokens.some((token) => front.endsWith(token))) {
+    return false;
+  }
+  if (hasClearAxis(front, profile)) {
+    return false;
+  }
+  if (hasSpecificRecallContext(front)) {
+    return false;
+  }
+
+  return true;
+}
+
+function hasSpecificRecallContext(front: string): boolean {
+  if (front.length >= 48) {
+    return true;
+  }
+  return /(?:\d|[A-Z]{2,}|[()'"]|·|:|법적|허용|최소|성능|규격|저항|회선|설비|시스템|프로토콜|네트워크|주배선반|MDF)/.test(front);
 }
 
 function isCompleteOxStatement(front: string): boolean {
@@ -327,6 +360,26 @@ function countBy<T extends Record<string, unknown>>(
     acc[value] = (acc[value] ?? 0) + 1;
     return acc;
   }, {});
+}
+
+function buildSourceFingerprint(lines: string[], cards: ParsedCard[]) {
+  const nonEmptyLines = lines.filter((line) => line.trim()).length;
+  const validRefs = cards.map((card) => card.ref).filter(Boolean);
+  return {
+    hash: hashText(lines.join("\n")),
+    nonEmptyLines,
+    firstRef: validRefs[0] ?? "",
+    lastRef: validRefs[validRefs.length - 1] ?? "",
+  };
+}
+
+function hashText(text: string): string {
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
 export function sampleCards<T extends { id: string }>(
@@ -411,6 +464,12 @@ export function buildSummaryPrompt(report: PreflightReport, sourceName: string):
     `- errors: ${report.severityCounts.error ?? 0}`,
     `- warnings: ${report.severityCounts.warning ?? 0}`,
     `- info: ${report.severityCounts.info ?? 0}`,
+    "",
+    "## 입력 지문",
+    `- source_hash: ${report.sourceFingerprint.hash}`,
+    `- non_empty_lines: ${report.sourceFingerprint.nonEmptyLines}`,
+    `- first_ref: ${report.sourceFingerprint.firstRef}`,
+    `- last_ref: ${report.sourceFingerprint.lastRef}`,
     "",
     "## 과목 분포",
     ...Object.entries(report.subjectCounts).map(([subject, count]) => `- ${subject}: ${count}`),

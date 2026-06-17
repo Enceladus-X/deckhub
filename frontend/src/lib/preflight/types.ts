@@ -49,6 +49,13 @@ export type ParsedCard = {
   subject?: string;
 };
 
+export type SourceFingerprint = {
+  hash: string;
+  nonEmptyLines: number;
+  firstRef: string;
+  lastRef: string;
+};
+
 export type PreflightIssue = {
   id: string;
   cardId: string;
@@ -67,6 +74,7 @@ export type PreflightIssue = {
 export type PreflightReport = {
   profileId: string;
   sourceName: string;
+  sourceFingerprint: SourceFingerprint;
   totalLines: number;
   totalCards: number;
   validCards: number;
