@@ -1,0 +1,5 @@
+source/*.pdf
+*.tmp
+*.bak
+__pycache__/
+.venv/

@@ -1,0 +1,304 @@
+#separator:tab
+#html:true
+#deck column:1
+#tags column:11
+HSK 1~3 600단어	爱	사랑하다, 좋아하다	ài	爱(ài)	我爱我的家。	나는 내 가족을 사랑한다.	Wǒ ài wǒ de jiā.			HSK1
+HSK 1~3 600단어	八	8, 여덟	bā	八(bā)	我有八本书。	나는 책 여덟 권이 있다.	Wǒ yǒu bā běn shū.			HSK1
+HSK 1~3 600단어	爸爸	아빠, 아버지	bàba	爸(bà) 爸(bà)	我爸爸在家。	우리 아빠는 집에 있다.	Wǒ bà bà zài jiā.			HSK1
+HSK 1~3 600단어	杯子	컵, 잔	bēizi	杯(bēi) 子(zi)	这个杯子是我的。	이 컵은 내 것이다.	Zhè ge bēi zi shì wǒ de.			HSK1
+HSK 1~3 600단어	北京	베이징	běijīng	北(běi) 京(jīng)	我想去北京。	나는 베이징에 가고 싶다.	Wǒ xiǎng qù běi jīng.			HSK1
+HSK 1~3 600단어	本	권, 본	běn	本(běn)	桌子上有一本书。	책상 위에 책 한 권이 있다.	Zhuō zi shàng yǒu yī běn shū.			HSK1
+HSK 1~3 600단어	不客气	천만에요	búkèqi	不(bù) 客(kè) 气(qì)	谢谢你。 不客气。	고마워. 천만에.	Xiè xiè nǐ.  bú kè qì.			HSK1
+HSK 1~3 600단어	不	아니다, 하지 않다	bù	不(bù)	我不喝咖啡。	나는 커피를 마시지 않는다.	Wǒ bù hē kā fēi.			HSK1
+HSK 1~3 600단어	没关系	괜찮다, 상관없다	méiguānxi	没(méi) 关(guān) 系(xì)	没关系，我可以等。	괜찮아, 나는 기다릴 수 있다.	Méi guān xì, wǒ kě yǐ děng.			HSK1
+HSK 1~3 600단어	菜	요리, 음식	cài	菜(cài)	这个菜很好吃。	이 요리는 맛있다.	Zhè ge cài hěn hǎo chī.			HSK1
+HSK 1~3 600단어	茶	차	chá	茶(chá)	我想喝茶。	나는 차를 마시고 싶다.	Wǒ xiǎng hē chá.			HSK1
+HSK 1~3 600단어	吃	먹다	chī	吃(chī)	我中午吃米饭。	나는 점심에 밥을 먹는다.	Wǒ zhōng wǔ chī mǐ fàn.			HSK1
+HSK 1~3 600단어	出租车	택시	chūzūchē	出(chū) 租(zū) 车(chē)	我们坐出租车去学校。	우리는 택시를 타고 학교에 간다.	Wǒ men zuò chū zū chē qù xué xiào.			HSK1
+HSK 1~3 600단어	打电话	전화하다	dǎdiànhuà	打(dǎ) 电(diàn) 话(huà)	我晚上给妈妈打电话。	나는 저녁에 엄마에게 전화한다.	Wǒ wǎn shàng gěi mā mā dǎ diàn huà.			HSK1
+HSK 1~3 600단어	大	크다	dà	大(dà)	这个房间很大。	이 방은 크다.	Zhè ge fáng jiān hěn dà.			HSK1
+HSK 1~3 600단어	的	~의, 관형어 조사	de	的(de)	这是我的书。	이것은 내 책이다.	Zhè shì wǒ de shū.			HSK1
+HSK 1~3 600단어	点	시, 점	diǎn	点(diǎn)	现在三点。	지금 세 시다.	Xiàn zài sān diǎn.			HSK1
+HSK 1~3 600단어	电脑	컴퓨터	diànnǎo	电(diàn) 脑(nǎo)	我用电脑学习汉语。	나는 컴퓨터로 중국어를 공부한다.	Wǒ yòng diàn nǎo xué xí hàn yǔ.			HSK1
+HSK 1~3 600단어	电视	텔레비전	diànshì	电(diàn) 视(shì)	爸爸在看电视。	아빠는 텔레비전을 보고 있다.	Bà bà zài kàn diàn shì.			HSK1
+HSK 1~3 600단어	电影	영화	diànyǐng	电(diàn) 影(yǐng)	这个电影很好看。	이 영화는 재미있다.	Zhè ge diàn yǐng hěn hǎo kàn.			HSK1
+HSK 1~3 600단어	东西	물건	dōngxi	东(dōng) 西(xī)	桌子上有很多东西。	책상 위에 물건이 많다.	Zhuō zi shàng yǒu hěn duō dōng xī.			HSK1
+HSK 1~3 600단어	都	모두, 다	dōu	都(dōu)	我们都喜欢汉语。	우리는 모두 중국어를 좋아한다.	Wǒ men dōu xǐ huān hàn yǔ.			HSK1
+HSK 1~3 600단어	读	읽다	dú	读(dú)	他每天读书。	그는 매일 책을 읽는다.	Tā měi tiān dú shū.			HSK1
+HSK 1~3 600단어	对不起	미안합니다	duìbùqǐ	对(duì) 不(bù) 起(qǐ)	对不起，我来晚了。	미안해, 내가 늦게 왔다.	Duì bù qǐ, wǒ lái wǎn le.			HSK1
+HSK 1~3 600단어	多	많다	duō	多(duō)	这里的人很多。	여기 사람은 많다.	Zhè lǐ de rén hěn duō.			HSK1
+HSK 1~3 600단어	多少	얼마, 몇	duōshao	多(duō) 少(shǎo)	这个多少钱？	이것은 얼마인가요?	Zhè ge duō shǎo qián?			HSK1
+HSK 1~3 600단어	儿子	아들	érzi	儿(ér) 子(zi)	他的儿子很可爱。	그의 아들은 귀엽다.	Tā de ér zi hěn kě ài.			HSK1
+HSK 1~3 600단어	二	2, 둘	èr	二(èr)	我有两个杯子。	나는 컵 두 개가 있다.	Wǒ yǒu liǎng gè bēi zi.			HSK1
+HSK 1~3 600단어	饭店	식당, 음식점	fàndiàn	饭(fàn) 店(diàn)	我们在饭店吃饭。	우리는 식당에서 밥을 먹는다.	Wǒ men zài fàn diàn chī fàn.			HSK1
+HSK 1~3 600단어	飞机	비행기	fēijī	飞(fēi) 机(jī)	我坐飞机去中国。	나는 비행기를 타고 중국에 간다.	Wǒ zuò fēi jī qù zhōng guó.			HSK1
+HSK 1~3 600단어	分钟	분	fēnzhōng	分(fēn) 钟(zhōng)	我等了十分钟。	나는 십 분 기다렸다.	Wǒ děng le shí fēn zhōng.			HSK1
+HSK 1~3 600단어	高兴	기쁘다	gāoxìng	高(gāo) 兴(xīng)	今天我很高兴。	오늘 나는 매우 기쁘다.	Jīn tiān wǒ hěn gāo xìng.			HSK1
+HSK 1~3 600단어	个	개, 명	gè	个(gè)	我买了三个苹果。	나는 사과 세 개를 샀다.	Wǒ mǎi le sān gè píng guǒ.			HSK1
+HSK 1~3 600단어	工作	일, 직장; 일하다	gōngzuò	工(gōng) 作(zuò)	他在北京工作。	그는 베이징에서 일한다.	Tā zài běi jīng gōng zuò.			HSK1
+HSK 1~3 600단어	狗	개	gǒu	狗(gǒu)	我家有一只狗。	우리 집에는 개 한 마리가 있다.	Wǒ jiā yǒu yī zhī gǒu.			HSK1
+HSK 1~3 600단어	汉语	중국어	hànyǔ	汉(hàn) 语(yǔ)	我学习汉语。	나는 중국어를 공부한다.	Wǒ xué xí hàn yǔ.			HSK1
+HSK 1~3 600단어	好	좋다	hǎo	好(hǎo)	这个办法很好。	이 방법은 좋다.	Zhè ge bàn fǎ hěn hǎo.			HSK1
+HSK 1~3 600단어	喝	마시다	hē	喝(hē)	我想喝水。	나는 물을 마시고 싶다.	Wǒ xiǎng hē shuǐ.			HSK1
+HSK 1~3 600단어	和	~와, 그리고	hé	和(hé)	我和朋友去商店。	나는 친구와 상점에 간다.	Wǒ hé péng yǒu qù shāng diàn.			HSK1
+HSK 1~3 600단어	很	매우	hěn	很(hěn)	她很漂亮。	그녀는 매우 예쁘다.	Tā hěn piào liàng.			HSK1
+HSK 1~3 600단어	后面	뒤쪽, 뒤	hòumiàn	后(hòu) 面(miàn)	学校后面有商店。	학교 뒤에 상점이 있다.	Xué xiào hòu miàn yǒu shāng diàn.			HSK1
+HSK 1~3 600단어	回	돌아가다	huí	回(huí)	我晚上回家。	나는 저녁에 집에 돌아간다.	Wǒ wǎn shàng huí jiā.			HSK1
+HSK 1~3 600단어	会	~할 줄 알다; ~할 것이다	huì	会(huì)	我会说汉语。	나는 중국어를 할 줄 안다.	Wǒ huì shuō hàn yǔ.			HSK1
+HSK 1~3 600단어	几	몇	jǐ	几(jǐ)	你有几个朋友？	너는 친구가 몇 명 있니?	Nǐ yǒu jǐ gè péng yǒu?			HSK1
+HSK 1~3 600단어	家	집, 가족	jiā	家(jiā)	我家有三口人。	우리 집은 세 식구다.	Wǒ jiā yǒu sān kǒu rén.			HSK1
+HSK 1~3 600단어	叫	부르다, 이름이 ~이다	jiào	叫(jiào)	我叫小明。	내 이름은 샤오밍이다.	Wǒ jiào xiǎo míng.			HSK1
+HSK 1~3 600단어	今天	오늘	jīntiān	今(jīn) 天(tiān)	今天我去学校。	오늘 나는 학교에 간다.	Jīn tiān wǒ qù xué xiào.			HSK1
+HSK 1~3 600단어	九	9, 아홉	jiǔ	九(jiǔ)	现在九点。	지금 아홉 시다.	Xiàn zài jiǔ diǎn.			HSK1
+HSK 1~3 600단어	开	열다; 운전하다	kāi	开(kāi)	请开门。	문을 열어 주세요.	Qǐng kāi mén.			HSK1
+HSK 1~3 600단어	看	보다	kàn	看(kàn)	我看书。	나는 책을 본다.	Wǒ kàn shū.			HSK1
+HSK 1~3 600단어	看见	보다, 보이다	kànjiàn	看(kàn) 见(jiàn)	我看见老师了。	나는 선생님을 보았다.	Wǒ kàn jiàn lǎo shī le.			HSK1
+HSK 1~3 600단어	块	위안; 조각	kuài	块(kuài)	这个杯子十块钱。	이 컵은 10위안이다.	Zhè ge bēi zi shí kuài qián.			HSK1
+HSK 1~3 600단어	来	오다	lái	来(lái)	他明天来学校。	그는 내일 학교에 온다.	Tā míng tiān lái xué xiào.			HSK1
+HSK 1~3 600단어	老师	선생님	lǎoshī	老(lǎo) 师(shī)	老师在教室里。	선생님은 교실 안에 있다.	Lǎo shī zài jiào shì lǐ.			HSK1
+HSK 1~3 600단어	了	완료·변화 조사	le	了(le)	我买了一个苹果。	나는 사과 하나를 샀다.	Wǒ mǎi le yí gè píng guǒ.			HSK1
+HSK 1~3 600단어	冷	춥다, 차갑다	lěng	冷(lěng)	今天很冷。	오늘은 춥다.	Jīn tiān hěn lěng.			HSK1
+HSK 1~3 600단어	里	안, 속	lǐ	里(lǐ)	书在包里。	책은 가방 안에 있다.	Shū zài bāo lǐ.			HSK1
+HSK 1~3 600단어	号	번호; 일	hào	号(hào)	你住几号房间？	너는 몇 호 방에 묵니?	Nǐ zhù jǐ hào fáng jiān?			HSK1
+HSK 1~3 600단어	六	6, 여섯	liù	六(liù)	我六点起床。	나는 여섯 시에 일어난다.	Wǒ liù diǎn qǐ chuáng.			HSK1
+HSK 1~3 600단어	妈妈	엄마, 어머니	māma	妈(mā) 妈(mā)	妈妈在做饭。	엄마는 밥을 하고 있다.	Mā mā zài zuò fàn.			HSK1
+HSK 1~3 600단어	吗	의문 조사	ma	吗(ma)	你是学生吗？	너는 학생이니?	Nǐ shì xué shēng ma?			HSK1
+HSK 1~3 600단어	买	사다	mǎi	买(mǎi)	我想买苹果。	나는 사과를 사고 싶다.	Wǒ xiǎng mǎi píng guǒ.			HSK1
+HSK 1~3 600단어	猫	고양이	māo	猫(māo)	这只猫很小。	이 고양이는 작다.	Zhè zhǐ māo hěn xiǎo.			HSK1
+HSK 1~3 600단어	没有	없다; ~하지 않았다	méiyǒu	没(méi) 有(yǒu)	我没有电脑。	나는 컴퓨터가 없다.	Wǒ méi yǒu diàn nǎo.			HSK1
+HSK 1~3 600단어	米饭	쌀밥	mǐfàn	米(mǐ) 饭(fàn)	我中午吃米饭。	나는 점심에 밥을 먹는다.	Wǒ zhōng wǔ chī mǐ fàn.			HSK1
+HSK 1~3 600단어	明天	내일	míngtiān	明(míng) 天(tiān)	明天我去医院。	내일 나는 병원에 간다.	Míng tiān wǒ qù yī yuàn.			HSK1
+HSK 1~3 600단어	名字	이름	míngzi	名(míng) 字(zì)	你的名字是什么？	네 이름은 무엇이니?	Nǐ de míng zì shì shén me?			HSK1
+HSK 1~3 600단어	哪	어느, 어떤	nǎ	哪(nǎ)	你是哪国人？	너는 어느 나라 사람이니?	Nǐ shì nǎ guó rén?			HSK1
+HSK 1~3 600단어	哪儿	어디	nǎr	哪(nǎ) 儿(ér)	你在哪儿？	너는 어디에 있니?	Nǐ zài nǎ ér?			HSK1
+HSK 1~3 600단어	那	저, 그것	nà	那(nà)	那是我的学校。	저것은 내 학교다.	Nà shì wǒ de xué xiào.			HSK1
+HSK 1~3 600단어	呢	의문·강조 조사	ne	呢(ne)	你呢？	너는?	Nǐ ne?			HSK1
+HSK 1~3 600단어	能	~할 수 있다	néng	能(néng)	我今天不能去。	나는 오늘 갈 수 없다.	Wǒ jīn tiān bù néng qù.			HSK1
+HSK 1~3 600단어	你	너, 당신	nǐ	你(nǐ)	你叫什么名字？	너는 이름이 뭐니?	Nǐ jiào shén me míng zì?			HSK1
+HSK 1~3 600단어	年	년, 해	nián	年(nián)	今年是二零二六年。	올해는 2026년이다.	Jīn nián shì èr líng èr liù nián.			HSK1
+HSK 1~3 600단어	女儿	딸	nǚér	女(nǚ) 儿(ér)	我的女儿是学生。	내 딸은 학생이다.	Wǒ de nǚ ér shì xué shēng.			HSK1
+HSK 1~3 600단어	朋友	친구	péngyǒu	朋(péng) 友(yǒu)	他是我的朋友。	그는 내 친구다.	Tā shì wǒ de péng yǒu.			HSK1
+HSK 1~3 600단어	漂亮	예쁘다, 아름답다	piàoliang	漂(piāo) 亮(liàng)	这件衣服很漂亮。	이 옷은 예쁘다.	Zhè jiàn yī fú hěn piào liàng.			HSK1
+HSK 1~3 600단어	苹果	사과	píngguǒ	苹(píng) 果(guǒ)	我每天吃一个苹果。	나는 매일 사과 하나를 먹는다.	Wǒ měi tiān chī yí gè píng guǒ.			HSK1
+HSK 1~3 600단어	七	7, 일곱	qī	七(qī)	我七点去学校。	나는 일곱 시에 학교에 간다.	Wǒ qī diǎn qù xué xiào.			HSK1
+HSK 1~3 600단어	钱	돈	qián	钱(qián)	我没有钱。	나는 돈이 없다.	Wǒ méi yǒu qián.			HSK1
+HSK 1~3 600단어	前面	앞쪽, 앞	qiánmiàn	前(qián) 面(miàn)	医院在学校前面。	병원은 학교 앞에 있다.	Yī yuàn zài xué xiào qián miàn.			HSK1
+HSK 1~3 600단어	请	청하다; 제발	qǐng	请(qǐng)	请坐。	앉으세요.	Qǐng zuò.			HSK1
+HSK 1~3 600단어	去	가다	qù	去(qù)	我去商店买东西。	나는 물건을 사러 상점에 간다.	Wǒ qù shāng diàn mǎi dōng xī.			HSK1
+HSK 1~3 600단어	热	덥다, 뜨겁다	rè	热(rè)	今天很热。	오늘은 덥다.	Jīn tiān hěn rè.			HSK1
+HSK 1~3 600단어	人	사람	rén	人(rén)	这里有很多人。	여기에는 사람이 많다.	Zhè lǐ yǒu hěn duō rén.			HSK1
+HSK 1~3 600단어	认识	알다, 인식하다	rènshi	认(rèn) 识(shí)	我认识这个老师。	나는 이 선생님을 안다.	Wǒ rèn shí zhè ge lǎo shī.			HSK1
+HSK 1~3 600단어	三	3, 셋	sān	三(sān)	我有三个朋友。	나는 친구가 세 명 있다.	Wǒ yǒu sān gè péng yǒu.			HSK1
+HSK 1~3 600단어	商店	상점	shāngdiàn	商(shāng) 店(diàn)	商店在前面。	상점은 앞에 있다.	Shāng diàn zài qián miàn.			HSK1
+HSK 1~3 600단어	上	위; 올라가다	shàng	上(shàng)	书在桌子上。	책은 책상 위에 있다.	Shū zài zhuō zi shàng.			HSK1
+HSK 1~3 600단어	上午	오전	shàngwǔ	上(shàng) 午(wǔ)	我上午有课。	나는 오전에 수업이 있다.	Wǒ shàng wǔ yǒu kè.			HSK1
+HSK 1~3 600단어	少	적다	shǎo	少(shǎo)	今天人很少。	오늘은 사람이 적다.	Jīn tiān rén hěn shǎo.			HSK1
+HSK 1~3 600단어	谁	누구	shuí	谁(shuí)	他是谁？	그는 누구인가?	Tā shì shuí?			HSK1
+HSK 1~3 600단어	什么	무엇	shénme	什(shén) 么(me)	你想吃什么？	너는 무엇을 먹고 싶니?	Nǐ xiǎng chī shén me?			HSK1
+HSK 1~3 600단어	十	10, 열	shí	十(shí)	现在十点。	지금 열 시다.	Xiàn zài shí diǎn.			HSK1
+HSK 1~3 600단어	时候	때, 시간	shíhou	时(shí) 候(hòu)	你什么时候来？	너는 언제 오니?	Nǐ shén me shí hòu lái?			HSK1
+HSK 1~3 600단어	是	~이다	shì	是(shì)	我是学生。	나는 학생이다.	Wǒ shì xué shēng.			HSK1
+HSK 1~3 600단어	书	책	shū	书(shū)	我喜欢这本书。	나는 이 책을 좋아한다.	Wǒ xǐ huān zhè běn shū.			HSK1
+HSK 1~3 600단어	水	물	shuǐ	水(shuǐ)	请喝水。	물을 마시세요.	Qǐng hē shuǐ.			HSK1
+HSK 1~3 600단어	水果	과일	shuǐguǒ	水(shuǐ) 果(guǒ)	我喜欢吃水果。	나는 과일 먹는 것을 좋아한다.	Wǒ xǐ huān chī shuǐ guǒ.			HSK1
+HSK 1~3 600단어	睡觉	자다	shuìjiào	睡(shuì) 觉(jué)	我晚上十点睡觉。	나는 밤 열 시에 잔다.	Wǒ wǎn shàng shí diǎn shuì jiào.			HSK1
+HSK 1~3 600단어	说	말하다	shuō	说(shuō)	他说汉语。	그는 중국어를 말한다.	Tā shuō hàn yǔ.			HSK1
+HSK 1~3 600단어	四	4, 넷	sì	四(sì)	我家有四口人。	우리 집은 네 식구다.	Wǒ jiā yǒu sì kǒu rén.			HSK1
+HSK 1~3 600단어	岁	살, 나이	suì	岁(suì)	我二十岁。	나는 스무 살이다.	Wǒ èr shí suì.			HSK1
+HSK 1~3 600단어	他	그	tā	他(tā)	他是我的同学。	그는 내 반 친구다.	Tā shì wǒ de tóng xué.			HSK1
+HSK 1~3 600단어	她	그녀	tā	她(tā)	她是医生。	그녀는 의사다.	Tā shì yī shēng.			HSK1
+HSK 1~3 600단어	太	너무, 매우	tài	太(tài)	这个苹果太大了。	이 사과는 너무 크다.	Zhè ge píng guǒ tài dà le.			HSK1
+HSK 1~3 600단어	天气	날씨	tiānqì	天(tiān) 气(qì)	今天天气很好。	오늘 날씨가 좋다.	Jīn tiān tiān qì hěn hǎo.			HSK1
+HSK 1~3 600단어	听	듣다	tīng	听(tīng)	我听老师说话。	나는 선생님이 말하는 것을 듣는다.	Wǒ tīng lǎo shī shuō huà.			HSK1
+HSK 1~3 600단어	同学	동급생, 학우	tóngxué	同(tóng) 学(xué)	他是我的同学。	그는 내 학우다.	Tā shì wǒ de tóng xué.			HSK1
+HSK 1~3 600단어	喂	여보세요	wèi	喂(wèi)	喂，你好！	여보세요, 안녕하세요!	Wèi, nǐ hǎo!			HSK1
+HSK 1~3 600단어	我	나	wǒ	我(wǒ)	我是中国人。	나는 중국 사람이다.	Wǒ shì zhōng guó rén.			HSK1
+HSK 1~3 600단어	我们	우리	wǒmen	我(wǒ) 们(men)	我们一起学习。	우리는 함께 공부한다.	Wǒ men yì qǐ xué xí.			HSK1
+HSK 1~3 600단어	五	5, 다섯	wǔ	五(wǔ)	我五点回家。	나는 다섯 시에 집에 간다.	Wǒ wǔ diǎn huí jiā.			HSK1
+HSK 1~3 600단어	喜欢	좋아하다	xǐhuān	喜(xǐ) 欢(huān)	我喜欢喝茶。	나는 차 마시는 것을 좋아한다.	Wǒ xǐ huān hē chá.			HSK1
+HSK 1~3 600단어	下	아래; 내리다	xià	下(xià)	猫在桌子下。	고양이는 책상 아래에 있다.	Māo zài zhuō zi xià.			HSK1
+HSK 1~3 600단어	下午	오후	xiàwǔ	下(xià) 午(wǔ)	我下午去商店。	나는 오후에 상점에 간다.	Wǒ xià wǔ qù shāng diàn.			HSK1
+HSK 1~3 600단어	下雨	비가 오다	xiàyǔ	下(xià) 雨(yǔ)	今天下午下雨。	오늘 오후에는 비가 온다.	Jīn tiān xià wǔ xià yǔ.			HSK1
+HSK 1~3 600단어	先生	선생, 씨	xiānsheng	先(xiān) 生(shēng)	王先生是老师。	왕 선생님은 선생님이다.	Wáng xiān shēng shì lǎo shī.			HSK1
+HSK 1~3 600단어	现在	지금, 현재	xiànzài	现(xiàn) 在(zài)	现在我在学校。	지금 나는 학교에 있다.	Xiàn zài wǒ zài xué xiào.			HSK1
+HSK 1~3 600단어	想	생각하다; ~하고 싶다	xiǎng	想(xiǎng)	我想喝水。	나는 물을 마시고 싶다.	Wǒ xiǎng hē shuǐ.			HSK1
+HSK 1~3 600단어	小	작다	xiǎo	小(xiǎo)	这个杯子很小。	이 컵은 작다.	Zhè ge bēi zi hěn xiǎo.			HSK1
+HSK 1~3 600단어	小姐	아가씨, 미스	xiǎojiě	小(xiǎo) 姐(jiě)	李小姐在商店工作。	리 양은 상점에서 일한다.	Lǐ xiǎo jiě zài shāng diàn gōng zuò.			HSK1
+HSK 1~3 600단어	些	조금, 몇몇	xiē	些(xiē)	我买了一些水果。	나는 과일을 조금 샀다.	Wǒ mǎi le yī xiē shuǐ guǒ.			HSK1
+HSK 1~3 600단어	写	쓰다	xiě	写(xiě)	我写汉字。	나는 한자를 쓴다.	Wǒ xiě hàn zì.			HSK1
+HSK 1~3 600단어	谢谢	감사합니다	xièxiè	谢(xiè) 谢(xiè)	谢谢你的帮助。	도와줘서 고맙다.	Xiè xiè nǐ de bāng zhù.			HSK1
+HSK 1~3 600단어	星期	요일, 주	xīngqī	星(xīng) 期(qī)	今天星期三。	오늘은 수요일이다.	Jīn tiān xīng qī sān.			HSK1
+HSK 1~3 600단어	学生	학생	xuésheng	学(xué) 生(shēng)	我是学生。	나는 학생이다.	Wǒ shì xué shēng.			HSK1
+HSK 1~3 600단어	学习	공부하다, 배우다	xuéxí	学(xué) 习(xí)	我学习汉语。	나는 중국어를 공부한다.	Wǒ xué xí hàn yǔ.			HSK1
+HSK 1~3 600단어	学校	학교	xuéxiào	学(xué) 校(xiào)	学校在前面。	학교는 앞에 있다.	Xué xiào zài qián miàn.			HSK1
+HSK 1~3 600단어	一	1, 하나	yī	一(yī)	我有一本书。	나는 책 한 권이 있다.	Wǒ yǒu yī běn shū.			HSK1
+HSK 1~3 600단어	衣服	옷	yīfú	衣(yī) 服(fú)	这件衣服很漂亮。	이 옷은 예쁘다.	Zhè jiàn yī fú hěn piào liàng.			HSK1
+HSK 1~3 600단어	医生	의사	yīshēng	医(yī) 生(shēng)	他是医生。	그는 의사다.	Tā shì yī shēng.			HSK1
+HSK 1~3 600단어	医院	병원	yīyuàn	医(yī) 院(yuàn)	我去医院看病。	나는 병원에 진료를 받으러 간다.	Wǒ qù yī yuàn kàn bìng.			HSK1
+HSK 1~3 600단어	椅子	의자	yǐzi	椅(yǐ) 子(zi)	椅子在桌子旁边。	의자는 책상 옆에 있다.	Yǐ zi zài zhuō zi páng biān.			HSK1
+HSK 1~3 600단어	有	있다, 가지다	yǒu	有(yǒu)	我有一个儿子。	나는 아들이 하나 있다.	Wǒ yǒu yí gè ér zi.			HSK1
+HSK 1~3 600단어	月	월, 달	yuè	月(yuè)	这个月我很忙。	이번 달 나는 바쁘다.	Zhè ge yuè wǒ hěn máng.			HSK1
+HSK 1~3 600단어	再见	안녕히 가세요, 또 만나요	zàijiàn	再(zài) 见(jiàn)	老师，再见！	선생님, 안녕히 계세요!	Lǎo shī, zài jiàn!			HSK1
+HSK 1~3 600단어	在	~에 있다; ~에서	zài	在(zài)	我在家。	나는 집에 있다.	Wǒ zài jiā.			HSK1
+HSK 1~3 600단어	怎么	어떻게, 왜	zěnme	怎(zěn) 么(me)	这个字怎么写？	이 글자는 어떻게 쓰나요?	Zhè ge zì zěn me xiě?			HSK1
+HSK 1~3 600단어	一点儿	조금	yìdiǎnér	一(yī) 点(diǎn) 儿(ér)	我想喝一点儿水。	나는 물을 조금 마시고 싶다.	Wǒ xiǎng hē yì diǎn ér shuǐ.			HSK1
+HSK 1~3 600단어	怎么样	어떠하다	zěnmeyàng	怎(zěn) 么(me) 样(yàng)	今天天气怎么样？	오늘 날씨는 어때?	Jīn tiān tiān qì zěn me yàng?			HSK1
+HSK 1~3 600단어	这	이것, 이	zhè	这(zhè)	这是我的电脑。	이것은 내 컴퓨터다.	Zhè shì wǒ de diàn nǎo.			HSK1
+HSK 1~3 600단어	中国	중국	zhōngguó	中(zhōng) 国(guó)	我想去中国。	나는 중국에 가고 싶다.	Wǒ xiǎng qù zhōng guó.			HSK1
+HSK 1~3 600단어	中午	정오, 점심때	zhōngwǔ	中(zhōng) 午(wǔ)	我中午吃饭。	나는 점심때 밥을 먹는다.	Wǒ zhōng wǔ chī fàn.			HSK1
+HSK 1~3 600단어	住	살다, 거주하다	zhù	住(zhù)	我住在北京。	나는 베이징에 산다.	Wǒ zhù zài běi jīng.			HSK1
+HSK 1~3 600단어	桌子	책상, 탁자	zhuōzi	桌(zhuō) 子(zi)	书在桌子上。	책은 책상 위에 있다.	Shū zài zhuō zi shàng.			HSK1
+HSK 1~3 600단어	字	글자, 문자	zì	字(zì)	这个字很难。	이 글자는 어렵다.	Zhè ge zì hěn nán.			HSK1
+HSK 1~3 600단어	昨天	어제	zuótiān	昨(zuó) 天(tiān)	昨天我看了电影。	어제 나는 영화를 보았다.	Zuó tiān wǒ kàn le diàn yǐng.			HSK1
+HSK 1~3 600단어	坐	앉다; 타다	zuò	坐(zuò)	请坐在这里。	여기에 앉으세요.	Qǐng zuò zài zhè lǐ.			HSK1
+HSK 1~3 600단어	做	하다, 만들다	zuò	做(zuò)	妈妈在做饭。	엄마는 밥을 하고 있다.	Mā mā zài zuò fàn.			HSK1
+HSK 1~3 600단어	吧	청유·추측 조사	ba	吧(ba)	我们走吧。	우리 가자.	Wǒ men zǒu ba.			HSK2
+HSK 1~3 600단어	白	희다, 하얗다	bái	白(bái)	我喜欢白色的衣服。	나는 흰색 옷을 좋아한다.	Wǒ xǐ huān bái sè de yī fú.			HSK2
+HSK 1~3 600단어	百	100, 백	bǎi	百(bǎi)	这本书一百块钱。	이 책은 100위안이다.	Zhè běn shū yì bǎi kuài qián.			HSK2
+HSK 1~3 600단어	帮助	돕다, 도움	bāngzhù	帮(bāng) 助(zhù)	谢谢你的帮助。	너의 도움에 감사한다.	Xiè xiè nǐ de bāng zhù.			HSK2
+HSK 1~3 600단어	报纸	신문	bàozhǐ	报(bào) 纸(zhǐ)	爸爸每天看报纸。	아빠는 매일 신문을 본다.	Bà bà měi tiān kàn bào zhǐ.			HSK2
+HSK 1~3 600단어	比	~보다; 비교하다	bǐ	比(bǐ)	今天比昨天热。	오늘은 어제보다 덥다.	Jīn tiān bǐ zuó tiān rè.			HSK2
+HSK 1~3 600단어	别	~하지 마라	bié	别(bié)	别说话。	말하지 마라.	Bié shuō huà.			HSK2
+HSK 1~3 600단어	宾馆	호텔, 숙소	bīnguǎn	宾(bīn) 馆(guǎn)	宾馆在火车站旁边。	호텔은 기차역 옆에 있다.	Bīn guǎn zài huǒ chē zhàn páng biān.			HSK2
+HSK 1~3 600단어	长	길다	cháng	长(cháng)	这条路很长。	이 길은 길다.	Zhè tiáo lù hěn zhǎng.			HSK2
+HSK 1~3 600단어	唱歌	노래하다	chànggē	唱(chàng) 歌(gē)	妹妹喜欢唱歌。	여동생은 노래하는 것을 좋아한다.	Mèi mèi xǐ huān chàng gē.			HSK2
+HSK 1~3 600단어	出	나가다, 나오다	chū	出(chū)	他出去了。	그는 나갔다.	Tā chū qù le.			HSK2
+HSK 1~3 600단어	穿	입다, 신다	chuān	穿(chuān)	今天我穿白色衣服。	오늘 나는 흰색 옷을 입었다.	Jīn tiān wǒ chuān bái sè yī fú.			HSK2
+HSK 1~3 600단어	次	번, 차례	cì	次(cì)	我去过一次北京。	나는 베이징에 한 번 가 본 적이 있다.	Wǒ qù guò yī cì běi jīng.			HSK2
+HSK 1~3 600단어	从	~부터, ~에서	cóng	从(cóng)	我从家去学校。	나는 집에서 학교로 간다.	Wǒ cóng jiā qù xué xiào.			HSK2
+HSK 1~3 600단어	错	틀리다, 잘못되다	cuò	错(cuò)	这个字写错了。	이 글자는 잘못 썼다.	Zhè ge zì xiě cuò le.			HSK2
+HSK 1~3 600단어	打篮球	농구를 하다	dǎlánqiú	打(dǎ) 篮(lán) 球(qiú)	他们下午打篮球。	그들은 오후에 농구를 한다.	Tā men xià wǔ dǎ lán qiú.			HSK2
+HSK 1~3 600단어	大家	모두, 여러분	dàjiā	大(dà) 家(jiā)	大家都来了。	모두 왔다.	Dà jiā dōu lái le.			HSK2
+HSK 1~3 600단어	到	도착하다, ~까지	dào	到(dào)	我八点到学校。	나는 여덟 시에 학교에 도착한다.	Wǒ bā diǎn dào xué xiào.			HSK2
+HSK 1~3 600단어	得	정도보어 조사	de	得(de)	他说得很好。	그는 말을 잘한다.	Tā shuō dé hěn hǎo.			HSK2
+HSK 1~3 600단어	等	기다리다	děng	等(děng)	我在门口等你。	나는 문 앞에서 너를 기다린다.	Wǒ zài mén kǒu děng nǐ.			HSK2
+HSK 1~3 600단어	弟弟	남동생	dìdi	弟(dì) 弟(dì)	我弟弟是学生。	내 남동생은 학생이다.	Wǒ dì di shì xué shēng.			HSK2
+HSK 1~3 600단어	第一	첫째, 제1	dìyī	第(dì) 一(yī)	他是第一名。	그는 1등이다.	Tā shì dì yì míng.			HSK2
+HSK 1~3 600단어	懂	이해하다, 알아듣다	dǒng	懂(dǒng)	我懂你的意思。	나는 네 뜻을 이해한다.	Wǒ dǒng nǐ de yì si.			HSK2
+HSK 1~3 600단어	对	맞다; ~에게	duì	对(duì)	你的答案很对。	네 답은 맞다.	Nǐ de dá àn hěn duì.			HSK2
+HSK 1~3 600단어	房间	방	fángjiān	房(fáng) 间(jiān)	我的房间不大。	내 방은 크지 않다.	Wǒ de fáng jiān bù dà.			HSK2
+HSK 1~3 600단어	非常	매우, 대단히	fēicháng	非(fēi) 常(cháng)	我非常喜欢汉语。	나는 중국어를 매우 좋아한다.	Wǒ fēi cháng xǐ huān hàn yǔ.			HSK2
+HSK 1~3 600단어	服务员	종업원	fúwùyuán	服(fú) 务(wù) 员(yuán)	服务员来了。	종업원이 왔다.	Fú wù yuán lái le.			HSK2
+HSK 1~3 600단어	高	높다, 키가 크다	gāo	高(gāo)	哥哥很高。	형은 키가 크다.	Gē gē hěn gāo.			HSK2
+HSK 1~3 600단어	告诉	알리다, 말해 주다	gàosù	告(gào) 诉(sù)	请告诉我你的名字。	네 이름을 나에게 말해 주세요.	Qǐng gào sù wǒ nǐ de míng zì.			HSK2
+HSK 1~3 600단어	哥哥	형, 오빠	gēge	哥(gē) 哥(gē)	我哥哥在公司工作。	내 형은 회사에서 일한다.	Wǒ gē gē zài gōng sī gōng zuò.			HSK2
+HSK 1~3 600단어	给	주다; ~에게	gěi	给(gěi)	我给妈妈打电话。	나는 엄마에게 전화한다.	Wǒ gěi mā mā dǎ diàn huà.			HSK2
+HSK 1~3 600단어	公共汽车	버스	gōnggòngqìchē	公(gōng) 共(gòng) 汽(qì) 车(chē)	我坐公共汽车去学校。	나는 버스를 타고 학교에 간다.	Wǒ zuò gōng gòng qì chē qù xué xiào.			HSK2
+HSK 1~3 600단어	公司	회사	gōngsī	公(gōng) 司(sī)	爸爸在公司工作。	아빠는 회사에서 일한다.	Bà bà zài gōng sī gōng zuò.			HSK2
+HSK 1~3 600단어	贵	비싸다	guì	贵(guì)	这个手机很贵。	이 휴대전화는 비싸다.	Zhè ge shǒu jī hěn guì.			HSK2
+HSK 1~3 600단어	过	~한 적이 있다; 지나가다	guo	过(guo)	我去过中国。	나는 중국에 가 본 적이 있다.	Wǒ qù guò zhōng guó.			HSK2
+HSK 1~3 600단어	还	아직, 여전히; 또한	hái	还(hái)	他还在学校。	그는 아직 학교에 있다.	Tā hái zài xué xiào.			HSK2
+HSK 1~3 600단어	孩子	아이	háizi	孩(hái) 子(zi)	这个孩子很可爱。	이 아이는 귀엽다.	Zhè ge hái zi hěn kě ài.			HSK2
+HSK 1~3 600단어	好吃	맛있다	hǎochī	好(hǎo) 吃(chī)	妈妈做的菜很好吃。	엄마가 만든 요리는 맛있다.	Mā mā zuò de cài hěn hǎo chī.			HSK2
+HSK 1~3 600단어	黑	검다	hēi	黑(hēi)	这只猫是黑色的。	이 고양이는 검은색이다.	Zhè zhǐ māo shì hēi sè de.			HSK2
+HSK 1~3 600단어	红	붉다, 빨갛다	hóng	红(hóng)	我喜欢红苹果。	나는 빨간 사과를 좋아한다.	Wǒ xǐ huān hóng píng guǒ.			HSK2
+HSK 1~3 600단어	火车站	기차역	huǒchēzhàn	火(huǒ) 车(chē) 站(zhàn)	火车站离这里很近。	기차역은 여기에서 가깝다.	Huǒ chē zhàn lí zhè lǐ hěn jìn.			HSK2
+HSK 1~3 600단어	机场	공항	jīchǎng	机(jī) 场(chǎng)	我们去机场接朋友。	우리는 친구를 마중하러 공항에 간다.	Wǒ men qù jī chǎng jiē péng yǒu.			HSK2
+HSK 1~3 600단어	鸡蛋	계란	jīdàn	鸡(jī) 蛋(dàn)	我早上吃鸡蛋。	나는 아침에 계란을 먹는다.	Wǒ zǎo shàng chī jī dàn.			HSK2
+HSK 1~3 600단어	件	벌, 건; 양사	jiàn	件(jiàn)	我买了一件衣服。	나는 옷 한 벌을 샀다.	Wǒ mǎi le yī jiàn yī fú.			HSK2
+HSK 1~3 600단어	教室	교실	jiàoshì	教(jiào) 室(shì)	学生在教室里学习。	학생들은 교실에서 공부한다.	Xué shēng zài jiào shì lǐ xué xí.			HSK2
+HSK 1~3 600단어	姐姐	누나, 언니	jiějie	姐(jiě) 姐(jiě)	我姐姐是医生。	내 누나는 의사다.	Wǒ jiě jiě shì yī shēng.			HSK2
+HSK 1~3 600단어	介绍	소개하다	jièshào	介(jiè) 绍(shào)	我介绍一下我的朋友。	내 친구를 좀 소개하겠다.	Wǒ jiè shào yī xià wǒ de péng yǒu.			HSK2
+HSK 1~3 600단어	进	들어가다	jìn	进(jìn)	请进。	들어오세요.	Qǐng jìn.			HSK2
+HSK 1~3 600단어	近	가깝다	jìn	近(jìn)	学校离我家很近。	학교는 우리 집에서 가깝다.	Xué xiào lí wǒ jiā hěn jìn.			HSK2
+HSK 1~3 600단어	就	곧, 바로	jiù	就(jiù)	我马上就来。	나는 곧 온다.	Wǒ mǎ shàng jiù lái.			HSK2
+HSK 1~3 600단어	觉得	생각하다, 느끼다	juéde	觉(jué) 得(de)	我觉得这个电影很好看。	나는 이 영화가 재미있다고 생각한다.	Wǒ jué de zhè ge diàn yǐng hěn hǎo kàn.			HSK2
+HSK 1~3 600단어	咖啡	커피	kāfēi	咖(kā) 啡(fēi)	我不喜欢喝咖啡。	나는 커피 마시는 것을 좋아하지 않는다.	Wǒ bù xǐ huān hē kā fēi.			HSK2
+HSK 1~3 600단어	开始	시작하다	kāishǐ	开(kāi) 始(shǐ)	我们开始上课吧。	우리 수업을 시작하자.	Wǒ men kāi shǐ shàng kè ba.			HSK2
+HSK 1~3 600단어	考试	시험	kǎoshì	考(kǎo) 试(shì)	明天有汉语考试。	내일 중국어 시험이 있다.	Míng tiān yǒu hàn yǔ kǎo shì.			HSK2
+HSK 1~3 600단어	可能	아마, 가능하다	kěnéng	可(kě) 能(néng)	他今天可能不来。	그는 오늘 아마 오지 않을 것이다.	Tā jīn tiān kě néng bù lái.			HSK2
+HSK 1~3 600단어	可以	~할 수 있다; 괜찮다	kěyǐ	可(kě) 以(yǐ)	我可以坐这里吗？	제가 여기 앉아도 될까요?	Wǒ kě yǐ zuò zhè lǐ ma?			HSK2
+HSK 1~3 600단어	课	수업, 과목	kè	课(kè)	今天下午有课。	오늘 오후에 수업이 있다.	Jīn tiān xià wǔ yǒu kè.			HSK2
+HSK 1~3 600단어	快	빠르다; 곧	kuài	快(kuài)	他跑得很快。	그는 빨리 달린다.	Tā pǎo dé hěn kuài.			HSK2
+HSK 1~3 600단어	快乐	즐겁다, 기쁘다	kuàilè	快(kuài) 乐(lè)	祝你生日快乐。	생일 축하해.	Zhù nǐ shēng rì kuài lè.			HSK2
+HSK 1~3 600단어	累	피곤하다	lèi	累(lèi)	我今天很累。	나는 오늘 피곤하다.	Wǒ jīn tiān hěn lèi.			HSK2
+HSK 1~3 600단어	离	~에서 떨어져 있다	lí	离(lí)	我家离学校不远。	우리 집은 학교에서 멀지 않다.	Wǒ jiā lí xué xiào bù yuǎn.			HSK2
+HSK 1~3 600단어	两	둘, 두	liǎng	两(liǎng)	我有两个姐姐。	나는 언니가 두 명 있다.	Wǒ yǒu liǎng gè jiě jiě.			HSK2
+HSK 1~3 600단어	零	0, 영	líng	零(líng)	现在是八点零五分。	지금은 8시 5분이다.	Xiàn zài shì bā diǎn líng wǔ fēn.			HSK2
+HSK 1~3 600단어	路	길	lù	路(lù)	这条路很宽。	이 길은 넓다.	Zhè tiáo lù hěn kuān.			HSK2
+HSK 1~3 600단어	旅游	여행하다	lǚyóu	旅(lǚ) 游(yóu)	我们去中国旅游。	우리는 중국으로 여행 간다.	Wǒ men qù zhōng guó lǚ yóu.			HSK2
+HSK 1~3 600단어	卖	팔다	mài	卖(mài)	这个商店卖水果。	이 상점은 과일을 판다.	Zhè ge shāng diàn mài shuǐ guǒ.			HSK2
+HSK 1~3 600단어	慢	느리다	màn	慢(màn)	他说话说得很慢。	그는 말을 천천히 한다.	Tā shuō huà shuō dé hěn màn.			HSK2
+HSK 1~3 600단어	忙	바쁘다	máng	忙(máng)	妈妈今天很忙。	엄마는 오늘 바쁘다.	Mā mā jīn tiān hěn máng.			HSK2
+HSK 1~3 600단어	每	매, 마다	měi	每(měi)	我每天学习汉语。	나는 매일 중국어를 공부한다.	Wǒ měi tiān xué xí hàn yǔ.			HSK2
+HSK 1~3 600단어	妹妹	여동생	mèimei	妹(mèi) 妹(mèi)	我妹妹喜欢跳舞。	내 여동생은 춤추는 것을 좋아한다.	Wǒ mèi mèi xǐ huān tiào wǔ.			HSK2
+HSK 1~3 600단어	门	문	mén	门(mén)	请关门。	문을 닫아 주세요.	Qǐng guān mén.			HSK2
+HSK 1~3 600단어	面条	국수	miàntiáo	面(miàn) 条(tiáo)	我中午吃面条。	나는 점심에 국수를 먹는다.	Wǒ zhōng wǔ chī miàn tiáo.			HSK2
+HSK 1~3 600단어	男	남자, 남성	nán	男(nán)	他是男学生。	그는 남학생이다.	Tā shì nán xué shēng.			HSK2
+HSK 1~3 600단어	您	당신, 선생님	nín	您(nín)	您贵姓？	성함이 어떻게 되십니까?	Nín guì xìng?			HSK2
+HSK 1~3 600단어	牛奶	우유	niúnǎi	牛(niú) 奶(nǎi)	我早上喝牛奶。	나는 아침에 우유를 마신다.	Wǒ zǎo shàng hē niú nǎi.			HSK2
+HSK 1~3 600단어	女	여자, 여성	nǚ	女(nǚ)	她是女医生。	그녀는 여의사다.	Tā shì nǚ yī shēng.			HSK2
+HSK 1~3 600단어	旁边	옆	pángbiān	旁(páng) 边(biān)	椅子在桌子旁边。	의자는 책상 옆에 있다.	Yǐ zi zài zhuō zi páng biān.			HSK2
+HSK 1~3 600단어	跑步	달리기하다	pǎobù	跑(pǎo) 步(bù)	他每天早上跑步。	그는 매일 아침 달리기를 한다.	Tā měi tiān zǎo shàng pǎo bù.			HSK2
+HSK 1~3 600단어	便宜	싸다, 저렴하다	piányi	便(biàn) 宜(yí)	这个苹果很便宜。	이 사과는 싸다.	Zhè ge píng guǒ hěn pián yi.			HSK2
+HSK 1~3 600단어	票	표, 티켓	piào	票(piào)	我买了两张票。	나는 표 두 장을 샀다.	Wǒ mǎi le liǎng zhāng piào.			HSK2
+HSK 1~3 600단어	妻子	아내	qīzi	妻(qī) 子(zi)	他的妻子是老师。	그의 아내는 선생님이다.	Tā de qī zǐ shì lǎo shī.			HSK2
+HSK 1~3 600단어	起床	일어나다	qǐchuáng	起(qǐ) 床(chuáng)	我每天六点起床。	나는 매일 여섯 시에 일어난다.	Wǒ měi tiān liù diǎn qǐ chuáng.			HSK2
+HSK 1~3 600단어	千	천, 1000	qiān	千(qiān)	这个电脑三千块钱。	이 컴퓨터는 3000위안이다.	Zhè ge diàn nǎo sān qiān kuài qián.			HSK2
+HSK 1~3 600단어	铅笔	연필	qiānbǐ	铅(qiān) 笔(bǐ)	我用铅笔写字。	나는 연필로 글씨를 쓴다.	Wǒ yòng qiān bǐ xiě zì.			HSK2
+HSK 1~3 600단어	晴	맑다	qíng	晴(qíng)	今天是晴天。	오늘은 맑은 날이다.	Jīn tiān shì qíng tiān.			HSK2
+HSK 1~3 600단어	去年	작년	qùnián	去(qù) 年(nián)	去年我去了北京。	작년에 나는 베이징에 갔다.	Qù nián wǒ qù le běi jīng.			HSK2
+HSK 1~3 600단어	让	~하게 하다, 시키다	ràng	让(ràng)	老师让我读课文。	선생님은 나에게 본문을 읽게 했다.	Lǎo shī ràng wǒ dú kè wén.			HSK2
+HSK 1~3 600단어	日	날, 일	rì	日(rì)	今天是五月十二日。	오늘은 5월 12일이다.	Jīn tiān shì wǔ yuè shí èr rì.			HSK2
+HSK 1~3 600단어	上班	출근하다	shàngbān	上(shàng) 班(bān)	爸爸早上八点上班。	아빠는 아침 여덟 시에 출근한다.	Bà bà zǎo shàng bā diǎn shàng bān.			HSK2
+HSK 1~3 600단어	身体	몸, 신체	shēntǐ	身(shēn) 体(tǐ)	他的身体很好。	그의 몸은 건강하다.	Tā de shēn tǐ hěn hǎo.			HSK2
+HSK 1~3 600단어	生病	병이 나다	shēngbìng	生(shēng) 病(bìng)	妹妹生病了。	여동생이 병이 났다.	Mèi mèi shēng bìng le.			HSK2
+HSK 1~3 600단어	生日	생일	shēngrì	生(shēng) 日(rì)	今天是我的生日。	오늘은 내 생일이다.	Jīn tiān shì wǒ de shēng rì.			HSK2
+HSK 1~3 600단어	时间	시간	shíjiān	时(shí) 间(jiān)	我没有时间。	나는 시간이 없다.	Wǒ méi yǒu shí jiān.			HSK2
+HSK 1~3 600단어	事情	일, 사건	shìqing	事(shì) 情(qíng)	我有一件事情告诉你。	나는 너에게 말할 일이 하나 있다.	Wǒ yǒu yī jiàn shì qíng gào sù nǐ.			HSK2
+HSK 1~3 600단어	手表	손목시계	shǒubiǎo	手(shǒu) 表(biǎo)	这个手表很漂亮。	이 손목시계는 예쁘다.	Zhè ge shǒu biǎo hěn piào liàng.			HSK2
+HSK 1~3 600단어	手机	휴대전화	shǒujī	手(shǒu) 机(jī)	我的手机在桌子上。	내 휴대전화는 책상 위에 있다.	Wǒ de shǒu jī zài zhuō zi shàng.			HSK2
+HSK 1~3 600단어	说话	말하다	shuōhuà	说(shuō) 话(huà)	上课的时候别说话。	수업 시간에는 말하지 마라.	Shàng kè de shí hòu bié shuō huà.			HSK2
+HSK 1~3 600단어	送	보내다; 선물하다	sòng	送(sòng)	我送你一本书。	내가 너에게 책 한 권을 선물한다.	Wǒ sòng nǐ yī běn shū.			HSK2
+HSK 1~3 600단어	虽然 但是	비록 ~이지만 그러나 ~하다	suīrán ... dànshì ...	虽(suī) 然(rán) / 但(dàn) 是(shì)	虽然今天很冷，但是我想出去。	오늘은 춥지만 나는 나가고 싶다.	Suī rán jīn tiān hěn lěng, dàn shì wǒ xiǎng chū qù.			HSK2
+HSK 1~3 600단어	它	그것	tā	它(tā)	这是我的猫，它很可爱。	이것은 내 고양이인데, 그것은 귀엽다.	Zhè shì wǒ de māo, tā hěn kě ài.			HSK2
+HSK 1~3 600단어	踢足球	축구를 하다	tīzúqiú	踢(tī) 足(zú) 球(qiú)	他们下午踢足球。	그들은 오후에 축구를 한다.	Tā men xià wǔ tī zú qiú.			HSK2
+HSK 1~3 600단어	题	문제	tí	题(tí)	这道题不难。	이 문제는 어렵지 않다.	Zhè dào tí bù nán.			HSK2
+HSK 1~3 600단어	跳舞	춤추다	tiàowǔ	跳(tiào) 舞(wǔ)	姐姐喜欢跳舞。	누나는 춤추는 것을 좋아한다.	Jiě jiě xǐ huān tiào wǔ.			HSK2
+HSK 1~3 600단어	外	밖, 외부	wài	外(wài)	他在门外等我。	그는 문밖에서 나를 기다린다.	Tā zài mén wài děng wǒ.			HSK2
+HSK 1~3 600단어	完	끝나다; 완성하다	wán	完(wán)	我做完作业了。	나는 숙제를 다 했다.	Wǒ zuò wán zuò yè le.			HSK2
+HSK 1~3 600단어	玩	놀다	wán	玩(wán)	孩子们在外面玩。	아이들이 밖에서 논다.	Hái zi men zài wài miàn wán.			HSK2
+HSK 1~3 600단어	晚上	저녁, 밤	wǎnshang	晚(wǎn) 上(shàng)	我晚上看电影。	나는 저녁에 영화를 본다.	Wǒ wǎn shàng kàn diàn yǐng.			HSK2
+HSK 1~3 600단어	往	~쪽으로, 향하여	wǎng	往(wǎng)	请往前走。	앞쪽으로 가세요.	Qǐng wǎng qián zǒu.			HSK2
+HSK 1~3 600단어	为什么	왜	wèishénme	为(wèi) 什(shén) 么(me)	你为什么不高兴？	너는 왜 기쁘지 않니?	Nǐ wèi shén me bù gāo xìng?			HSK2
+HSK 1~3 600단어	问	묻다	wèn	问(wèn)	我想问一个问题。	나는 질문 하나를 하고 싶다.	Wǒ xiǎng wèn yí gè wèn tí.			HSK2
+HSK 1~3 600단어	问题	문제, 질문	wèntí	问(wèn) 题(tí)	这个问题很简单。	이 문제는 간단하다.	Zhè ge wèn tí hěn jiǎn dān.			HSK2
+HSK 1~3 600단어	西瓜	수박	xīguā	西(xī) 瓜(guā)	夏天我喜欢吃西瓜。	여름에 나는 수박 먹는 것을 좋아한다.	Xià tiān wǒ xǐ huān chī xī guā.			HSK2
+HSK 1~3 600단어	希望	희망하다, 바라다	xīwàng	希(xī) 望(wàng)	我希望你来。	나는 네가 오기를 바란다.	Wǒ xī wàng nǐ lái.			HSK2
+HSK 1~3 600단어	洗	씻다	xǐ	洗(xǐ)	我每天洗衣服。	나는 매일 옷을 빤다.	Wǒ měi tiān xǐ yī fú.			HSK2
+HSK 1~3 600단어	小时	시간	xiǎoshí	小(xiǎo) 时(shí)	我学习了两个小时。	나는 두 시간 공부했다.	Wǒ xué xí le liǎng gè xiǎo shí.			HSK2
+HSK 1~3 600단어	笑	웃다	xiào	笑(xiào)	他笑了。	그가 웃었다.	Tā xiào le.			HSK2
+HSK 1~3 600단어	新	새롭다	xīn	新(xīn)	这是我的新手机。	이것은 내 새 휴대전화다.	Zhè shì wǒ de xīn shǒu jī.			HSK2
+HSK 1~3 600단어	姓	성씨가 ~이다	xìng	姓(xìng)	你姓什么？	당신의 성은 무엇입니까?	Nǐ xìng shén me?			HSK2
+HSK 1~3 600단어	休息	쉬다, 휴식하다	xiūxi	休(xiū) 息(xī)	我想休息一下。	나는 좀 쉬고 싶다.	Wǒ xiǎng xiū xī yī xià.			HSK2
+HSK 1~3 600단어	雪	눈	xuě	雪(xuě)	今天下雪了。	오늘 눈이 왔다.	Jīn tiān xià xuě le.			HSK2
+HSK 1~3 600단어	颜色	색깔	yánsè	颜(yán) 色(sè)	你喜欢什么颜色？	너는 어떤 색을 좋아하니?	Nǐ xǐ huān shén me yán sè?			HSK2
+HSK 1~3 600단어	眼睛	눈	yǎnjing	眼(yǎn) 睛(jīng)	她的眼睛很大。	그녀의 눈은 크다.	Tā de yǎn jīng hěn dà.			HSK2
+HSK 1~3 600단어	羊肉	양고기	yángròu	羊(yáng) 肉(ròu)	我不吃羊肉。	나는 양고기를 먹지 않는다.	Wǒ bù chī yáng ròu.			HSK2
+HSK 1~3 600단어	药	약	yào	药(yào)	生病了要吃药。	병이 나면 약을 먹어야 한다.	Shēng bìng le yào chī yào.			HSK2
+HSK 1~3 600단어	要	원하다; ~하려고 하다	yào	要(yào)	我要买一张票。	나는 표 한 장을 사려고 한다.	Wǒ yào mǎi yī zhāng piào.			HSK2
+HSK 1~3 600단어	也	또한, 역시	yě	也(yě)	我也喜欢汉语。	나도 중국어를 좋아한다.	Wǒ yě xǐ huān hàn yǔ.			HSK2
+HSK 1~3 600단어	一起	함께	yìqǐ	一(yī) 起(qǐ)	我们一起去学校。	우리는 함께 학교에 간다.	Wǒ men yì qǐ qù xué xiào.			HSK2
+HSK 1~3 600단어	一下	좀, 한번	yīxià	一(yī) 下(xià)	请等一下。	잠깐 기다려 주세요.	Qǐng děng yí xià.			HSK2
+HSK 1~3 600단어	已经	이미, 벌써	yǐjīng	已(yǐ) 经(jīng)	他已经回家了。	그는 이미 집에 갔다.	Tā yǐ jīng huí jiā le.			HSK2
+HSK 1~3 600단어	意思	뜻, 의미	yìsi	意(yì) 思(sī)	这个词是什么意思？	이 단어는 무슨 뜻입니까?	Zhè ge cí shì shén me yì si?			HSK2
+HSK 1~3 600단어	因为 所以	~ 때문에 그래서 ~하다	yīnwèi ... suǒyǐ ...	因(yīn) 为(wèi) / 所(suǒ) 以(yǐ)	因为下雨，所以我不出门。	비가 오기 때문에 나는 외출하지 않는다.	Yīn wèi xià yǔ, suǒ yǐ wǒ bù chū mén.			HSK2
+HSK 1~3 600단어	阴	흐리다	yīn	阴(yīn)	今天是阴天。	오늘은 흐린 날이다.	Jīn tiān shì yīn tiān.			HSK2
+HSK 1~3 600단어	游泳	수영하다	yóuyǒng	游(yóu) 泳(yǒng)	我会游泳。	나는 수영할 줄 안다.	Wǒ huì yóu yǒng.			HSK2
+HSK 1~3 600단어	右边	오른쪽	yòubiān	右(yòu) 边(biān)	银行在学校右边。	은행은 학교 오른쪽에 있다.	Yín háng zài xué xiào yòu biān.			HSK2
+HSK 1~3 600단어	鱼	물고기, 생선	yú	鱼(yú)	我喜欢吃鱼。	나는 생선을 먹는 것을 좋아한다.	Wǒ xǐ huān chī yú.			HSK2
+HSK 1~3 600단어	远	멀다	yuǎn	远(yuǎn)	机场离这里很远。	공항은 여기에서 멀다.	Jī chǎng lí zhè lǐ hěn yuǎn.			HSK2
+HSK 1~3 600단어	运动	운동하다; 운동	yùndòng	运(yùn) 动(dòng)	我每天运动。	나는 매일 운동한다.	Wǒ měi tiān yùn dòng.			HSK2
+HSK 1~3 600단어	再	다시, 또	zài	再(zài)	请再说一遍。	다시 한 번 말해 주세요.	Qǐng zài shuō yī biàn.			HSK2
+HSK 1~3 600단어	早上	아침	zǎoshang	早(zǎo) 上(shàng)	我早上喝牛奶。	나는 아침에 우유를 마신다.	Wǒ zǎo shàng hē niú nǎi.			HSK2
+HSK 1~3 600단어	丈夫	남편	zhàngfū	丈(zhàng) 夫(fū)	她的丈夫是医生。	그녀의 남편은 의사다.	Tā de zhàng fū shì yī shēng.			HSK2
+HSK 1~3 600단어	找	찾다	zhǎo	找(zhǎo)	我在找我的手机。	나는 내 휴대전화를 찾고 있다.	Wǒ zài zhǎo wǒ de shǒu jī.			HSK2
+HSK 1~3 600단어	着	동작 지속 조사	zhe	着(zhe)	门开着。	문이 열려 있다.	Mén kāi zhe.			HSK2
+HSK 1~3 600단어	真	정말, 참으로	zhēn	真(zhēn)	这个菜真好吃。	이 요리는 정말 맛있다.	Zhè ge cài zhēn hǎo chī.			HSK2
+HSK 1~3 600단어	正在	마침 ~하는 중이다	zhèngzài	正(zhèng) 在(zài)	他正在看电视。	그는 마침 텔레비전을 보고 있다.	Tā zhèng zài kàn diàn shì.			HSK2
+HSK 1~3 600단어	只	다만, 단지; 마리·짝	zhǐ / zhī	只(zhǐ / zhī)	我只喝一杯茶。	나는 차 한 잔만 마신다.	Wǒ zhǐ hē yī bēi chá.			HSK2
+HSK 1~3 600단어	知道	알다	zhīdào	知(zhī) 道(dào)	我知道他的名字。	나는 그의 이름을 안다.	Wǒ zhī dào tā de míng zì.			HSK2
+HSK 1~3 600단어	准备	준비하다	zhǔnbèi	准(zhǔn) 备(bèi)	我准备明天去北京。	나는 내일 베이징에 갈 준비를 한다.	Wǒ zhǔn bèi míng tiān qù běi jīng.			HSK2
+HSK 1~3 600단어	走	걷다, 가다	zǒu	走(zǒu)	我们走吧。	우리 가자.	Wǒ men zǒu ba.			HSK2
+HSK 1~3 600단어	最	가장, 제일	zuì	最(zuì)	我最喜欢这个电影。	나는 이 영화를 가장 좋아한다.	Wǒ zuì xǐ huān zhè ge diàn yǐng.			HSK2
+HSK 1~3 600단어	左边	왼쪽	zuǒbiān	左(zuǒ) 边(biān)	商店在医院左边。	상점은 병원 왼쪽에 있다.	Shāng diàn zài yī yuàn zuǒ biān.			HSK2
